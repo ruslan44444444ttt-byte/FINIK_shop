@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDK (App, Realtime Database) -->
+    <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
       import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -36,7 +36,7 @@
         }
       } catch (e) {
         console.error("Ошибка инициализации Firebase:", e);
-        alert("Ошибка инициализации базы данных: " + e.message);
+        alert("Ошибка подключения базы данных: " + e.message);
       }
     </script>
 </head>
@@ -78,7 +78,8 @@
                 <span id="items-count" class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
             </div>
             
-            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5"></div>
+            <!-- Сетка товаров (3-5 колонок с компактным адаптивным размером) -->
+            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
 
             <div id="empty-shop-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 my-4">
                 <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
@@ -186,24 +187,26 @@
         </section>
     </main>
 
-    <!-- Модальное окно для покупки через Telegram -->
-    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <!-- Окно Покупки (Показывается при клике на Купить) -->
+    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
             <div class="w-14 h-14 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
                 <i class="fa-brands fa-telegram"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Оформление покупки</h3>
-            <p class="text-slate-300 text-sm mb-1">Вы хотите купить:</p>
-            <p id="modal-product-name" class="font-semibold text-indigo-400 mb-4 text-base"></p>
-            <p class="text-xs text-slate-400 mb-6 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                Перейдите в профиль <span class="text-sky-400 font-bold">@TOPTTL</span> в Telegram и напишите продавцу название предмета.
+            
+            <h3 class="text-xl font-bold text-white mb-2">Покупка товара</h3>
+            <p id="modal-product-name" class="font-bold text-indigo-400 mb-3 text-base"></p>
+            
+            <!-- Основное сообщение по вашему запросу -->
+            <p class="text-sm text-slate-200 mb-6 bg-slate-900/70 p-3.5 rounded-xl border border-slate-700/60 leading-relaxed font-medium">
+                Напишите мне в телеграм по поводу покупки
             </p>
             
             <div class="flex flex-col gap-2.5">
-                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95">
-                    <i class="fa-brands fa-telegram text-lg"></i> Перейти в Telegram
+                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95 text-sm">
+                    <i class="fa-brands fa-telegram text-lg"></i> Перейти в мой Telegram
                 </a>
-                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2.5 rounded-xl transition text-sm active:scale-95">
+                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2.5 rounded-xl transition text-xs active:scale-95">
                     Закрыть
                 </button>
             </div>
@@ -288,23 +291,24 @@
                         if (item.category === currentTab) {
                             count++;
                             grid.innerHTML += `
-                                <div class="bg-slate-800 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg flex flex-col justify-between transition hover:border-slate-600 p-2.5">
-                                    <div class="h-28 sm:h-32 bg-slate-900/80 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-700/40 p-2">
-                                        <img src="${item.img || 'https://via.placeholder.com/150?text=No+Image'}" class="max-h-full max-w-full object-contain filter drop-shadow-md">
+                                <div class="bg-slate-800 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg flex flex-col justify-between transition hover:border-slate-600 p-2 sm:p-2.5">
+                                    <!-- Уменьшенный блок карточки иконки -->
+                                    <div class="h-24 sm:h-28 bg-slate-900/90 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-700/50 p-1.5">
+                                        <img src="${item.img || 'https://via.placeholder.com/120?text=No+Image'}" class="max-h-full max-w-full object-contain filter drop-shadow">
                                     </div>
-                                    <div class="mt-2.5 flex flex-col flex-grow justify-between">
+                                    <div class="mt-2 flex flex-col flex-grow justify-between">
                                         <div>
-                                            <h3 class="font-bold text-sm text-slate-100 line-clamp-2">${item.title}</h3>
-                                            <p class="text-base sm:text-lg font-extrabold text-emerald-400 my-1">${item.price} <span class="text-xs font-normal text-slate-400">грн / ₴</span></p>
+                                            <h3 class="font-bold text-xs sm:text-sm text-slate-100 line-clamp-2 leading-tight">${item.title}</h3>
+                                            <p class="text-sm sm:text-base font-extrabold text-emerald-400 my-1">${item.price} <span class="text-[10px] sm:text-xs font-normal text-slate-400">грн / ₴</span></p>
                                         </div>
-                                        <div class="mt-2 pt-2 border-t border-slate-700/50">
+                                        <div class="mt-1.5 pt-1.5 border-t border-slate-700/50">
                                             ${isAdmin ? `
-                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-1.5 rounded-lg transition text-xs flex items-center justify-center gap-1 active:scale-95">
+                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-1 rounded-lg transition text-xs flex items-center justify-center gap-1 active:scale-95">
                                                     <i class="fa-solid fa-trash-can"></i> Удалить
                                                 </button>
                                             ` : `
-                                                <button type="button" onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl transition text-xs sm:text-sm shadow-md shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-1.5">
-                                                    <i class="fa-solid fa-cart-shopping text-xs"></i> Купить
+                                                <button type="button" onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 rounded-lg transition text-xs shadow-md shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-1">
+                                                    <i class="fa-solid fa-cart-shopping text-[10px]"></i> Купить
                                                 </button>
                                             `}
                                         </div>
@@ -323,7 +327,7 @@
             });
         }
 
-        function compressImage(file, maxWidth = 500, quality = 0.6) {
+        function compressImage(file, maxWidth = 400, quality = 0.6) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -388,7 +392,7 @@
                     createdAt: new Date().toISOString()
                 });
 
-                alert('Товар успешно сохранён и опубликован для всех!');
+                alert('Товар успешно сохранён!');
                 document.getElementById('product-form').reset();
                 switchTab(category);
             } catch (err) {
