@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="uk" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Trading Marketplace (грн)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        roblox: {
+                            pink: '#FF007A',
+                            purple: '#7B2CBF',
+                            blue: '#00F0FF',
+                            dark: '#0B0E17',
+                            card: '#161B26',
+                            cardHover: '#1F2636'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0E17;
+            color: #F3F4F6;
+        }
+        .glow-pink {
+            box-shadow: 0 0 20px rgba(255, 0, 122, 0.35);
+        }
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(123, 44, 191, 0.35);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased">
+
+    <!-- Шапка сайта -->
+    <header class="sticky top-0 z-50 bg-roblox-card/90 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Логотип -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('adopt-me')">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-roblox-pink to-roblox-purple rounded-xl flex items-center justify-center font-fredoka font-bold text-2xl text-white shadow-lg">
+                        R
+                    </div>
+                    <div>
+                        <span class="font-fredoka text-xl font-bold bg-gradient-to-r from-roblox-pink via-roblox-purple to-roblox-blue bg-clip-text text-transparent">ROBLOX STORE</span>
+                        <p class="text-xs text-gray-400">Adopt Me & MM2 Shop</p>
+                    </div>
+                </div>
+
+                <!-- Вкладки навигации -->
+                <nav class="hidden md:flex items-center space-x-2 bg-roblox-dark/60 p-1.5 rounded-2xl border border-gray-800">
+                    <button id="nav-adopt-me" onclick="switchTab('adopt-me')" class="tab-btn px-5 py-2.5 rounded-xl font-fredoka text-sm transition-all duration-200 flex items-center space-x-2 bg-gradient-to-r from-roblox-pink to-purple-600 text-white font-semibold shadow-md">
+                        <i class="fa-solid fa-paw"></i>
+                        <span>Adopt Me</span>
+                    </button>
+                    <button id="nav-mm2" onclick="switchTab('mm2')" class="tab-btn px-5 py-2.5 rounded-xl font-fredoka text-sm transition-all duration-200 flex items-center space-x-2 text-gray-400 hover:text-white hover:bg-gray-800/50">
+                        <i class="fa-solid fa-skull"></i>
+                        <span>MM2</span>
+                    </button>
+                    <button id="nav-reviews" onclick="switchTab('reviews')" class="tab-btn px-5 py-2.5 rounded-xl font-fredoka text-sm transition-all duration-200 flex items-center space-x-2 text-gray-400 hover:text-white hover:bg-gray-800/50">
+                        <i class="fa-solid fa-star"></i>
+                        <span>Відгуки</span>
+                    </button>
+                </nav>
+
+                <!-- Кнопка Входу в Админ-панель / Статус -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <button id="admin-header-btn" onclick="openAdminModal()" class="px-4 py-2 bg-roblox-dark hover:bg-gray-800 text-roblox-blue font-fredoka text-sm font-semibold rounded-xl border border-roblox-blue/30 transition flex items-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span id="admin-status-text">Вхід для Адміна</span>
+                    </button>
+                </div>
+
+                <!-- Мобильное меню кнопки -->
+                <div class="md:hidden flex items-center space-x-2">
+                    <button onclick="openAdminModal()" class="text-roblox-blue p-2 text-lg">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white p-2 text-xl">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div id="mobile-menu" class="hidden md:hidden bg-roblox-card border-b border-gray-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('adopt-me'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-fredoka text-sm flex items-center space-x-3 text-white bg-roblox-pink/20 border border-roblox-pink/40">
+                <i class="fa-solid fa-paw text-roblox-pink"></i>
+                <span>Adopt Me</span>
+            </button>
+            <button onclick="switchTab('mm2'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-fredoka text-sm flex items-center space-x-3 text-gray-300 hover:bg-gray-800">
+                <i class="fa-solid fa-skull text-roblox-purple"></i>
+                <span>MM2</span>
+            </button>
+            <button onclick="switchTab('reviews'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-fredoka text-sm flex items-center space-x-3 text-gray-300 hover:bg-gray-800">
+                <i class="fa-solid fa-star text-yellow-400"></i>
+                <span>Відгуки</span>
+            </button>
+            <button onclick="openAdminModal(); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-fredoka text-sm flex items-center space-x-3 text-roblox-blue hover:bg-gray-800">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Адмін-панель</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Вкладка: Adopt Me -->
+        <section id="tab-adopt-me" class="space-y-6">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-pink-600/30 via-purple-600/20 to-roblox-dark p-8 border border-pink-500/20">
+                <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 bg-roblox-pink/20 text-roblox-pink text-xs font-bold rounded-full border border-roblox-pink/30 uppercase tracking-wider">Каталог Вихованців</span>
+                        <h1 class="text-3xl sm:text-4xl font-fredoka font-bold text-white mt-2">Adopt Me!</h1>
+                        <p class="text-gray-300 max-w-xl text-sm sm:text-base mt-1">Купуй улюбленців за кращими цінами в гривнях!</p>
+                    </div>
+                    <button id="add-btn-adopt-me" onclick="openAddProductModal('adopt-me')" class="hidden px-5 py-3 bg-gradient-to-r from-roblox-pink to-roblox-purple text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition shadow-lg items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Додати товар</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Каталог Adopt Me -->
+            <div id="grid-adopt-me" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Динамические товары -->
+            </div>
+        </section>
+
+        <!-- Вкладка: MM2 -->
+        <section id="tab-mm2" class="hidden space-y-6">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-900/40 via-blue-900/20 to-roblox-dark p-8 border border-purple-500/20">
+                <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 bg-roblox-purple/20 text-purple-300 text-xs font-bold rounded-full border border-roblox-purple/30 uppercase tracking-wider">Каталог Зброї</span>
+                        <h1 class="text-3xl sm:text-4xl font-fredoka font-bold text-white mt-2">Murder Mystery 2</h1>
+                        <p class="text-gray-300 max-w-xl text-sm sm:text-base mt-1">Купуй ножі та пістолети MM2 у гривнях!</p>
+                    </div>
+                    <button id="add-btn-mm2" onclick="openAddProductModal('mm2')" class="hidden px-5 py-3 bg-gradient-to-r from-roblox-purple to-roblox-blue text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition shadow-lg items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Додати товар</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Каталог MM2 -->
+            <div id="grid-mm2" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Динамические товары -->
+            </div>
+        </section>
+
+        <!-- Вкладка: Отзывы -->
+        <section id="tab-reviews" class="hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-roblox-card p-6 rounded-3xl border border-gray-800">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-fredoka font-bold text-white">Відгуки покупців</h1>
+                    <p class="text-gray-400 text-sm">Думки наших клієнтів про проведені угоди</p>
+                </div>
+                <button onclick="openReviewModal()" class="px-6 py-3 bg-gradient-to-r from-roblox-pink to-roblox-purple text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition shadow-lg flex items-center space-x-2 self-start md:self-auto">
+                    <i class="fa-solid fa-pen"></i>
+                    <span>Залишити відгук</span>
+                </button>
+            </div>
+
+            <!-- Список отзывов -->
+            <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Динамические отзывы -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Модальное окно Входа в Админ-панель -->
+    <div id="admin-auth-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-roblox-card border border-gray-800 w-full max-w-md rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-user-shield text-roblox-blue text-xl"></i>
+                    <h3 class="text-xl font-fredoka font-bold text-white">Панель Адміністратора</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Состояние: Требуется пароль -->
+            <div id="admin-login-view" class="space-y-4">
+                <p class="text-sm text-gray-400">Введіть пароль для отримання прав адміністратора та керування магазином:</p>
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-2">Пароль доступу</label>
+                        <div class="relative">
+                            <input type="password" id="admin-password-input" required placeholder="Введіть пароль..." class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-roblox-pink text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('admin-password-input', 'pass-icon')" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                                <i id="pass-icon" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="admin-login-error" class="hidden text-red-400 text-xs bg-red-500/10 border border-red-500/20 p-3 rounded-xl flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Невірний пароль!</span>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-roblox-pink via-roblox-purple to-roblox-blue text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition">
+                        Увійти
+                    </button>
+                </form>
+            </div>
+
+            <!-- Состояние: Вы уже Админ -->
+            <div id="admin-logged-view" class="hidden space-y-5 text-center">
+                <div class="w-16 h-16 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+                <div>
+                    <h4 class="text-lg font-fredoka font-bold text-white">Ви авторизовані як Адмін</h4>
+                    <p class="text-xs text-gray-400 mt-1">Тепер вам доступне додавання, редагування та видалення товарів і відгуків.</p>
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button onclick="openAddProductModal('adopt-me')" class="flex-1 py-3 bg-roblox-pink text-white font-fredoka font-semibold rounded-xl hover:opacity-90 text-sm">
+                        + Товар
+                    </button>
+                    <button onclick="logoutAdmin()" class="py-3 px-4 bg-red-500/10 border border-red-500/30 text-red-400 font-fredoka font-semibold rounded-xl hover:bg-red-500/20 text-sm">
+                        Вийти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно Создания / Редактирования Товара (ТОЛЬКО ДЛЯ АДМИНА) -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-roblox-card border border-gray-800 w-full max-w-lg rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4">
+                <h3 id="product-modal-title" class="text-xl font-fredoka font-bold text-white">Викласти товар</h3>
+                <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-4">
+                <input type="hidden" id="edit-prod-id" value="">
+
+                <!-- Категория слайда -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-2">Розділ (Слайд)</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="modal-category" id="cat-adopt-me" value="adopt-me" checked class="peer hidden">
+                            <div class="p-3 rounded-2xl bg-roblox-dark border border-gray-800 peer-checked:border-roblox-pink peer-checked:bg-roblox-pink/10 flex items-center justify-center space-x-2 transition">
+                                <i class="fa-solid fa-paw text-roblox-pink"></i>
+                                <span class="font-fredoka text-sm text-white">Adopt Me</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="modal-category" id="cat-mm2" value="mm2" class="peer hidden">
+                            <div class="p-3 rounded-2xl bg-roblox-dark border border-gray-800 peer-checked:border-roblox-purple peer-checked:bg-roblox-purple/10 flex items-center justify-center space-x-2 transition">
+                                <i class="fa-solid fa-skull text-roblox-purple"></i>
+                                <span class="font-fredoka text-sm text-white">MM2</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Название -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Назва предмета</label>
+                    <input type="text" id="modal-prod-title" required placeholder="Наприклад: Neon Fly Ride Unicorn" class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-roblox-pink text-sm">
+                </div>
+
+                <!-- Цена в грн -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Ціна (грн / ₴)</label>
+                    <input type="number" id="modal-prod-price" min="1" step="1" required placeholder="120" class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-roblox-pink text-sm">
+                </div>
+
+                <!-- Фото с галереи -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Фотографії з галереї</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-700 border-dashed rounded-2xl cursor-pointer bg-roblox-dark hover:bg-gray-800/50 hover:border-roblox-pink transition overflow-hidden relative">
+                            <div id="modal-upload-placeholder" class="flex flex-col items-center justify-center pt-4 pb-4 text-center px-4">
+                                <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+                                <p class="text-xs text-gray-300 font-medium">Оберіть фото з пристрою</p>
+                                <p class="text-[10px] text-gray-500 mt-1">PNG, JPG, WEBP</p>
+                            </div>
+                            <img id="modal-image-preview" class="hidden absolute inset-0 w-full h-full object-cover">
+                            <input type="file" id="modal-image-file" accept="image/*" onchange="previewProductImage(this)" class="hidden" />
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition shadow-lg text-base">
+                    Зберегти товар
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно Создания Отзыва -->
+    <div id="review-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-roblox-card border border-gray-800 w-full max-w-md rounded-3xl p-6 space-y-5 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4">
+                <h3 class="text-xl font-fredoka font-bold text-white">Залишити відгук</h3>
+                <button onclick="closeReviewModal()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleAddReview(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-2">Ваше ім'я / Нікнейм</label>
+                    <input type="text" id="rev-author" required placeholder="RobloxPlayer123" class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-roblox-pink text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-2">Оцінка</label>
+                    <select id="rev-rating" class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-roblox-pink text-sm">
+                        <option value="5">⭐⭐⭐⭐⭐ (5/5) — Чудово</option>
+                        <option value="4">⭐⭐⭐⭐ (4/5) — Добре</option>
+                        <option value="3">⭐⭐⭐ (3/5) — Нормально</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-2">Ваш відгук</label>
+                    <textarea id="rev-text" required rows="3" placeholder="Швидка видача товару, дякую!" class="w-full bg-roblox-dark border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-roblox-pink text-sm"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-roblox-pink to-roblox-purple text-white font-fredoka font-semibold rounded-xl hover:opacity-90 transition">
+                    Опублікувати відгук
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Уведомления Toast -->
+    <div id="toast-message" class="fixed bottom-6 right-6 z-50 hidden bg-roblox-card border border-roblox-pink px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 text-white">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-green-400 text-xl"></i>
+        <span id="toast-text" class="text-sm font-medium">Операцію виконано!</span>
+    </div>
+
+    <script>
+        // --- ПАРОЛЬ АДМИНА ---
+        const ADMIN_PASSWORD = "Roblox2604Rusla";
+
+        // --- СОСТОЯНИЕ (STATE) ---
+        // Начальный каталог абсолютно пустой!
+        let products = [];
+        let reviews = [];
+        let isAdminLoggedIn = false;
+        let currentUploadedImageData = null;
+
+        // --- ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ---
+        window.onload = function() {
+            // Загрузка товаров из localStorage
+            const savedProducts = localStorage.getItem('roblox_shop_products_v2');
+            if (savedProducts) {
+                try {
+                    products = JSON.parse(savedProducts);
+                } catch(e) {
+                    products = [];
+                }
+            } else {
+                products = []; // По умолчанию ПУСТО
+            }
+
+            // Загрузка отзывов из localStorage
+            const savedReviews = localStorage.getItem('roblox_shop_reviews_v2');
+            if (savedReviews) {
+                try {
+                    reviews = JSON.parse(savedReviews);
+                } catch(e) {
+                    reviews = [];
+                }
+            } else {
+                reviews = [];
+            }
+
+            // Проверка авторизации Админа
+            if (sessionStorage.getItem('roblox_admin_auth') === 'true') {
+                isAdminLoggedIn = true;
+                updateAdminUI();
+            }
+
+            renderProducts();
+            renderReviews();
+        };
+
+        function saveProductsToStorage() {
+            localStorage.setItem('roblox_shop_products_v2', JSON.stringify(products));
+        }
+
+        function saveReviewsToStorage() {
+            localStorage.setItem('roblox_shop_reviews_v2', JSON.stringify(reviews));
+        }
+
+        // --- НАВИГАЦИЯ МЕЖДУ ВКЛАДКАМИ ---
+        function switchTab(tabName) {
+            document.querySelectorAll('main > section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.className = 'tab-btn px-5 py-2.5 rounded-xl font-fredoka text-sm transition-all duration-200 flex items-center space-x-2 text-gray-400 hover:text-white hover:bg-gray-800/50';
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = 'tab-btn px-5 py-2.5 rounded-xl font-fredoka text-sm transition-all duration-200 flex items-center space-x-2 bg-gradient-to-r from-roblox-pink to-purple-600 text-white font-semibold shadow-md';
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // --- ОТОБРАЖЕНИЕ КАТАЛОГА ТОВАРОВ ---
+        function renderProducts() {
+            const adoptMeContainer = document.getElementById('grid-adopt-me');
+            const mm2Container = document.getElementById('grid-mm2');
+
+            adoptMeContainer.innerHTML = '';
+            mm2Container.innerHTML = '';
+
+            const adoptMeProducts = products.filter(p => p.category === 'adopt-me');
+            const mm2Products = products.filter(p => p.category === 'mm2');
+
+            // Отрисовка Adopt Me
+            if (adoptMeProducts.length === 0) {
+                adoptMeContainer.innerHTML = `
+                    <div class="col-span-full border-2 border-dashed border-gray-800 rounded-3xl p-12 text-center text-gray-500">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 block text-gray-600"></i>
+                        <p class="font-fredoka text-lg">У цій категорії поки немає товарів</p>
+                        ${isAdminLoggedIn ? '<p class="text-xs text-roblox-pink mt-1">Ви авторизовані як адмін. Натисніть "+ Додати товар", щоб викласти предмет.</p>' : ''}
+                    </div>
+                `;
+            } else {
+                adoptMeProducts.forEach(prod => {
+                    adoptMeContainer.appendChild(createProductCard(prod));
+                });
+            }
+
+            // Отрисовка MM2
+            if (mm2Products.length === 0) {
+                mm2Container.innerHTML = `
+                    <div class="col-span-full border-2 border-dashed border-gray-800 rounded-3xl p-12 text-center text-gray-500">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 block text-gray-600"></i>
+                        <p class="font-fredoka text-lg">У цій категорії поки немає товарів</p>
+                        ${isAdminLoggedIn ? '<p class="text-xs text-roblox-purple mt-1">Ви авторизовані як адмін. Натисніть "+ Додати товар", щоб викласти предмет.</p>' : ''}
+                    </div>
+                `;
+            } else {
+                mm2Products.forEach(prod => {
+                    mm2Container.appendChild(createProductCard(prod));
+                });
+            }
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = "bg-roblox-card border border-gray-800 hover:border-gray-700 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group shadow-lg relative";
+
+            const isAdoptMe = product.category === 'adopt-me';
+            const badgeBg = isAdoptMe ? 'bg-roblox-pink/20 text-roblox-pink border-roblox-pink/30' : 'bg-roblox-purple/20 text-purple-300 border-roblox-purple/30';
+            const badgeText = isAdoptMe ? 'Adopt Me' : 'MM2';
+
+            card.innerHTML = `
+                <div>
+                    <!-- Изображение -->
+                    <div class="relative w-full h-48 bg-roblox-dark overflow-hidden">
+                        <img src="${product.image}" alt="${product.title}" 
+                             onerror="this.src='https://placehold.co/400x300/161B26/FFF?text=Roblox+Item'"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <span class="absolute top-3 left-3 px-3 py-1 ${badgeBg} text-xs font-bold rounded-full border backdrop-blur-md">
+                            ${badgeText}
+                        </span>
+
+                        <!-- ТОЛЬКО ДЛЯ АДМИНА: Кнопки Управления -->
+                        ${isAdminLoggedIn ? `
+                            <div class="absolute top-3 right-3 flex space-x-1.5">
+                                <button onclick="openEditProductModal('${product.id}')" title="Редагувати" class="w-8 h-8 bg-blue-600/80 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-xs backdrop-blur-md transition">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteProduct('${product.id}')" title="Видалити" class="w-8 h-8 bg-red-600/80 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs backdrop-blur-md transition">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Контент -->
+                    <div class="p-5">
+                        <h3 class="font-fredoka font-bold text-lg text-white group-hover:text-roblox-pink transition-colors line-clamp-1">${product.title}</h3>
+                        <div class="mt-3 flex items-baseline justify-between">
+                            <!-- Цена в ГРИВНЯХ -->
+                            <span class="text-2xl font-bold text-white font-fredoka">${product.price} <span class="text-sm font-normal text-roblox-pink">грн</span></span>
+                            <span class="text-xs text-green-400 font-medium flex items-center space-x-1">
+                                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                                <span>В наявності</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка покупки для пользователей -->
+                <div class="px-5 pb-5">
+                    <button onclick="buyProduct('${product.title}', ${product.price})" class="w-full py-3 bg-gradient-to-r from-roblox-pink to-roblox-purple hover:opacity-95 text-white font-fredoka font-semibold rounded-xl transition shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Купити предмет</span>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        function buyProduct(title, price) {
+            showToast(`Ви обрали "${title}" за ${price} грн. Зв'яжіться з нами для угоди!`, 'fa-circle-check', 'text-green-400');
+        }
+
+        // --- УПРАВЛЕНИЕ АДМИНКОЙ ВХОД / ВЫХОД ---
+        function openAdminModal() {
+            document.getElementById('admin-auth-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-auth-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const passwordInput = document.getElementById('admin-password-input').value;
+            const errorDiv = document.getElementById('admin-login-error');
+
+            if (passwordInput === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem('roblox_admin_auth', 'true');
+                errorDiv.classList.add('hidden');
+                document.getElementById('admin-password-input').value = '';
+                
+                updateAdminUI();
+                renderProducts();
+                renderReviews();
+                showToast('Ви успішно увійшли як Адміністратор!', 'fa-user-shield', 'text-roblox-blue');
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('roblox_admin_auth');
+            updateAdminUI();
+            renderProducts();
+            renderReviews();
+            closeAdminModal();
+            showToast('Ви вийшли з адмін-панелі', 'fa-right-from-bracket', 'text-yellow-400');
+        }
+
+        function updateAdminUI() {
+            const statusText = document.getElementById('admin-status-text');
+            const loginView = document.getElementById('admin-login-view');
+            const loggedView = document.getElementById('admin-logged-view');
+            const addBtnAdopt = document.getElementById('add-btn-adopt-me');
+            const addBtnMM2 = document.getElementById('add-btn-mm2');
+
+            if (isAdminLoggedIn) {
+                statusText.textContent = 'Адмін (Активний)';
+                statusText.classList.add('text-green-400');
+                loginView.classList.add('hidden');
+                loggedView.classList.remove('hidden');
+
+                addBtnAdopt.classList.remove('hidden');
+                addBtnAdopt.classList.add('flex');
+                addBtnMM2.classList.remove('hidden');
+                addBtnMM2.classList.add('flex');
+            } else {
+                statusText.textContent = 'Вхід для Адміна';
+                statusText.classList.remove('text-green-400');
+                loginView.classList.remove('hidden');
+                loggedView.classList.add('hidden');
+
+                addBtnAdopt.classList.add('hidden');
+                addBtnAdopt.classList.remove('flex');
+                addBtnMM2.classList.add('hidden');
+                addBtnMM2.classList.remove('flex');
+            }
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // --- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ / РЕДАКТИРОВАНИЯ ТОВАРА ---
+        function openAddProductModal(defaultCategory = 'adopt-me') {
+            if (!isAdminLoggedIn) {
+                openAdminModal();
+                return;
+            }
+
+            document.getElementById('edit-prod-id').value = '';
+            document.getElementById('product-modal-title').textContent = 'Викласти новий товар';
+            document.getElementById('product-form').reset();
+            
+            if (defaultCategory === 'mm2') {
+                document.getElementById('cat-mm2').checked = true;
+            } else {
+                document.getElementById('cat-adopt-me').checked = true;
+            }
+
+            document.getElementById('modal-image-preview').classList.add('hidden');
+            document.getElementById('modal-upload-placeholder').classList.remove('hidden');
+            currentUploadedImageData = null;
+
+            closeAdminModal();
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function openEditProductModal(id) {
+            if (!isAdminLoggedIn) return;
+
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('edit-prod-id').value = product.id;
+            document.getElementById('product-modal-title').textContent = 'Редагувати товар';
+            document.getElementById('modal-prod-title').value = product.title;
+            document.getElementById('modal-prod-price').value = product.price;
+
+            if (product.category === 'mm2') {
+                document.getElementById('cat-mm2').checked = true;
+            } else {
+                document.getElementById('cat-adopt-me').checked = true;
+            }
+
+            // Загруженная картинка
+            currentUploadedImageData = product.image;
+            const previewImg = document.getElementById('modal-image-preview');
+            previewImg.src = product.image;
+            previewImg.classList.remove('hidden');
+            document.getElementById('modal-upload-placeholder').classList.add('hidden');
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function previewProductImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUploadedImageData = e.target.result;
+                    const previewImg = document.getElementById('modal-image-preview');
+                    const placeholder = document.getElementById('modal-upload-placeholder');
+                    
+                    previewImg.src = currentUploadedImageData;
+                    previewImg.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleSaveProduct(event) {
+            event.preventDefault();
+            if (!isAdminLoggedIn) return;
+
+            const editId = document.getElementById('edit-prod-id').value;
+            const title = document.getElementById('modal-prod-title').value.trim();
+            const price = parseFloat(document.getElementById('modal-prod-price').value);
+            const category = document.querySelector('input[name="modal-category"]:checked').value;
+
+            if (!currentUploadedImageData) {
+                showToast('Будь ласка, оберіть фото з галереї!', 'fa-triangle-exclamation', 'text-red-400');
+                return;
+            }
+
+            if (editId) {
+                // Редактирование существующего товара
+                const index = products.findIndex(p => p.id === editId);
+                if (index !== -1) {
+                    products[index] = {
+                        id: editId,
+                        category: category,
+                        title: title,
+                        price: price,
+                        image: currentUploadedImageData
+                    };
+                    showToast('Товар успішно оновлено!', 'fa-circle-check', 'text-green-400');
+                }
+            } else {
+                // Добавление нового товара
+                const newProduct = {
+                    id: 'prod_' + Date.now(),
+                    category: category,
+                    title: title,
+                    price: price,
+                    image: currentUploadedImageData
+                };
+                products.unshift(newProduct);
+                showToast('Товар успішно додано!', 'fa-circle-check', 'text-green-400');
+            }
+
+            saveProductsToStorage();
+            renderProducts();
+            closeProductModal();
+            switchTab(category);
+        }
+
+        function deleteProduct(id) {
+            if (!isAdminLoggedIn) return;
+
+            products = products.filter(p => p.id !== id);
+            saveProductsToStorage();
+            renderProducts();
+            showToast('Товар видалено!', 'fa-trash', 'text-red-400');
+        }
+
+        // --- УПРАВЛЕНИЕ ОТЗЫВАМИ ---
+        function renderReviews() {
+            const listContainer = document.getElementById('reviews-list');
+            listContainer.innerHTML = '';
+
+            if (reviews.length === 0) {
+                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">Поки немає відгуків. Будьте першими!</div>`;
+                return;
+            }
+
+            reviews.forEach(rev => {
+                const stars = '⭐'.repeat(rev.rating);
+                const card = document.createElement('div');
+                card.className = "bg-roblox-card border border-gray-800 p-6 rounded-3xl space-y-3 shadow-lg relative";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-roblox-pink to-roblox-purple flex items-center justify-center font-bold text-white uppercase text-sm">
+                                ${rev.author.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="font-fredoka font-bold text-white text-base">${rev.author}</h4>
+                                <span class="text-xs text-gray-500">${rev.date}</span>
+                            </div>
+                        </div>
+                        <div class="text-sm">${stars}</div>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed">${rev.text}</p>
+                    ${isAdminLoggedIn ? `
+                        <button onclick="deleteReview('${rev.id}')" title="Видалити відгук" class="absolute bottom-4 right-4 text-xs text-red-400 hover:text-red-300 border border-red-500/20 bg-red-500/10 px-2.5 py-1 rounded-lg transition">
+                            <i class="fa-solid fa-trash mr-1"></i>Видалити
+                        </button>
+                    ` : ''}
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function openReviewModal() {
+            document.getElementById('review-modal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.add('hidden');
+        }
+
+        function handleAddReview(event) {
+            event.preventDefault();
+            const author = document.getElementById('rev-author').value.trim();
+            const rating = parseInt(document.getElementById('rev-rating').value);
+            const text = document.getElementById('rev-text').value.trim();
+
+            const newReview = {
+                id: 'rev_' + Date.now(),
+                author: author,
+                rating: rating,
+                text: text,
+                date: 'Сьогодні'
+            };
+
+            reviews.unshift(newReview);
+            saveReviewsToStorage();
+            renderReviews();
+
+            document.getElementById('rev-author').value = '';
+            document.getElementById('rev-text').value = '';
+            closeReviewModal();
+
+            showToast('Дякуємо за ваш відгук!', 'fa-star', 'text-yellow-400');
+        }
+
+        function deleteReview(id) {
+            if (!isAdminLoggedIn) return;
+            reviews = reviews.filter(r => r.id !== id);
+            saveReviewsToStorage();
+            renderReviews();
+            showToast('Відгук видалено!', 'fa-trash', 'text-red-400');
+        }
+
+        // --- УВЕДОМЛЕНИЯ TOAST ---
+        function showToast(message, iconClass, iconColorClass) {
+            const toast = document.getElementById('toast-message');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastText.textContent = message;
+            toastIcon.className = `fa-solid ${iconClass} ${iconColorClass} text-xl`;
+
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
