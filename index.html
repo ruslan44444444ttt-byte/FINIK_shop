@@ -39,7 +39,6 @@
       }
     </script>
     <style>
-        /* Стили для кейс-рулетки */
         .case-tape-container {
             mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
@@ -47,7 +46,6 @@
         #case-tape {
             transition: transform 5s cubic-bezier(0.08, 0.82, 0.12, 1);
         }
-        /* Цвета редкости */
         .rarity-common { border-color: #64748b; background: rgba(100, 116, 139, 0.1); }
         .rarity-rare { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
         .rarity-epic { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
@@ -130,50 +128,39 @@
                     </div>
                 </div>
 
-                <!-- РУЛЕТКА (КАК В MM2) -->
+                <!-- РУЛЕТКА -->
                 <div class="relative w-full bg-slate-950 rounded-2xl border-2 border-amber-500/50 p-4 mb-6 overflow-hidden shadow-inner">
-                    <!-- Указатель по центру -->
                     <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-red-500 z-30 shadow-[0_0_10px_#ef4444]"></div>
                     <div class="absolute top-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▼</div>
                     <div class="absolute bottom-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▲</div>
 
-                    <!-- Лента с предметами -->
                     <div class="case-tape-container overflow-hidden w-full py-2">
-                        <div id="case-tape" class="flex gap-3 items-center" style="transform: translateX(0px);">
-                            <!-- Карточки генерируются динамически -->
-                        </div>
+                        <div id="case-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
                     </div>
                 </div>
 
-                <!-- Кнопка открытия -->
                 <button id="btn-open-case" onclick="startCaseOpening()" class="w-full max-w-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
                     <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс
                 </button>
             </div>
 
-            <!-- ШОУКЕЙС: Что может выпасть (Фотки снизу) -->
+            <!-- ШОУКЕЙС -->
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <h3 class="text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
                     <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть из кейса:
                 </h3>
-                <div id="case-loot-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-                    <!-- Заполняется JS -->
-                </div>
+                <div id="case-loot-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
             </div>
         </section>
 
-        <!-- Секция Инвентаря Игрока -->
+        <!-- Секция Инвентаря Игрока (БЕЗ стоимости) -->
         <section id="inventory-section" class="hidden max-w-4xl mx-auto space-y-4">
             <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex justify-between items-center">
                 <div>
                     <h2 class="text-lg sm:text-xl font-bold text-sky-400 flex items-center gap-2">
                         <i class="fa-solid fa-backpack"></i> Ваш Инвентарь
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Здесь хранятся все скины, выигранные из кейсов</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-right">
-                    <span class="text-[10px] text-slate-400 block">Стоимость:</span>
-                    <span id="inventory-total-price" class="text-sm font-extrabold text-emerald-400">0 ₴</span>
+                    <p class="text-xs text-slate-400 mt-0.5">Здесь хранятся ваши купленные и выигранные из боксов вещи</p>
                 </div>
             </div>
 
@@ -181,7 +168,7 @@
             
             <div id="empty-inventory-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700">
                 <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
-                <p class="text-slate-400 font-medium text-sm">Ваш инвентарь пуст. Откройте кейсы, чтобы получить скины!</p>
+                <p class="text-slate-400 font-medium text-sm">Ваш инвентарь пуст. Ожидайте выдачи товара администратором или откройте кейсы!</p>
             </div>
         </section>
 
@@ -244,44 +231,79 @@
             </div>
 
             <div id="admin-panel" class="hidden max-w-xl mx-auto space-y-6">
-                <!-- Опубликовать товар в магазин -->
+                <!-- ВЫДАЧА ВЕЩЕЙ В ИНВЕНТАРЬ ИГРОКУ -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
                     <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-700">
-                        <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                            <i class="fa-solid fa-plus-circle"></i> Опубликовать товар
+                        <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
+                            <i class="fa-solid fa-gift"></i> Выдать товар в инвентарь игроку
                         </h2>
                         <button type="button" onclick="handleLogoutAdmin()" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg active:scale-95">
                             Выйти
                         </button>
                     </div>
 
+                    <form onsubmit="handleGiveItemToUser(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Email игрока</label>
+                            <input type="email" id="give-item-email" required placeholder="user@gmail.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара / скина</label>
+                            <input type="text" id="give-item-name" required placeholder="Например: Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Редкость</label>
+                            <select id="give-item-rarity" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <option value="common">Common (Обычный)</option>
+                                <option value="rare">Rare (Редкий)</option>
+                                <option value="epic">Epic (Эпический)</option>
+                                <option value="legendary">Legendary (Легендарный)</option>
+                                <option value="godly">Godly (Божественный)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография товара (Файл или Ссылка)</label>
+                            <input type="file" id="give-item-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white cursor-pointer bg-slate-900 p-1.5 rounded-xl border border-slate-700 mb-2">
+                            <input type="text" id="give-item-url" placeholder="Или вставьте URL картинки..." class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
+                            Положить вещь в инвентарь игроку
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Публикация товара в магазин -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> Опубликовать товар в магазин
+                    </h2>
                     <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-3.5">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Выберите вкладку магазина</label>
-                            <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Категория</label>
+                            <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                                 <option value="adopt">Adopt Me</option>
                                 <option value="mm2">MM2</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара</label>
-                            <input type="text" id="prod-title" required placeholder="Например: Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm">
+                            <input type="text" id="prod-title" required placeholder="Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена (грн / ₴)</label>
-                            <input type="number" id="prod-price" min="1" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm">
+                            <input type="number" id="prod-price" min="1" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография товара</label>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография</label>
                             <input type="file" id="prod-img" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white cursor-pointer bg-slate-900 p-1.5 rounded-xl border border-slate-700">
                         </div>
-                        <button type="submit" id="btn-prod-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
                             Добавить в магазин
                         </button>
                     </form>
                 </div>
 
-                <!-- Управление Кейсами (Фото и цены) -->
+                <!-- Настройка Кейсов и Фото -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
                     <h2 class="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-box-archive"></i> Настройка Кейсов и Фото
@@ -294,24 +316,16 @@
                                 <option value="mm2">MM2 Кейс</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена кейса (грн)</label>
-                            <input type="number" id="admin-case-price" min="0" placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
-                        </div>
-
-                        <div id="admin-case-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-1">
-                            <!-- Динамически заполняются предметы кейса с фотками -->
-                        </div>
-
+                        <div id="admin-case-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
                         <button type="button" onclick="saveAdminCaseSettings()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
                             Сохранить кейс и фотографии
                         </button>
                     </div>
                 </div>
 
-                <!-- Выдача Попыток Спина Игроку -->
+                <!-- Выдача прокрутов -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
-                    <h2 class="text-lg font-bold text-sky-400 mb-2 flex items-center gap-2">
+                    <h2 class="text-lg font-bold text-indigo-400 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-ticket"></i> Выдать прокруты кейса
                     </h2>
                     <form onsubmit="handleGiveSpinToUser(event)" class="space-y-3.5">
@@ -330,27 +344,24 @@
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Количество попыток</label>
                             <input type="number" id="grant-count" value="1" min="1" required class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                         </div>
-                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold p-3 rounded-xl transition active:scale-95 text-sm">
+                        <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold p-3 rounded-xl transition active:scale-95 text-sm">
                             Выдать попытки
                         </button>
                     </form>
                 </div>
 
-                <!-- История открытий (ЛОГИ КЕЙСОВ) -->
+                <!-- Логи открытий -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
-                    <h2 class="text-lg font-bold text-indigo-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left"></i> История открытий кейсов (Логи)
+                    <h2 class="text-lg font-bold text-slate-300 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> История открытий кейсов
                     </h2>
-                    <p class="text-xs text-slate-400 mb-4">Здесь видно, кто, когда и что выбил из кейсов:</p>
-                    <div id="admin-cases-logs" class="space-y-2 max-h-60 overflow-y-auto">
-                        <!-- Логи загружаются через JS -->
-                    </div>
+                    <div id="admin-cases-logs" class="space-y-2 max-h-60 overflow-y-auto"></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Нижняя мобильная навигационная панель -->
+    <!-- Нижняя мобильная навигационная панель (с Отзывами вместо админки) -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
         <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
             <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
@@ -364,8 +375,8 @@
         <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-backpack text-base"></i><span>Инвентарь</span>
         </button>
-        <button onclick="switchTab('admin')" id="m-btn-admin" class="flex flex-col items-center gap-0.5 text-amber-400">
-            <i class="fa-solid fa-shield-halved text-base"></i><span>Админ</span>
+        <button onclick="switchTab('reviews')" id="m-btn-reviews" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-star text-base"></i><span>Отзывы</span>
         </button>
         <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
             <i class="fa-solid fa-user-gear text-base"></i><span>Профиль</span>
@@ -393,7 +404,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно Профиля -->
+    <!-- Модальное окно Профиля (с кнопкой Админ-панели внутри) -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
             <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto uppercase" id="prof-modal-avatar">U</div>
@@ -439,21 +450,20 @@
         let userSpinsCount = 0;
         let currentCasePrice = 50;
 
-        // Стандартные предметы кейсов с картинками
         let defaultCaseItems = {
             adopt: [
-                { name: "Shadow Dragon", rarity: "godly", chance: "2%", price: 1500, img: "https://via.placeholder.com/120/ef4444/ffffff?text=Shadow" },
-                { name: "Frost Dragon", rarity: "legendary", chance: "8%", price: 900, img: "https://via.placeholder.com/120/eab308/ffffff?text=Frost" },
-                { name: "Bat Dragon", rarity: "legendary", chance: "10%", price: 800, img: "https://via.placeholder.com/120/eab308/ffffff?text=Bat" },
-                { name: "Owl", rarity: "epic", chance: "30%", price: 350, img: "https://via.placeholder.com/120/a855f7/ffffff?text=Owl" },
-                { name: "Unicorn", rarity: "rare", chance: "50%", price: 100, img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Unicorn" }
+                { name: "Shadow Dragon", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Shadow" },
+                { name: "Frost Dragon", rarity: "legendary", chance: "8%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Frost" },
+                { name: "Bat Dragon", rarity: "legendary", chance: "10%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Bat" },
+                { name: "Owl", rarity: "epic", chance: "30%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Owl" },
+                { name: "Unicorn", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Unicorn" }
             ],
             mm2: [
-                { name: "Corrupt Gun", rarity: "godly", chance: "2%", price: 1800, img: "https://via.placeholder.com/120/ef4444/ffffff?text=Corrupt" },
-                { name: "Harvester", rarity: "godly", chance: "5%", price: 1400, img: "https://via.placeholder.com/120/ef4444/ffffff?text=Harvester" },
-                { name: "Icebreaker", rarity: "legendary", chance: "15%", price: 700, img: "https://via.placeholder.com/120/eab308/ffffff?text=Icebreaker" },
-                { name: "Candy Knife", rarity: "epic", chance: "28%", price: 300, img: "https://via.placeholder.com/120/a855f7/ffffff?text=Candy" },
-                { name: "Seer", rarity: "rare", chance: "50%", price: 90, img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Seer" }
+                { name: "Corrupt Gun", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Corrupt" },
+                { name: "Harvester", rarity: "godly", chance: "5%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Harvester" },
+                { name: "Icebreaker", rarity: "legendary", chance: "15%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Icebreaker" },
+                { name: "Candy Knife", rarity: "epic", chance: "28%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Candy" },
+                { name: "Seer", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Seer" }
             ]
         };
         let currentCaseItems = [...defaultCaseItems.adopt];
@@ -562,7 +572,7 @@
 
             document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
             const mBtn = document.getElementById(`m-btn-${tab}`);
-            if (mBtn && tab !== 'admin') mBtn.classList.add('text-indigo-400');
+            if (mBtn) mBtn.classList.add('text-indigo-400');
 
             if (tab === 'adopt' || tab === 'mm2') {
                 document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
@@ -585,7 +595,6 @@
             loadUserSpins();
         };
 
-        // Товары магазина
         function loadProducts() {
             if (!window.firebaseReady) return;
             const { ref, onValue } = window.fb;
@@ -653,7 +662,6 @@
             }
         }
 
-        // Кейсы и Рулетка
         function switchCaseCategory(cat) {
             caseCategory = cat;
             document.getElementById('case-cat-adopt').className = cat === 'adopt' ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95' : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95';
@@ -688,7 +696,6 @@
         function renderCaseTape() {
             const tape = document.getElementById('case-tape');
             tape.innerHTML = '';
-            // Создаем длинную ленту из предметов для прокрутки (повторяем массив 6 раз)
             let extendedItems = [];
             for (let i = 0; i < 6; i++) {
                 extendedItems = extendedItems.concat(currentCaseItems);
@@ -746,7 +753,6 @@
                 return;
             }
 
-            // Списываем попытку
             await set(spinsRef, currentSpins - 1);
             userSpinsCount = currentSpins - 1;
             document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
@@ -755,12 +761,9 @@
             const btn = document.getElementById('btn-open-case');
             btn.disabled = true;
 
-            // Выбор выигрышного предмета (случайный индекс среди первых 5 элементов)
             const winningIndex = Math.floor(Math.random() * currentCaseItems.length);
             const wonItem = currentCaseItems[winningIndex];
 
-            // Настройка анимации рулетки: расчет пикселей смещения
-            // Карточка = 96px width + 12px gap = 108px
             const cardWidth = 108;
             const targetOffset = (currentCaseItems.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
 
@@ -768,20 +771,19 @@
             tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
             tape.style.transform = `translateX(-${targetOffset}px)`;
 
-            // Звук тиков (через Web Audio API)
             playTickSound();
 
             setTimeout(async () => {
                 isSpinningCase = false;
                 btn.disabled = false;
 
-                // Добавляем в инвентарь игрока
                 await push(ref(window.rtdb, `user_inventory/${key}`), {
-                    ...wonItem,
+                    name: wonItem.name,
+                    rarity: wonItem.rarity,
+                    img: wonItem.img,
                     wonAt: new Date().toLocaleString()
                 });
 
-                // Добавляем в общие логи кейсов для админа
                 await push(ref(window.rtdb, 'cases_logs'), {
                     username: currentUser.username,
                     email: currentUser.email,
@@ -793,7 +795,6 @@
 
                 alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли предмет: ${wonItem.name} (${wonItem.rarity.toUpperCase()})!\nПредмет добавлен в ваш инвентарь.`);
                 
-                // Сброс ленты без анимации
                 tape.style.transition = 'none';
                 tape.style.transform = 'translateX(0px)';
                 loadUserInventory();
@@ -801,7 +802,6 @@
             }, 5200);
         }
 
-        // Web Audio API звуковой тик при прокрутке
         function playTickSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -823,7 +823,7 @@
             } catch(e) {}
         }
 
-        // Инвентарь
+        // Инвентарь (БЕЗ стоимости)
         function loadUserInventory() {
             if (!window.firebaseReady || !currentUser) return;
             const key = safeEmailKey(currentUser.email);
@@ -831,9 +831,7 @@
             onValue(ref(window.rtdb, `user_inventory/${key}`), (snap) => {
                 const grid = document.getElementById('inventory-grid');
                 const emptyState = document.getElementById('empty-inventory-state');
-                const totalPriceEl = document.getElementById('inventory-total-price');
                 grid.innerHTML = '';
-                let total = 0;
                 let count = 0;
 
                 const data = snap.val();
@@ -841,31 +839,57 @@
                     Object.keys(data).forEach(id => {
                         const item = { id, ...data[id] };
                         count++;
-                        total += (item.price || 100);
                         grid.innerHTML += `
                             <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg rarity-${item.rarity || 'common'}">
                                 <img src="${item.img}" class="w-20 h-16 object-contain my-2 filter drop-shadow">
                                 <span class="font-bold text-xs text-white line-clamp-1">${item.name}</span>
-                                <span class="text-[10px] text-emerald-400 font-extrabold mt-1">Оценка: ${item.price || 100} ₴</span>
-                                <button onclick="sellInventoryItem('${id}', ${item.price || 100})" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-200 py-1 rounded text-[10px] font-bold">Продать</button>
+                                <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.rarity || 'common'}</span>
+                                <button onclick="removeInventoryItem('${id}')" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-1 rounded text-[10px] font-bold">Убрать</button>
                             </div>`;
                     });
                 }
-                totalPriceEl.innerText = `${total} ₴`;
                 emptyState.classList.toggle('hidden', count > 0);
             });
         }
 
-        async function sellInventoryItem(id, price) {
-            if (confirm(`Продать предмет за ${price} ₴?`)) {
+        async function removeInventoryItem(id) {
+            if (confirm('Убрать предмет из инвентаря?')) {
                 const key = safeEmailKey(currentUser.email);
                 const { ref, remove } = window.fb;
                 await remove(ref(window.rtdb, `user_inventory/${key}/${id}`));
-                alert('Предмет успешно продан!');
             }
         }
 
-        // Админка: Управление кейсами и фотками
+        // Выдача вещи в инвентарь игроку из админки
+        async function handleGiveItemToUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('give-item-email').value.trim().toLowerCase();
+            const name = document.getElementById('give-item-name').value.trim();
+            const rarity = document.getElementById('give-item-rarity').value;
+            const fileInput = document.getElementById('give-item-file');
+            const urlInput = document.getElementById('give-item-url').value.trim();
+
+            let imgData = 'https://via.placeholder.com/120';
+            if (fileInput.files[0]) {
+                imgData = await compressImage(fileInput.files[0]);
+            } else if (urlInput) {
+                imgData = urlInput;
+            }
+
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, `user_inventory/${key}`), {
+                    name, rarity, img: imgData, wonAt: new Date().toLocaleString()
+                });
+                alert(`Успешно! Предмет "${name}" выдан игроку ${email} в инвентарь.`);
+                document.getElementById('give-item-email').value = '';
+                document.getElementById('give-item-name').value = '';
+                document.getElementById('give-item-url').value = '';
+                document.getElementById('give-item-file').value = '';
+            }
+        }
+
         function loadAdminCaseInputs() {
             const cat = document.getElementById('admin-case-cat').value;
             const container = document.getElementById('admin-case-items-list');
@@ -890,7 +914,7 @@
                             <input type="text" id="adm-item-chance-${idx}" value="${item.chance}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
                         </div>
                         <div>
-                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL картинки)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
                         </div>
                     </div>`;
             });
@@ -904,17 +928,13 @@
                     name: document.getElementById(`adm-item-name-${i}`).value.trim() || `Скин ${i+1}`,
                     rarity: document.getElementById(`adm-item-rarity-${i}`).value,
                     chance: document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%',
-                    price: 500,
                     img: document.getElementById(`adm-item-img-${i}`).value.trim() || 'https://via.placeholder.com/120'
                 });
             }
 
             if (window.firebaseReady) {
                 const { ref, set } = window.fb;
-                await set(ref(window.rtdb, 'case_' + cat), {
-                    price: 50,
-                    items: newItems
-                });
+                await set(ref(window.rtdb, 'case_' + cat), { price: 50, items: newItems });
                 alert('Кейс и фотографии успешно сохранены!');
                 loadCaseData();
             }
@@ -980,7 +1000,6 @@
             });
         }
 
-        // Отзывы
         function loadReviews() {
             if (!window.firebaseReady) return;
             const { ref, onValue } = window.fb;
