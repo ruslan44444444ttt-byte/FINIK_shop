@@ -844,6 +844,27 @@
                 toast.classList.add('hidden');
             }, 3500);
         }
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDuotWstgVYf-TLgJzywcqAvprBUBI1fdA",
+  authDomain: "finik-shop-2f147.firebaseapp.com",
+  projectId: "finik-shop-2f147",
+  storageBucket: "finik-shop-2f147.firebasestorage.app",
+  messagingSenderId: "987256885592",
+  appId: "1:987256885592:web:26ec42abf9a3f8c7ab152d",
+  measurementId: "G-QLSPW1DE8Q"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
     </script>
 </body>
 </html>
