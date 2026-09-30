@@ -43,7 +43,7 @@
             mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
         }
-        #case-adopt-tape, #case-mm2-tape {
+        #case-tape {
             transition: transform 5s cubic-bezier(0.08, 0.82, 0.12, 1);
         }
         .rarity-common { border-color: #64748b; background: rgba(100, 116, 139, 0.1); }
@@ -69,13 +69,13 @@
             
             <!-- Навигация ПК -->
             <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
-                <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="nav-btn px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95">Adopt Me</button>
-                <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="nav-btn px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">MM2</button>
-                <button type="button" onclick="switchTab('case_adopt')" id="btn-case_adopt" class="nav-btn px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Кейс Adopt Me</button>
-                <button type="button" onclick="switchTab('case_mm2')" id="btn-case_mm2" class="nav-btn px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-red-400"></i> Кейс MM2</button>
-                <button type="button" onclick="switchTab('inventory')" id="btn-inventory" class="nav-btn px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95"><i class="fa-solid fa-backpack text-sky-400"></i> Инвентарь</button>
-                <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="nav-btn px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">Отзывы</button>
-                <button type="button" onclick="switchTab('admin')" id="btn-admin" class="nav-btn px-3.5 py-2 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-1 whitespace-nowrap active:scale-95"><i class="fa-solid fa-lock text-[10px]"></i> Admin</button>
+                <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95">Adopt Me</button>
+                <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">MM2</button>
+                <button type="button" onclick="switchTab('case_adopt')" id="btn-case_adopt" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Кейс Adopt Me</button>
+                <button type="button" onclick="switchTab('case_mm2')" id="btn-case_mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-red-400"></i> Кейс MM2</button>
+                <button type="button" onclick="switchTab('inventory')" id="btn-inventory" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95"><i class="fa-solid fa-backpack text-sky-400"></i> Инвентарь</button>
+                <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">Отзывы</button>
+                <button type="button" onclick="switchTab('admin')" id="btn-admin" class="px-3.5 py-2 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-1 whitespace-nowrap active:scale-95"><i class="fa-solid fa-lock text-[10px]"></i> Admin</button>
             </nav>
 
             <!-- Профиль на ПК -->
@@ -88,7 +88,7 @@
 
     <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
         <!-- Секция Магазина (Adopt Me / MM2) -->
-        <section id="shop-section" class="tab-content">
+        <section id="shop-section">
             <div class="flex justify-between items-center mb-4 sm:mb-6">
                 <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
                 <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
@@ -103,7 +103,7 @@
         </section>
 
         <!-- Секция Кейса Adopt Me -->
-        <section id="case_adopt-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+        <section id="case_adopt-section" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
                 <h2 class="text-xl font-black text-amber-400 mb-1 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-box-open text-2xl"></i> Кейс Adopt Me
@@ -149,7 +149,7 @@
         </section>
 
         <!-- Секция Кейса MM2 -->
-        <section id="case_mm2-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+        <section id="case_mm2-section" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
                 <h2 class="text-xl font-black text-red-400 mb-1 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-box-open text-2xl"></i> Кейс MM2
@@ -195,7 +195,7 @@
         </section>
 
         <!-- Секция Инвентаря Игрока -->
-        <section id="inventory-section" class="tab-content hidden max-w-4xl mx-auto space-y-4">
+        <section id="inventory-section" class="hidden max-w-4xl mx-auto space-y-4">
             <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex justify-between items-center">
                 <div>
                     <h2 class="text-lg sm:text-xl font-bold text-sky-400 flex items-center gap-2">
@@ -214,7 +214,7 @@
         </section>
 
         <!-- Секция Отзывов -->
-        <section id="reviews-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+        <section id="reviews-section" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <h2 class="text-lg sm:text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-star text-amber-400"></i> Оставить отзыв
@@ -251,7 +251,7 @@
         </section>
 
         <!-- Секция Админ-панели -->
-        <section id="admin-section" class="tab-content hidden space-y-6">
+        <section id="admin-section" class="hidden space-y-6">
             <div id="admin-login" class="max-w-md mx-auto bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
                 <div class="text-center mb-6">
                     <div class="w-12 h-12 bg-amber-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-amber-400 text-xl">
@@ -358,6 +358,7 @@
                             </select>
                         </div>
 
+                        <!-- Поле изменения цены кейса -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена открытия кейса (грн / ₴)</label>
                             <input type="number" id="admin-case-price" min="1" required placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-amber-500/50 text-amber-400 font-bold text-sm">
@@ -411,19 +412,19 @@
 
     <!-- Нижняя мобильная навигационная панель -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
-        <button onclick="switchTab('adopt')" id="m-btn-adopt" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-indigo-400">
+        <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
             <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
         </button>
-        <button onclick="switchTab('mm2')" id="m-btn-mm2" class="mobile-nav-btn flex flex-col items-center gap-0.5">
+        <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-gun text-base"></i><span>MM2</span>
         </button>
-        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="mobile-nav-btn flex flex-col items-center gap-0.5">
+        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-box-open text-base text-amber-400"></i><span>Кейс Am</span>
         </button>
-        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="mobile-nav-btn flex flex-col items-center gap-0.5">
+        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-box-open text-base text-red-400"></i><span>Кейс MM2</span>
         </button>
-        <button onclick="switchTab('inventory')" id="m-btn-inventory" class="mobile-nav-btn flex flex-col items-center gap-0.5">
+        <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-backpack text-base"></i><span>Инв.</span>
         </button>
         <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
@@ -431,48 +432,11 @@
         </button>
     </div>
 
-    <!-- Модальное окно Профиля -->
-    <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
-            <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-2xl text-white uppercase mx-auto mb-3" id="modal-avatar">U</div>
-            <h3 class="text-xl font-bold text-white mb-1" id="modal-username">Пользователь</h3>
-            <p class="text-xs text-slate-400 mb-6" id="modal-email">user@gmail.com</p>
-            
-            <div class="space-y-2.5">
-                <button onclick="openReviewsModalFromProfile()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm">
-                    <i class="fa-solid fa-star text-amber-400"></i> Мои отзывы
-                </button>
-                <button onclick="handleLogoutUser()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2.5 px-4 rounded-xl transition text-sm">
-                    Сменить аккаунт
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Отдельное Модальное окно Отзывов из Профиля -->
-    <div id="reviews-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-star text-amber-400"></i> Отзывы покупателей
-                </h3>
-                <button onclick="closeReviewsModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
-            </div>
-            <div id="modal-reviews-container" class="space-y-3 overflow-y-auto pr-1 flex-grow">
-                <!-- Заполняется динамически -->
-            </div>
-            <button onclick="closeReviewsModal()" class="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2.5 rounded-xl transition text-sm">
-                Закрыть
-            </button>
-        </div>
-    </div>
-
-    <!-- Модальное окно Регистрации / Авторизации -->
+    <!-- Модальное окно Регистрации -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <h3 class="text-xl font-bold text-white mb-1">Регистрация / Вход</h3>
-            <p class="text-xs text-slate-400 mb-5">Введите ник и почту для доступа к инвентарю и кейсам</p>
+            <h3 class="text-xl font-bold text-white mb-1">Регистрация</h3>
+            <p class="text-xs text-slate-400 mb-5">Введите ник и почту для открытия кейсов</p>
             <form onsubmit="handleRegisterUser(event)" class="space-y-3.5 text-left">
                 <div>
                     <label class="block text-[11px] font-semibold text-slate-400 mb-1 uppercase">Никнейм</label>
@@ -482,712 +446,676 @@
                     <label class="block text-[11px] font-semibold text-slate-400 mb-1 uppercase">Email</label>
                     <input type="email" id="reg-email" required placeholder="name@gmail.com" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-3 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-95 text-sm">
-                    Продолжить
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition text-sm mt-2">
+                    Войти
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Модальное окно покупки товара -->
-    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <button onclick="closeBuyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
-            <h3 class="text-xl font-bold text-white mb-2">Покупка товара</h3>
-            <p id="buy-item-name" class="text-indigo-400 font-bold mb-1"></p>
-            <p id="buy-item-price" class="text-emerald-400 font-extrabold text-lg mb-4"></p>
-            <p class="text-xs text-slate-300 mb-5">Для покупки и выдачи товара свяжитесь с продавцом в Telegram:</p>
-            <a id="buy-telegram-link" href="https://t.me/ваш_логин" target="_blank" class="w-full inline-block bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
-                <i class="fa-brands fa-telegram me-1"></i> Написать продавцу
-            </a>
+    <!-- Модальное окно Профиля -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
+            <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto uppercase" id="prof-modal-avatar">U</div>
+            <div>
+                <h3 class="text-lg font-bold text-white" id="prof-modal-username">Пользователь</h3>
+                <p class="text-xs text-slate-400" id="prof-modal-email">user@gmail.com</p>
+            </div>
+            <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2">
+                <i class="fa-solid fa-crown"></i> Админ-Панель
+            </button>
+            <button type="button" onclick="closeProfileModal()" class="w-full bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">
+                Закрыть
+            </button>
         </div>
     </div>
 
-    <!-- Основной скрипт сайта -->
+    <!-- Окно Покупки -->
+    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <div class="w-12 h-12 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-brands fa-telegram"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1.5">Покупка товара</h3>
+            <p id="modal-product-name" class="font-bold text-indigo-400 mb-3 text-sm"></p>
+            <p class="text-xs text-slate-200 mb-5 bg-slate-900/70 p-3 rounded-xl border border-slate-700">Напишите администратору в Telegram для получения товара</p>
+            <div class="flex flex-col gap-2">
+                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-brands fa-telegram text-base"></i> Написать в Telegram (@TOPTTL)
+                </a>
+                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl transition text-xs">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let currentUser = JSON.parse(localStorage.getItem('roblox_store_user')) || null;
-        let isAdminLoggedIn = localStorage.getItem('roblox_store_admin') === 'true';
+        let currentTab = 'adopt';
+        let isAdmin = false;
+        let currentUser = null;
+        let isSpinningCase = false;
 
-        let products = [];
-        let reviews = [];
-        let caseSettings = {
-            adopt: { price: 50, items: [] },
-            mm2: { price: 50, items: [] }
+        let defaultCaseItems = {
+            adopt: [
+                { name: "Shadow Dragon", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Shadow" },
+                { name: "Frost Dragon", rarity: "legendary", chance: "8%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Frost" },
+                { name: "Bat Dragon", rarity: "legendary", chance: "10%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Bat" },
+                { name: "Owl", rarity: "epic", chance: "30%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Owl" },
+                { name: "Unicorn", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Unicorn" }
+            ],
+            mm2: [
+                { name: "Corrupt Gun", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Corrupt" },
+                { name: "Harvester", rarity: "godly", chance: "5%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Harvester" },
+                { name: "Icebreaker", rarity: "legendary", chance: "15%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Icebreaker" },
+                { name: "Candy Knife", rarity: "epic", chance: "28%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Candy" },
+                { name: "Seer", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Seer" }
+            ]
+        };
+        
+        let currentCaseItems = {
+            adopt: [...defaultCaseItems.adopt],
+            mm2: [...defaultCaseItems.mm2]
+        };
+        
+        let currentCasePrices = {
+            adopt: 50,
+            mm2: 50
         };
 
-        const defaultCaseAdoptItems = [
-            { id: '1', name: 'Dog', rarity: 'common', image: 'https://via.placeholder.com/150/64748b/ffffff?text=Dog' },
-            { id: '2', name: 'Cat', rarity: 'common', image: 'https://via.placeholder.com/150/64748b/ffffff?text=Cat' },
-            { id: '3', name: 'Unicorn', rarity: 'rare', image: 'https://via.placeholder.com/150/3b82f6/ffffff?text=Unicorn' },
-            { id: '4', name: 'Dragon', rarity: 'epic', image: 'https://via.placeholder.com/150/a855f7/ffffff?text=Dragon' },
-            { id: '5', name: 'Frost Dragon', rarity: 'legendary', image: 'https://via.placeholder.com/150/eab308/ffffff?text=Frost+Dragon' },
-            { id: '6', name: 'Shadow Dragon', rarity: 'godly', image: 'https://via.placeholder.com/150/ef4444/ffffff?text=Shadow+Dragon' }
-        ];
+        window.addEventListener('DOMContentLoaded', () => {
+            checkUserAuth();
+            renderCaseTape('adopt');
+            renderCaseShowcase('adopt');
+            renderCaseTape('mm2');
+            renderCaseShowcase('mm2');
+            if (window.firebaseReady) {
+                loadProducts();
+                loadCaseData('adopt');
+                loadCaseData('mm2');
+            }
+        });
 
-        const defaultCaseMm2Items = [
-            { id: 'm1', name: 'Common Knife', rarity: 'common', image: 'https://via.placeholder.com/150/64748b/ffffff?text=Knife' },
-            { id: 'm2', name: 'Rare Gun', rarity: 'rare', image: 'https://via.placeholder.com/150/3b82f6/ffffff?text=Gun' },
-            { id: 'm3', name: 'Purple Seer', rarity: 'epic', image: 'https://via.placeholder.com/150/a855f7/ffffff?text=Seer' },
-            { id: 'm4', name: 'Laser', rarity: 'legendary', image: 'https://via.placeholder.com/150/eab308/ffffff?text=Laser' },
-            { id: 'm5', name: 'Corrupt', rarity: 'godly', image: 'https://via.placeholder.com/150/ef4444/ffffff?text=Corrupt' }
-        ];
-
-        window.onFirebaseLoaded = function() {
-            initFirebaseListeners();
-        };
-
-        window.onload = function() {
-            if (!currentUser) {
+        function checkUserAuth() {
+            const saved = localStorage.getItem('roblox_shop_user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                if (currentUser.isAdmin) {
+                    isAdmin = true;
+                    activateAdminState();
+                }
+                updateProfileUI();
+            } else {
                 document.getElementById('auth-modal').classList.remove('hidden');
             }
-            updateUserUI();
-            if (isAdminLoggedIn) {
-                document.getElementById('admin-badge').classList.remove('hidden');
-            }
-            
-            // Если Firebase долго не отвечает, загружаем локальные демо-данные
-            setTimeout(() => {
-                if (products.length === 0) {
-                    products = [
-                        { id: 'd1', category: 'adopt', title: 'Shadow Dragon', price: 350, image: 'https://via.placeholder.com/200/2a2a2a/00ffcc?text=Shadow' },
-                        { id: 'd2', category: 'mm2', title: 'Corrupt Godly', price: 200, image: 'https://via.placeholder.com/200/2a2a2a/ff4444?text=Corrupt' }
-                    ];
-                    renderShop('adopt');
-                }
-                if (reviews.length === 0) {
-                    reviews = [
-                        { author: 'RobloxPro', rating: 5, text: 'Быстрая выдача! Топ магазин.', date: '10.06.2026' }
-                    ];
-                    renderReviews();
-                }
-            }, 1000);
-        };
-
-        function initFirebaseListeners() {
-            const dbRef = window.fb.ref(window.rtdb);
-
-            // Слушаем товары магазина
-            window.fb.onValue(window.fb.ref(window.rtdb, 'products'), (snapshot) => {
-                const data = snapshot.val();
-                products = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-                const activeTab = document.querySelector('main section:not(.hidden)').id.replace('-section', '');
-                if (activeTab === 'adopt' || activeTab === 'mm2') {
-                    renderShop(activeTab);
-                }
-            });
-
-            // Слушаем отзывы
-            window.fb.onValue(window.fb.ref(window.rtdb, 'reviews'), (snapshot) => {
-                const data = snapshot.val();
-                reviews = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-                renderReviews();
-            });
-
-            // Слушаем кейсы
-            window.fb.onValue(window.fb.ref(window.rtdb, 'caseSettings'), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    caseSettings = data;
-                } else {
-                    caseSettings.adopt.items = defaultCaseAdoptItems;
-                    caseSettings.mm2.items = defaultCaseMm2Items;
-                }
-                renderCaseShowcase('adopt');
-                renderCaseShowcase('mm2');
-                renderCaseTape('adopt');
-                renderCaseTape('mm2');
-                updateCasePricesUI();
-                if (isAdminLoggedIn) loadAdminCaseInputs();
-            });
-
-            // Слушаем инвентарь пользователя
-            if (currentUser) {
-                window.fb.onValue(window.fb.ref(window.rtdb, `users/${sanitizedEmail(currentUser.email)}`), (snapshot) => {
-                    const userData = snapshot.val();
-                    if (userData) {
-                        currentUser.spins = userData.spins || { adopt: 1, mm2: 1 };
-                        currentUser.inventory = userData.inventory || [];
-                        localStorage.setItem('roblox_store_user', JSON.stringify(currentUser));
-                        updateUserSpinsUI();
-                        if (!document.getElementById('inventory-section').classList.contains('hidden')) {
-                            renderInventory();
-                        }
-                    }
-                });
-            }
         }
 
-        // Переключение вкладок с полным исправлением бага подсветки
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
-            
-            let targetId = tabId;
-            if (tabId === 'adopt' || tabId === 'mm2') {
-                targetId = 'shop';
-                renderShop(tabId);
-            }
-
-            const targetSection = document.getElementById(`${targetId}-section`);
-            if (targetSection) targetSection.classList.remove('hidden');
-
-            // Подсветка кнопок ПК
-            document.querySelectorAll('header nav button').forEach(btn => {
-                btn.className = "px-3.5 py-2 rounded-xl transition bg-slate-700/65 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95";
-            });
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            if (activeBtn) {
-                if (tabId === 'admin') {
-                    activeBtn.className = "px-3.5 py-2 rounded-xl transition bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1 whitespace-nowrap active:scale-95 shadow-lg";
-                } else {
-                    activeBtn.className = "px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95";
-                }
-            }
-
-            // Подсветка мобильных кнопок
-            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-                btn.classList.remove('text-indigo-400', 'text-amber-400', 'text-red-400');
-                btn.classList.add('text-slate-400');
-            });
-            const mobileActiveBtn = document.getElementById(`m-btn-${tabId}`);
-            if (mobileActiveBtn) {
-                mobileActiveBtn.classList.remove('text-slate-400');
-                if (tabId === 'case_adopt') mobileActiveBtn.classList.add('text-amber-400');
-                else if (tabId === 'case_mm2') mobileActiveBtn.classList.add('text-red-400');
-                else mobileActiveBtn.classList.add('text-indigo-400');
-            }
-
-            if (tabId === 'inventory') renderInventory();
-        }
-
-        function renderShop(category) {
-            const grid = document.getElementById('items-grid');
-            const title = document.getElementById('section-title');
-            const count = document.getElementById('items-count');
-            const empty = document.getElementById('empty-shop-state');
-
-            title.innerText = category === 'adopt' ? 'Adopt Me' : 'MM2';
-            grid.innerHTML = '';
-
-            const filtered = products.filter(p => p.category === category);
-            count.innerText = `${filtered.length} товаров`;
-
-            if (filtered.length === 0) {
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-
-            filtered.forEach(p => {
-                let adminControls = '';
-                if (isAdminLoggedIn) {
-                    adminControls = `
-                        <div class="mt-2 pt-2 border-t border-slate-700 flex gap-1">
-                            <button onclick="editProductPrice('${p.id}', ${p.price})" class="flex-1 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 text-[10px] py-1 rounded font-bold">Цена</button>
-                            <button onclick="deleteProduct('${p.id}')" class="bg-red-500/20 text-red-400 hover:bg-red-500/30 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    `;
-                }
-
-                grid.innerHTML += `
-                    <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between p-3">
-                        <div>
-                            <img src="${p.image || 'https://via.placeholder.com/200'}" class="w-full h-32 object-cover rounded-xl bg-slate-900 mb-2.5">
-                            <h3 class="font-bold text-sm text-slate-100 truncate">${p.title}</h3>
-                            <p class="text-emerald-400 font-extrabold text-sm mt-1">${p.price} грн / ₴</p>
-                        </div>
-                        <div class="mt-3">
-                            <button onclick="openBuyModal('${p.title}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs transition active:scale-95 shadow">Купить</button>
-                            ${adminControls}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Авторизация
         function handleRegisterUser(e) {
             e.preventDefault();
             const username = document.getElementById('reg-username').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
             if (!username || !email) return;
 
-            currentUser = { username, email, spins: { adopt: 1, mm2: 1 }, inventory: [] };
-            localStorage.setItem('roblox_store_user', JSON.stringify(currentUser));
-
-            if (window.firebaseReady) {
-                window.fb.set(window.fb.ref(window.rtdb, `users/${sanitizedEmail(email)}/username`), username);
-            }
-
+            currentUser = { username, email, isAdmin: false };
+            localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
-            updateUserUI();
-            location.reload();
+            updateProfileUI();
         }
 
-        function sanitizedEmail(email) {
-            return email.replace(/[.#$[\]]/g, '_');
-        }
-
-        function updateUserUI() {
+        function updateProfileUI() {
             if (!currentUser) return;
+            const letter = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('pc-avatar').innerText = letter;
             document.getElementById('pc-username').innerText = currentUser.username;
-            document.getElementById('pc-avatar').innerText = currentUser.username.charAt(0).toUpperCase();
-            document.getElementById('modal-username').innerText = currentUser.username;
-            document.getElementById('modal-email').innerText = currentUser.email;
-            document.getElementById('modal-avatar').innerText = currentUser.username.charAt(0).toUpperCase();
-            updateUserSpinsUI();
+            document.getElementById('pc-user-profile').classList.remove('hidden');
+
+            document.getElementById('prof-modal-avatar').innerText = letter;
+            document.getElementById('prof-modal-username').innerText = currentUser.username;
+            document.getElementById('prof-modal-email').innerText = currentUser.email;
+
+            const revAuthor = document.getElementById('rev-author');
+            if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
+
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
+            loadUserInventory();
         }
 
-        function updateUserSpinsUI() {
-            if (!currentUser || !currentUser.spins) return;
-            document.getElementById('user-spins-adopt').innerText = `${currentUser.spins.adopt || 0} спинов`;
-            document.getElementById('user-spins-mm2').innerText = `${currentUser.spins.mm2 || 0} спинов`;
-        }
+        function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
+        function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
 
-        function openProfileModal() {
-            document.getElementById('profile-modal').classList.remove('hidden');
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profile-modal').classList.add('hidden');
-        }
-
-        // Управление окном "Мои отзывы" из профиля
-        function openReviewsModalFromProfile() {
-            closeProfileModal();
-            document.getElementById('reviews-modal').classList.remove('hidden');
-            renderModalReviews();
-        }
-
-        function closeReviewsModal() {
-            document.getElementById('reviews-modal').classList.add('hidden');
-        }
-
-        function handleLogoutUser() {
-            localStorage.removeItem('roblox_store_user');
-            location.reload();
-        }
-
-        // Окно покупки
-        function openBuyModal(title, price) {
-            document.getElementById('buy-item-name').innerText = title;
-            document.getElementById('buy-item-price').innerText = `${price} грн / ₴`;
-            document.getElementById('buy-modal').classList.remove('hidden');
-        }
-
-        function closeBuyModal() {
-            document.getElementById('buy-modal').classList.add('hidden');
-        }
-
-        // Отзывы
-        function renderReviews() {
-            const list = document.getElementById('reviews-list');
-            list.innerHTML = '';
-            if (reviews.length === 0) {
-                list.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Отзывов пока нет</p>`;
-                return;
-            }
-            reviews.forEach(r => {
-                list.innerHTML += `
-                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-sm text-indigo-300">${r.author}</span>
-                            <span class="text-amber-400 text-xs">${'⭐'.repeat(r.rating)}</span>
-                        </div>
-                        <p class="text-xs text-slate-300">${r.text}</p>
-                        <span class="text-[10px] text-slate-500 mt-2 block">${r.date || ''}</span>
-                    </div>
-                `;
-            });
-        }
-
-        function renderModalReviews() {
-            const container = document.getElementById('modal-reviews-container');
-            container.innerHTML = '';
-            if (reviews.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Пока нет ни одного отзыва.</p>`;
-                return;
-            }
-            reviews.forEach(r => {
-                container.innerHTML += `
-                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-xs text-indigo-300">${r.author}</span>
-                            <span class="text-amber-400 text-xs">${'⭐'.repeat(r.rating)}</span>
-                        </div>
-                        <p class="text-xs text-slate-300">${r.text}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function handleSaveReview(e) {
-            e.preventDefault();
-            const author = document.getElementById('rev-author').value.trim();
-            const rating = parseInt(document.getElementById('rev-rating').value);
-            const text = document.getElementById('rev-text').value.trim();
-            const date = new Date().toLocaleDateString();
-
-            if (!author || !text) return;
-
-            const newRev = { author, rating, text, date };
-            if (window.firebaseReady) {
-                window.fb.push(window.fb.ref(window.rtdb, 'reviews'), newRev);
-            } else {
-                reviews.unshift(newRev);
-                renderReviews();
-            }
-
-            document.getElementById('rev-text').value = '';
-            alert('Спасибо за ваш отзыв!');
-            switchTab('adopt');
-        }
-
-        // Инвентарь
-        function renderInventory() {
-            const grid = document.getElementById('inventory-grid');
-            const empty = document.getElementById('empty-inventory-state');
-            grid.innerHTML = '';
-
-            const inv = currentUser && currentUser.inventory ? currentUser.inventory : [];
-            if (inv.length === 0) {
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-
-            inv.forEach(item => {
-                grid.innerHTML += `
-                    <div class="bg-slate-800 border-2 rarity-${item.rarity || 'common'} rounded-2xl p-3 flex flex-col items-center text-center shadow-lg">
-                        <img src="${item.image || 'https://via.placeholder.com/150'}" class="w-full h-28 object-cover rounded-xl bg-slate-900 mb-2">
-                        <h4 class="font-bold text-xs text-white truncate w-full">${item.name}</h4>
-                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded mt-1 bg-slate-900 text-slate-300">${item.rarity || 'common'}</span>
-                    </div>
-                `;
-            });
-        }
-
-        // Кейсы и рулетка
-        function getCaseItems(category) {
-            return caseSettings[category] && caseSettings[category].items && caseSettings[category].items.length > 0 
-                ? caseSettings[category].items 
-                : (category === 'adopt' ? defaultCaseAdoptItems : defaultCaseMm2Items);
-        }
-
-        function updateCasePricesUI() {
-            const adoptPrice = caseSettings.adopt?.price || 50;
-            const mm2Price = caseSettings.mm2?.price || 50;
-            document.getElementById('case-adopt-price-tag').innerText = `${adoptPrice} грн / ₴`;
-            document.getElementById('case-mm2-price-tag').innerText = `${mm2Price} грн / ₴`;
-        }
-
-        function renderCaseShowcase(category) {
-            const container = document.getElementById(`case-${category}-showcase`);
-            if (!container) return;
-            container.innerHTML = '';
-            const items = getCaseItems(category);
-            items.forEach(item => {
-                container.innerHTML += `
-                    <div class="bg-slate-900 border rarity-${item.rarity || 'common'} rounded-xl p-2 text-center">
-                        <img src="${item.image}" class="w-full h-16 object-cover rounded-lg bg-slate-950 mb-1">
-                        <p class="text-[11px] font-bold text-slate-200 truncate">${item.name}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function renderCaseTape(category) {
-            const tape = document.getElementById(`case-${category}-tape`);
-            if (!tape) return;
-            tape.innerHTML = '';
-            const items = getCaseItems(category);
-            for (let i = 0; i < 30; i++) {
-                const randItem = items[Math.floor(Math.random() * items.length)];
-                tape.innerHTML += `
-                    <div class="min-w-[100px] h-[100px] bg-slate-900 border-2 rarity-${randItem.rarity || 'common'} rounded-xl p-2 flex flex-col items-center justify-center flex-shrink-0">
-                        <img src="${randItem.image}" class="w-12 h-12 object-cover rounded-lg bg-slate-950 mb-1">
-                        <span class="text-[10px] font-bold text-slate-200 truncate w-full text-center">${randItem.name}</span>
-                    </div>
-                `;
-            }
-        }
-
-        function startCaseOpening(category) {
-            if (!currentUser || !currentUser.spins || currentUser.spins[category] <= 0) {
-                alert('У вас нет попыток для открытия кейса! Обратитесь к администратору для пополнения.');
-                return;
-            }
-
-            currentUser.spins[category]--;
-            updateUserSpinsUI();
-            if (window.firebaseReady) {
-                window.fb.set(window.fb.ref(window.rtdb, `users/${sanitizedEmail(currentUser.email)}/spins`), currentUser.spins);
-            }
-
-            const tape = document.getElementById(`case-${category}-tape`);
-            const items = getCaseItems(category);
-            
-            // Добавляем выигрышный элемент в центр рулетки
-            const winningItem = items[Math.floor(Math.random() * items.length)];
-            const winningNode = document.createElement('div');
-            winningNode.className = `min-w-[100px] h-[100px] bg-slate-900 border-2 rarity-${winningItem.rarity || 'common'} rounded-xl p-2 flex flex-col items-center justify-center flex-shrink-0`;
-            winningNode.innerHTML = `
-                <img src="${winningItem.image}" class="w-12 h-12 object-cover rounded-lg bg-slate-950 mb-1">
-                <span class="text-[10px] font-bold text-slate-200 truncate w-full text-center">${winningItem.name}</span>
-            `;
-            tape.replaceChild(winningNode, tape.children[14]); // 15-й элемент под прицелом
-
-            tape.style.transition = 'none';
-            tape.style.transform = 'translateX(0px)';
-            
-            setTimeout(() => {
-                tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
-                const randomOffset = Math.floor(Math.random() * 40) - 20;
-                const targetTranslate = -(14 * 112) + 100 + randomOffset; // 112px ширина карточки + отступ
-                tape.style.transform = `translateX(${targetTranslate}px)`;
-            }, 50);
-
-            setTimeout(() => {
-                if (!currentUser.inventory) currentUser.inventory = [];
-                currentUser.inventory.push(winningItem);
-                localStorage.setItem('roblox_store_user', JSON.stringify(currentUser));
-
-                if (window.firebaseReady) {
-                    window.fb.set(window.fb.ref(window.rtdb, `users/${sanitizedEmail(currentUser.email)}/inventory`), currentUser.inventory);
-                    window.fb.push(window.fb.ref(window.rtdb, 'caseLogs'), {
-                        email: currentUser.email,
-                        item: winningItem.name,
-                        category: category,
-                        date: new Date().toLocaleTimeString()
-                    });
-                }
-
-                alert(`Поздравляем! Вам выпало: ${winningItem.name}`);
-                renderCaseTape(category);
-            }, 5100);
-        }
-
-        // Админ-панель
         function handleCheckAdminPass(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const pass = document.getElementById('admin-pass').value;
-            if (pass === 'admin123' || pass === '12345') {
-                isAdminLoggedIn = true;
-                localStorage.setItem('roblox_store_admin', 'true');
-                document.getElementById('admin-badge').classList.remove('hidden');
-                document.getElementById('admin-login').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                loadAdminCaseInputs();
-                loadAdminLogs();
+            if (pass === 'Roblox2604Rusla') {
+                isAdmin = true;
+                if (currentUser) {
+                    currentUser.isAdmin = true;
+                    localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+                }
+                activateAdminState();
+                alert('Успешный вход в админ-панель!');
             } else {
-                alert('Неверный пароль администратора!');
+                alert('Неверный пароль!');
             }
+        }
+
+        function activateAdminState() {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            document.getElementById('admin-badge').classList.remove('hidden');
+            loadAdminCaseInputs();
+            loadAdminCasesLogs();
         }
 
         function handleLogoutAdmin() {
-            isAdminLoggedIn = false;
-            localStorage.removeItem('roblox_store_admin');
-            document.getElementById('admin-badge').classList.add('hidden');
-            document.getElementById('admin-panel').classList.add('hidden');
+            isAdmin = false;
+            if (currentUser) {
+                currentUser.isAdmin = false;
+                localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            }
             document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-badge').classList.add('hidden');
+            switchTab('adopt');
         }
 
-        if (isAdminLoggedIn) {
-            document.addEventListener("DOMContentLoaded", () => {
-                document.getElementById('admin-login').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('admin-badge').classList.remove('hidden');
-                loadAdminCaseInputs();
-                loadAdminLogs();
+        function switchTab(tab) {
+            currentTab = tab;
+            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
+                const el = document.getElementById(t + '-section');
+                if (el) el.classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById('btn-' + t);
+                if (btn) btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+            });
+
+            document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
+            const mBtn = document.getElementById(`m-btn-${tab}`);
+            if (mBtn) mBtn.classList.add('text-indigo-400');
+
+            if (tab === 'adopt' || tab === 'mm2') {
+                document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
+                loadProducts();
+            } else if (tab === 'case_adopt') {
+                loadCaseData('adopt');
+                loadUserSpins('adopt');
+            } else if (tab === 'case_mm2') {
+                loadCaseData('mm2');
+                loadUserSpins('mm2');
+            } else if (tab === 'inventory') {
+                loadUserInventory();
+            } else if (tab === 'reviews') {
+                loadReviews();
+            } else if (tab === 'admin' && isAdmin) {
+                loadAdminCasesLogs();
+            }
+        }
+
+        window.onFirebaseLoaded = function() {
+            loadProducts();
+            loadCaseData('adopt');
+            loadCaseData('mm2');
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
+        };
+
+        function loadProducts() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'products'), (snapshot) => {
+                const grid = document.getElementById('items-grid');
+                const emptyState = document.getElementById('empty-shop-state');
+                const countBadge = document.getElementById('items-count');
+                grid.innerHTML = '';
+                let count = 0;
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        const item = { id: key, ...data[key] };
+                        if (item.category === currentTab) {
+                            count++;
+                            grid.innerHTML += `
+                                <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2">
+                                    <div class="h-24 sm:h-28 bg-slate-900 rounded-lg flex items-center justify-center p-1 border border-slate-700/50">
+                                        <img src="${item.img || 'https://via.placeholder.com/120'}" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    <div class="mt-2 flex flex-col justify-between flex-grow">
+                                        <div>
+                                            <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${item.title}</h3>
+                                            <p class="text-xs sm:text-sm font-extrabold text-emerald-400 my-0.5">${item.price} ₴</p>
+                                        </div>
+                                        <div class="mt-1 pt-1 border-t border-slate-700/40">
+                                            ${isAdmin ? `
+                                                <button onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/20 text-red-400 py-1 rounded text-[10px] font-bold">Удалить</button>
+                                            ` : `
+                                                <button onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 rounded text-xs shadow-md">Купить</button>
+                                            `}
+                                        </div>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+                }
+                countBadge.innerText = `${count} товаров`;
+                emptyState.classList.toggle('hidden', count > 0);
             });
         }
 
-        function handleSaveProduct(e) {
+        async function handleSaveProduct(e) {
             e.preventDefault();
-            const category = document.getElementById('prod-category').value;
             const title = document.getElementById('prod-title').value.trim();
-            const price = parseFloat(document.getElementById('prod-price').value);
+            const price = Number(document.getElementById('prod-price').value);
+            const category = document.getElementById('prod-category').value;
             const fileInput = document.getElementById('prod-img');
-
-            if (!title || isNaN(price)) return;
-
-            let image = 'https://via.placeholder.com/200';
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    saveProductToDb(category, title, price, evt.target.result);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                saveProductToDb(category, title, price, image);
-            }
-        }
-
-        function saveProductToDb(category, title, price, image) {
-            const newProd = { category, title, price, image };
-            if (window.firebaseReady) {
-                window.fb.push(window.fb.ref(window.rtdb, 'products'), newProd);
-            } else {
-                products.push({ id: Date.now().toString(), ...newProd });
-                renderShop(category);
-            }
-            alert('Товар успешно добавлен в магазин!');
-            document.getElementById('product-form').reset();
-        }
-
-        function deleteProduct(id) {
-            if (!confirm('Удалить этот товар?')) return;
-            if (window.firebaseReady) {
-                window.fb.remove(window.fb.ref(window.rtdb, `products/${id}`));
-            } else {
-                products = products.filter(p => p.id !== id);
-                renderShop('adopt');
-            }
-        }
-
-        function editProductPrice(id, currentPrice) {
-            const newPrice = prompt('Введите новую цену товара (грн):', currentPrice);
-            if (newPrice === null || isNaN(newPrice)) return;
-            const price = parseFloat(newPrice);
+            let imgData = 'https://via.placeholder.com/120';
+            if (fileInput.files[0]) imgData = await compressImage(fileInput.files[0]);
 
             if (window.firebaseReady) {
-                window.fb.set(window.fb.ref(window.rtdb, `products/${id}/price`), price);
-            } else {
-                const p = products.find(prod => prod.id === id);
-                if (p) p.price = price;
-                renderShop('adopt');
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, 'products'), { title, price, category, img: imgData });
+                alert('Товар добавлен в магазин!');
+                document.getElementById('product-form').reset();
+                switchTab(category);
             }
-            alert('Цена обновлена!');
         }
 
-        function handleGiveItemToUser(e) {
+        async function handleDeleteProduct(id) {
+            if (confirm('Удалить товар?')) {
+                const { ref, remove } = window.fb;
+                await remove(ref(window.rtdb, 'products/' + id));
+            }
+        }
+
+        function loadCaseData(cat) {
+            if (!window.firebaseReady) {
+                currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
+                return;
+            }
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'case_' + cat), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    if (data.items && Array.isArray(data.items)) currentCaseItems[cat] = data.items;
+                    else currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                    
+                    currentCasePrices[cat] = data.price !== undefined ? data.price : 50;
+                } else {
+                    currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                    currentCasePrices[cat] = 50;
+                }
+                
+                const priceTag = document.getElementById(`case-${cat}-price-tag`);
+                if (priceTag) priceTag.innerText = `${currentCasePrices[cat]} грн / ₴`;
+                
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
+            });
+        }
+
+        function renderCaseTape(cat) {
+            const tape = document.getElementById(`case-${cat}-tape`);
+            if (!tape) return;
+            tape.innerHTML = '';
+            let extendedItems = [];
+            for (let i = 0; i < 6; i++) {
+                extendedItems = extendedItems.concat(currentCaseItems[cat]);
+            }
+            extendedItems.forEach(item => {
+                tape.innerHTML += `
+                    <div class="flex-shrink-0 w-24 h-28 bg-slate-900 border-2 rounded-xl p-2 flex flex-col items-center justify-between shadow-md rarity-${item.rarity || 'common'}">
+                        <img src="${item.img}" class="w-16 h-14 object-contain filter drop-shadow">
+                        <span class="text-[10px] font-bold text-slate-200 text-center line-clamp-1">${item.name}</span>
+                    </div>`;
+            });
+        }
+
+        function renderCaseShowcase(cat) {
+            const showcase = document.getElementById(`case-${cat}-showcase`);
+            if (!showcase) return;
+            showcase.innerHTML = '';
+            currentCaseItems[cat].forEach(item => {
+                showcase.innerHTML += `
+                    <div class="bg-slate-900/90 border rounded-xl p-2.5 flex flex-col items-center text-center rarity-${item.rarity || 'common'}">
+                        <img src="${item.img}" class="w-14 h-12 object-contain mb-1">
+                        <span class="text-[11px] font-bold text-white line-clamp-1">${item.name}</span>
+                        <span class="text-[10px] text-amber-400 font-semibold mt-0.5">Шанс: ${item.chance || '10%'}</span>
+                    </div>`;
+            });
+        }
+
+        function safeEmailKey(email) { return email.replace(/\./g, '_dot_').replace(/@/g, '_at_'); }
+
+        function loadUserSpins(cat) {
+            if (!window.firebaseReady || !currentUser) return;
+            const key = safeEmailKey(currentUser.email);
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, `user_spins/${key}/${cat}`), (snap) => {
+                const spins = snap.val() || 0;
+                const counter = document.getElementById(`user-spins-${cat}`);
+                if (counter) counter.innerText = `${spins} спинов`;
+            });
+        }
+
+        async function startCaseOpening(cat) {
+            if (isSpinningCase) return;
+            if (!currentUser) {
+                alert('Сначала зарегистрируйтесь!');
+                document.getElementById('auth-modal').classList.remove('hidden');
+                return;
+            }
+
+            const key = safeEmailKey(currentUser.email);
+            const { ref, get, set, push } = window.fb;
+            const spinsRef = ref(window.rtdb, `user_spins/${key}/${cat}`);
+            const snap = await get(spinsRef);
+            const currentSpins = snap.val() || 0;
+
+            if (currentSpins <= 0) {
+                alert(`⛔ У вас нет оплаченных попыток!\nЦена открытия: ${currentCasePrices[cat]} грн.\nНапишите в Telegram админу: @TOPTTL для оплаты и получения спинов.`);
+                return;
+            }
+
+            await set(spinsRef, currentSpins - 1);
+            loadUserSpins(cat);
+
+            isSpinningCase = true;
+            const btn = document.getElementById(`btn-open-case-${cat}`);
+            if (btn) btn.disabled = true;
+
+            const itemsList = currentCaseItems[cat];
+            const winningIndex = Math.floor(Math.random() * itemsList.length);
+            const wonItem = itemsList[winningIndex];
+
+            const cardWidth = 108;
+            const targetOffset = (itemsList.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
+
+            const tape = document.getElementById(`case-${cat}-tape`);
+            tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
+            tape.style.transform = `translateX(-${targetOffset}px)`;
+
+            playTickSound();
+
+            setTimeout(async () => {
+                isSpinningCase = false;
+                if (btn) btn.disabled = false;
+
+                await push(ref(window.rtdb, `user_inventory/${key}`), {
+                    name: wonItem.name,
+                    rarity: wonItem.rarity,
+                    img: wonItem.img,
+                    wonAt: new Date().toLocaleString()
+                });
+
+                await push(ref(window.rtdb, 'cases_logs'), {
+                    username: currentUser.username,
+                    email: currentUser.email,
+                    caseType: cat.toUpperCase(),
+                    itemName: wonItem.name,
+                    rarity: wonItem.rarity,
+                    time: new Date().toLocaleTimeString()
+                });
+
+                alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли предмет: ${wonItem.name} (${wonItem.rarity.toUpperCase()})!\nПредмет добавлен в ваш инвентарь.`);
+                
+                tape.style.transition = 'none';
+                tape.style.transform = 'translateX(0px)';
+                loadUserInventory();
+                if (isAdmin) loadAdminCasesLogs();
+            }, 5200);
+        }
+
+        function playTickSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let i = 0;
+                const interval = setInterval(() => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600 + i * 20, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                    i++;
+                    if (i > 35) clearInterval(interval);
+                }, 130);
+            } catch(e) {}
+        }
+
+        function loadUserInventory() {
+            if (!window.firebaseReady || !currentUser) return;
+            const key = safeEmailKey(currentUser.email);
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, `user_inventory/${key}`), (snap) => {
+                const grid = document.getElementById('inventory-grid');
+                const emptyState = document.getElementById('empty-inventory-state');
+                grid.innerHTML = '';
+                let count = 0;
+
+                const data = snap.val();
+                if (data) {
+                    Object.keys(data).forEach(id => {
+                        const item = { id, ...data[id] };
+                        count++;
+                        grid.innerHTML += `
+                            <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg rarity-${item.rarity || 'common'}">
+                                <img src="${item.img}" class="w-20 h-16 object-contain my-2 filter drop-shadow">
+                                <span class="font-bold text-xs text-white line-clamp-1">${item.name}</span>
+                                <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.rarity || 'common'}</span>
+                                <button onclick="removeInventoryItem('${id}')" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-1 rounded text-[10px] font-bold">Убрать</button>
+                            </div>`;
+                    });
+                }
+                emptyState.classList.toggle('hidden', count > 0);
+            });
+        }
+
+        async function removeInventoryItem(id) {
+            if (confirm('Убрать предмет из инвентаря?')) {
+                const key = safeEmailKey(currentUser.email);
+                const { ref, remove } = window.fb;
+                await remove(ref(window.rtdb, `user_inventory/${key}/${id}`));
+            }
+        }
+
+        async function handleGiveItemToUser(e) {
             e.preventDefault();
-            const email = document.getElementById('give-item-email').value.trim();
+            const email = document.getElementById('give-item-email').value.trim().toLowerCase();
             const name = document.getElementById('give-item-name').value.trim();
             const rarity = document.getElementById('give-item-rarity').value;
-            const url = document.getElementById('give-item-url').value.trim();
             const fileInput = document.getElementById('give-item-file');
+            const urlInput = document.getElementById('give-item-url').value.trim();
 
-            let image = url || 'https://via.placeholder.com/150';
+            let imgData = 'https://via.placeholder.com/120';
+            if (fileInput.files[0]) {
+                imgData = await compressImage(fileInput.files[0]);
+            } else if (urlInput) {
+                imgData = urlInput;
+            }
 
-            const processGive = (imgSrc) => {
-                const newItem = { name, rarity, image: imgSrc };
-                if (window.firebaseReady) {
-                    const userRef = window.fb.ref(window.rtdb, `users/${sanitizedEmail(email)}/inventory`);
-                    window.fb.get(userRef).then(snap => {
-                        let inv = snap.val() || [];
-                        inv.push(newItem);
-                        window.fb.set(userRef, inv);
-                        alert(`Товар успешно выдан игроку ${email}!`);
-                    });
-                } else {
-                    alert('Товар выдан (в демо-режиме)');
-                }
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, `user_inventory/${key}`), {
+                    name, rarity, img: imgData, wonAt: new Date().toLocaleString()
+                });
+                alert(`Успешно! Предмет "${name}" выдан игроку ${email} в инвентарь.`);
                 document.getElementById('give-item-email').value = '';
                 document.getElementById('give-item-name').value = '';
                 document.getElementById('give-item-url').value = '';
-            };
-
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(evt) { processGive(evt.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                processGive(image);
-            }
-        }
-
-        function handleGiveSpinToUser(e) {
-            e.preventDefault();
-            const email = document.getElementById('grant-email').value.trim();
-            const category = document.getElementById('grant-category').value;
-            const count = parseInt(document.getElementById('grant-count').value);
-
-            if (window.firebaseReady) {
-                const spinsRef = window.fb.ref(window.rtdb, `users/${sanitizedEmail(email)}/spins`);
-                window.fb.get(spinsRef).then(snap => {
-                    let spins = snap.val() || { adopt: 0, mm2: 0 };
-                    spins[category] = (spins[category] || 0) + count;
-                    window.fb.set(spinsRef, spins);
-                    alert(`Успешно выдано ${count} спинов игроку ${email}!`);
-                });
-            } else {
-                alert('Прокруты выданы (в демо-режиме)');
+                document.getElementById('give-item-file').value = '';
             }
         }
 
         function loadAdminCaseInputs() {
             const cat = document.getElementById('admin-case-cat').value;
-            document.getElementById('admin-case-price').value = caseSettings[cat]?.price || 50;
+            
+            if (window.firebaseReady) {
+                const { ref, get } = window.fb;
+                get(ref(window.rtdb, 'case_' + cat)).then(snap => {
+                    const val = snap.val();
+                    const price = (val && val.price !== undefined) ? val.price : 50;
+                    document.getElementById('admin-case-price').value = price;
+                });
+            } else {
+                document.getElementById('admin-case-price').value = currentCasePrices[cat];
+            }
+
             const container = document.getElementById('admin-case-items-list');
             container.innerHTML = '';
-            
-            const items = getCaseItems(cat);
-            items.forEach((item, index) => {
+            const items = defaultCaseItems[cat];
+
+            items.forEach((item, idx) => {
                 container.innerHTML += `
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                        <img src="${item.image}" class="w-10 h-10 object-cover rounded bg-slate-950">
-                        <div class="flex-grow">
-                            <input type="text" id="admin-item-name-${index}" value="${item.name}" class="w-full bg-slate-800 border border-slate-700 p-1.5 rounded text-xs text-white mb-1">
-                            <select id="admin-item-rarity-${index}" class="w-full bg-slate-800 border border-slate-700 p-1 rounded text-[11px] text-white">
-                                <option value="common" ${item.rarity === 'common' ? 'selected' : ''}>Common</option>
-                                <option value="rare" ${item.rarity === 'rare' ? 'selected' : ''}>Rare</option>
-                                <option value="epic" ${item.rarity === 'epic' ? 'selected' : ''}>Epic</option>
-                                <option value="legendary" ${item.rarity === 'legendary' ? 'selected' : ''}>Legendary</option>
-                                <option value="godly" ${item.rarity === 'godly' ? 'selected' : ''}>Godly</option>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-amber-400">Предмет #${idx + 1}</span>
+                            <select id="adm-item-rarity-${idx}" class="text-xs bg-slate-800 text-white p-1 rounded border border-slate-700">
+                                <option value="common" ${item.rarity==='common'?'selected':''}>Common</option>
+                                <option value="rare" ${item.rarity==='rare'?'selected':''}>Rare</option>
+                                <option value="epic" ${item.rarity==='epic'?'selected':''}>Epic</option>
+                                <option value="legendary" ${item.rarity==='legendary'?'selected':''}>Legendary</option>
+                                <option value="godly" ${item.rarity==='godly'?'selected':''}>Godly</option>
                             </select>
                         </div>
-                    </div>
-                `;
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="adm-item-name-${idx}" value="${item.name}" placeholder="Название" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                            <input type="text" id="adm-item-chance-${idx}" value="${item.chance}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                        </div>
+                        <div>
+                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                        </div>
+                    </div>`;
             });
         }
 
-        function saveAdminCaseSettings() {
+        async function saveAdminCaseSettings() {
             const cat = document.getElementById('admin-case-cat').value;
-            const price = parseFloat(document.getElementById('admin-case-price').value);
-            const items = getCaseItems(cat);
-
-            items.forEach((item, index) => {
-                const nameInput = document.getElementById(`admin-item-name-${index}`);
-                const raritySelect = document.getElementById(`admin-item-rarity-${index}`);
-                if (nameInput) item.name = nameInput.value;
-                if (raritySelect) item.rarity = raritySelect.value;
-            });
-
-            if (!caseSettings[cat]) caseSettings[cat] = {};
-            caseSettings[cat].price = price;
-            caseSettings[cat].items = items;
+            const newPrice = Number(document.getElementById('admin-case-price').value) || 50;
+            const newItems = [];
+            
+            for (let i = 0; i < 5; i++) {
+                newItems.push({
+                    name: document.getElementById(`adm-item-name-${i}`).value.trim() || `Скин ${i+1}`,
+                    rarity: document.getElementById(`adm-item-rarity-${i}`).value,
+                    chance: document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%',
+                    img: document.getElementById(`adm-item-img-${i}`).value.trim() || 'https://via.placeholder.com/120'
+                });
+            }
 
             if (window.firebaseReady) {
-                window.fb.set(window.fb.ref(window.rtdb, `caseSettings/${cat}`), caseSettings[cat]);
+                const { ref, set } = window.fb;
+                await set(ref(window.rtdb, 'case_' + cat), { price: newPrice, items: newItems });
+                alert('Цена и настройки кейса успешно сохранены!');
+                loadCaseData(cat);
             }
-            alert('Настройки кейса сохранены!');
-            renderCaseShowcase(cat);
-            updateCasePricesUI();
         }
 
-        function loadAdminLogs() {
+        async function handleGiveSpinToUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('grant-email').value.trim().toLowerCase();
+            const category = document.getElementById('grant-category').value;
+            const count = Number(document.getElementById('grant-count').value) || 1;
+
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, get, set } = window.fb;
+                const snap = await get(ref(window.rtdb, `user_spins/${key}/${category}`));
+                const current = snap.val() || 0;
+                await set(ref(window.rtdb, `user_spins/${key}/${category}`), current + count);
+                alert(`Успешно выдано ${count} прокрутов для ${email}!`);
+                document.getElementById('grant-email').value = '';
+            }
+        }
+
+        function loadAdminCasesLogs() {
             if (!window.firebaseReady) return;
-            window.fb.onValue(window.fb.ref(window.rtdb, 'caseLogs'), (snapshot) => {
-                const logsContainer = document.getElementById('admin-cases-logs');
-                if (!logsContainer) return;
-                logsContainer.innerHTML = '';
-                const data = snapshot.val();
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'cases_logs'), (snap) => {
+                const container = document.getElementById('admin-cases-logs');
+                container.innerHTML = '';
+                const data = snap.val();
                 if (!data) {
-                    logsContainer.innerHTML = '<p class="text-xs text-slate-500">Нет открытий кейсов</p>';
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">История пуста</p>`;
                     return;
                 }
                 Object.values(data).reverse().forEach(log => {
-                    logsContainer.innerHTML += `
+                    container.innerHTML += `
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-xs flex justify-between items-center">
                             <div>
-                                <span class="font-bold text-indigo-400">${log.email}</span> выиграл <span class="font-bold text-amber-400">${log.item}</span> (${log.category})
+                                <span class="font-bold text-indigo-300">${log.username}</span> (${log.email})
+                                <span class="text-slate-400 block text-[10px]">Кейс: ${log.caseType} | Выпало: <strong class="text-amber-400">${log.itemName}</strong></span>
                             </div>
-                            <span class="text-[10px] text-slate-500">${log.date}</span>
-                        </div>
-                    `;
+                            <span class="text-[10px] text-slate-500">${log.time}</span>
+                        </div>`;
                 });
             });
         }
+
+        function compressImage(file, maxWidth = 400, quality = 0.6) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                };
+            });
+        }
+
+        function loadReviews() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'reviews'), (snap) => {
+                const list = document.getElementById('reviews-list');
+                list.innerHTML = '';
+                const data = snap.val();
+                if (!data) { list.innerHTML = `<p class="text-slate-500 text-xs text-center">Отзывов пока нет.</p>`; return; }
+                Object.keys(data).forEach(k => {
+                    const rev = data[k];
+                    list.innerHTML += `
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-xs text-slate-200">${rev.author}</span>
+                                <span class="text-amber-400 text-xs">${'⭐'.repeat(rev.rating)}</span>
+                            </div>
+                            <p class="text-slate-300 text-xs">${rev.text}</p>
+                        </div>`;
+                });
+            });
+        }
+
+        async function handleSaveReview(e) {
+            e.preventDefault();
+            const author = document.getElementById('rev-author').value.trim();
+            const rating = document.getElementById('rev-rating').value;
+            const text = document.getElementById('rev-text').value.trim();
+            if (window.firebaseReady) {
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, 'reviews'), { author, rating, text });
+                alert('Отзыв отправлен!');
+                document.getElementById('rev-text').value = '';
+            }
+        }
+
+        function handleBuyProduct(title) {
+            document.getElementById('modal-product-name').innerText = title;
+            document.getElementById('buy-modal').classList.remove('hidden');
+        }
+        function closeBuyModal() { document.getElementById('buy-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
