@@ -2,548 +2,1141 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Store - Adopt Me & MM2</title>
-    <!-- Подключаем Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roblox Store — Adopt Me, MM2 & Кейсы</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getDatabase, ref, push, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDuotWstgVYf-TLgJzywcqAvprBUBI1fdA",
+        authDomain: "finik-shop-2f147.firebaseapp.com",
+        databaseURL: "https://finik-shop-2f147-default-rtdb.firebaseio.com",
+        projectId: "finik-shop-2f147",
+        storageBucket: "finik-shop-2f147.appspot.com",
+        messagingSenderId: "987256885592",
+        appId: "1:987256885592:web:26ec42abf9a3f8c7ab152d",
+        measurementId: "G-QLSPW1DE8Q"
+      };
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        const rtdb = getDatabase(app);
+        
+        window.rtdb = rtdb;
+        window.fb = { ref, push, onValue, set, remove, get };
+        window.firebaseReady = true;
+        
+        if (typeof window.onFirebaseLoaded === 'function') {
+            window.onFirebaseLoaded();
+        }
+      } catch (e) {
+        console.error("Ошибка инициализации Firebase:", e);
+      }
+    </script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .case-tape-container {
+            mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
         }
-
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        #case-tape {
+            transition: transform 5s cubic-bezier(0.08, 0.82, 0.12, 1);
         }
-
-        header {
-            background-color: #1e1e1e;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ffcc;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .btn {
-            background-color: #00ffcc;
-            color: #121212;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .btn:hover {
-            background-color: #00cc99;
-        }
-
-        .btn-secondary {
-            background-color: #333;
-            color: #e0e0e0;
-        }
-
-        .btn-secondary:hover {
-            background-color: #444;
-        }
-
-        main {
-            flex: 1;
-            padding: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .category-btn {
-            background-color: #1e1e1e;
-            color: #aaa;
-            border: 1px solid #333;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .category-btn.active {
-            background-color: #00ffcc;
-            color: #121212;
-            border-color: #00ffcc;
-            font-weight: bold;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            background-color: #2a2a2a;
-        }
-
-        .product-info {
-            padding: 15px;
-        }
-
-        .product-title {
-            font-size: 16px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .product-price {
-            color: #00ffcc;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        /* Модальные окна */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid #333;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #aaa;
-            font-size: 14px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 8px 12px;
-            background-color: #121212;
-            border: 1px solid #333;
-            border-radius: 4px;
-            color: #fff;
-        }
-
-        .reviews-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .review-item {
-            background: #121212;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #333;
-        }
-
-        .review-author {
-            font-weight: bold;
-            color: #00ffcc;
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
+        .rarity-common { border-color: #64748b; background: rgba(100, 116, 139, 0.1); }
+        .rarity-rare { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        .rarity-epic { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+        .rarity-legendary { border-color: #eab308; background: rgba(234, 179, 8, 0.1); }
+        .rarity-godly { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-24 sm:pb-12">
 
-    <header>
-        <div class="logo">Roblox Shop</div>
-        <div class="nav-buttons">
-            <button class="btn btn-secondary" onclick="openProfileModal()">👤 Профиль</button>
+    <!-- Верхний Хедер -->
+    <header class="bg-slate-800/95 backdrop-blur border-b border-slate-700 sticky top-0 z-40 shadow-md">
+        <div class="max-w-6xl mx-auto px-3 py-2.5 flex justify-between items-center gap-2">
+            <div class="flex items-center gap-2">
+                <h1 class="text-base sm:text-xl font-black text-indigo-400 tracking-wide flex items-center gap-2 cursor-pointer" onclick="switchTab('adopt')">
+                    <i class="fa-solid fa-gamepad text-xl sm:text-2xl"></i> Roblox Store
+                </h1>
+                <span id="admin-badge" class="hidden text-[10px] sm:text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold border border-amber-500/30">
+                    <i class="fa-solid fa-crown me-1"></i>Админ
+                </span>
+            </div>
+            
+            <!-- Навигация ПК -->
+            <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
+                <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95">Adopt Me</button>
+                <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">MM2</button>
+                <button type="button" onclick="switchTab('case_adopt')" id="btn-case_adopt" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Кейс Adopt Me</button>
+                <button type="button" onclick="switchTab('case_mm2')" id="btn-case_mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-red-400"></i> Кейс MM2</button>
+                <button type="button" onclick="switchTab('inventory')" id="btn-inventory" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95"><i class="fa-solid fa-backpack text-sky-400"></i> Инвентарь</button>
+                <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">Отзывы</button>
+                <button type="button" onclick="switchTab('admin')" id="btn-admin" class="px-3.5 py-2 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-1 whitespace-nowrap active:scale-95"><i class="fa-solid fa-lock text-[10px]"></i> Admin</button>
+            </nav>
+
+            <!-- Профиль на ПК -->
+            <div id="pc-user-profile" class="hidden md:flex items-center gap-2 bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-xl cursor-pointer hover:border-indigo-500/50" onclick="openProfileModal()">
+                <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase" id="pc-avatar">U</div>
+                <span id="pc-username" class="text-xs font-bold text-slate-200">Пользователь</span>
+            </div>
         </div>
     </header>
 
-    <main>
-        <div class="categories">
-            <button class="category-btn active" onclick="filterCategory('all', this)">Все товары</button>
-            <button class="category-btn" onclick="filterCategory('adoptme', this)">Adopt Me</button>
-            <button class="category-btn" onclick="filterCategory('mm2', this)">MM2</button>
-        </div>
+    <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
+        <!-- Секция Магазина (Adopt Me / MM2) -->
+        <section id="shop-section">
+            <div class="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
+                <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
+            </div>
+            
+            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4"></div>
 
-        <div class="products-grid" id="products-container">
-            <!-- Товары загружаются через JS / Firebase -->
-        </div>
+            <div id="empty-shop-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 my-4">
+                <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
+                <p class="text-slate-400 font-medium text-sm">Товаров в этой категории пока нет</p>
+            </div>
+        </section>
+
+        <!-- Секция Кейса Adopt Me -->
+        <section id="case_adopt-section" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
+                <h2 class="text-xl font-black text-amber-400 mb-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-box-open text-2xl"></i> Кейс Adopt Me
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">Испытай удачу и выиграй питомца из Adopt Me!</p>
+
+                <!-- Баланс спинов и цена -->
+                <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-3 mb-6 flex justify-around items-center text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Цена открытия:</span>
+                        <span id="case-adopt-price-tag" class="font-extrabold text-amber-400 text-sm">50 грн / ₴</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-700"></div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Ваши попытки:</span>
+                        <span id="user-spins-adopt" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
+                    </div>
+                </div>
+
+                <!-- РУЛЕТКА -->
+                <div class="relative w-full bg-slate-950 rounded-2xl border-2 border-amber-500/50 p-4 mb-6 overflow-hidden shadow-inner">
+                    <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-red-500 z-30 shadow-[0_0_10px_#ef4444]"></div>
+                    <div class="absolute top-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▼</div>
+                    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▲</div>
+
+                    <div class="case-tape-container overflow-hidden w-full py-2">
+                        <div id="case-adopt-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
+                    </div>
+                </div>
+
+                <button id="btn-open-case-adopt" onclick="startCaseOpening('adopt')" class="w-full max-w-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
+                    <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс Adopt Me
+                </button>
+            </div>
+
+            <!-- ШОУКЕЙС -->
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть:
+                </h3>
+                <div id="case-adopt-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+            </div>
+        </section>
+
+        <!-- Секция Кейса MM2 -->
+        <section id="case_mm2-section" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
+                <h2 class="text-xl font-black text-red-400 mb-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-box-open text-2xl"></i> Кейс MM2
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">Испытай удачу и выиграй крутой нож или ган из MM2!</p>
+
+                <!-- Баланс спинов и цена -->
+                <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-3 mb-6 flex justify-around items-center text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Цена открытия:</span>
+                        <span id="case-mm2-price-tag" class="font-extrabold text-red-400 text-sm">50 грн / ₴</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-700"></div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Ваши попытки:</span>
+                        <span id="user-spins-mm2" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
+                    </div>
+                </div>
+
+                <!-- РУЛЕТКА -->
+                <div class="relative w-full bg-slate-950 rounded-2xl border-2 border-red-500/50 p-4 mb-6 overflow-hidden shadow-inner">
+                    <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-red-500 z-30 shadow-[0_0_10px_#ef4444]"></div>
+                    <div class="absolute top-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▼</div>
+                    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▲</div>
+
+                    <div class="case-tape-container overflow-hidden w-full py-2">
+                        <div id="case-mm2-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
+                    </div>
+                </div>
+
+                <button id="btn-open-case-mm2" onclick="startCaseOpening('mm2')" class="w-full max-w-sm bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-red-500/20 active:scale-95 text-sm uppercase tracking-wider">
+                    <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс MM2
+                </button>
+            </div>
+
+            <!-- ШОУКЕЙС -->
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть:
+                </h3>
+                <div id="case-mm2-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+            </div>
+        </section>
+
+        <!-- Секция Инвентаря Игрока -->
+        <section id="inventory-section" class="hidden max-w-4xl mx-auto space-y-4">
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-sky-400 flex items-center gap-2">
+                        <i class="fa-solid fa-backpack"></i> Ваш Инвентарь
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Здесь хранятся ваши купленные и выигранные из боксов вещи</p>
+                </div>
+            </div>
+
+            <div id="inventory-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+            
+            <div id="empty-inventory-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700">
+                <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
+                <p class="text-slate-400 font-medium text-sm">Ваш инвентарь пуст. Ожидайте выдачи товара администратором или откройте кейсы!</p>
+            </div>
+        </section>
+
+        <!-- Секция Отзывов -->
+        <section id="reviews-section" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h2 class="text-lg sm:text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-star text-amber-400"></i> Оставить отзыв
+                </h2>
+                <form id="review-form" onsubmit="handleSaveReview(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваше имя / Никнейм</label>
+                        <input type="text" id="rev-author" required placeholder="Например: Player_123" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Оценка</label>
+                        <select id="rev-rating" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 font-bold focus:outline-none focus:border-indigo-500 text-sm">
+                            <option value="5">⭐⭐⭐⭐⭐ (5/5) — Отлично!</option>
+                            <option value="4">⭐⭐⭐⭐ (4/5) — Хорошо</option>
+                            <option value="3">⭐⭐⭐ (3/5) — Нормально</option>
+                            <option value="2">⭐⭐ (2/5) — Плохо</option>
+                            <option value="1">⭐ (1/5) — Ужасно</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваш отзыв</label>
+                        <textarea id="rev-text" required rows="3" placeholder="Напишите впечатления о покупке..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
+                    </div>
+                    <button type="submit" id="btn-review-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-3 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-95 text-sm">
+                        Отправить отзыв
+                    </button>
+                </form>
+            </div>
+
+            <div class="space-y-3">
+                <h3 class="text-base sm:text-lg font-bold text-slate-200">Все отзывы</h3>
+                <div id="reviews-list" class="space-y-2.5"></div>
+            </div>
+        </section>
+
+        <!-- Секция Админ-панели -->
+        <section id="admin-section" class="hidden space-y-6">
+            <div id="admin-login" class="max-w-md mx-auto bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-amber-400 text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-100">Панель Администратора</h2>
+                    <p class="text-xs text-slate-400 mt-1">Введите пароль для администрирования</p>
+                </div>
+                
+                <form id="login-form" onsubmit="handleCheckAdminPass(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="admin-pass" autocomplete="current-password" placeholder="Пароль администратора..." required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-amber-400 text-white placeholder-slate-500 text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm">
+                        Войти в панель
+                    </button>
+                </form>
+            </div>
+
+            <div id="admin-panel" class="hidden max-w-xl mx-auto space-y-6">
+                <!-- ВЫДАЧА ВЕЩЕЙ В ИНВЕНТАРЬ ИГРОКУ -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-700">
+                        <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
+                            <i class="fa-solid fa-gift"></i> Выдать товар в инвентарь игроку
+                        </h2>
+                        <button type="button" onclick="handleLogoutAdmin()" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg active:scale-95">
+                            Выйти
+                        </button>
+                    </div>
+
+                    <form onsubmit="handleGiveItemToUser(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Email игрока</label>
+                            <input type="email" id="give-item-email" required placeholder="user@gmail.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара / скина</label>
+                            <input type="text" id="give-item-name" required placeholder="Например: Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Редкость</label>
+                            <select id="give-item-rarity" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <option value="common">Common (Обычный)</option>
+                                <option value="rare">Rare (Редкий)</option>
+                                <option value="epic">Epic (Эпический)</option>
+                                <option value="legendary">Legendary (Легендарный)</option>
+                                <option value="godly">Godly (Божественный)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография товара (Файл или Ссылка)</label>
+                            <input type="file" id="give-item-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white cursor-pointer bg-slate-900 p-1.5 rounded-xl border border-slate-700 mb-2">
+                            <input type="text" id="give-item-url" placeholder="Или вставьте URL картинки..." class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
+                            Положить вещь в инвентарь игроку
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Публикация товара в магазин -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> Опубликовать товар в магазин
+                    </h2>
+                    <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Категория</label>
+                            <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <option value="adopt">Adopt Me</option>
+                                <option value="mm2">MM2</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара</label>
+                            <input type="text" id="prod-title" required placeholder="Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена (грн / ₴)</label>
+                            <input type="number" id="prod-price" min="1" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография</label>
+                            <input type="file" id="prod-img" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white cursor-pointer bg-slate-900 p-1.5 rounded-xl border border-slate-700">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
+                            Добавить в магазин
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Настройка Цены и Содержимого Кейсов -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-box-archive"></i> Настройка Цены и Кейсов
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Выбрать кейс</label>
+                            <select id="admin-case-cat" onchange="loadAdminCaseInputs()" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <option value="adopt">Кейс Adopt Me</option>
+                                <option value="mm2">Кейс MM2</option>
+                            </select>
+                        </div>
+
+                        <!-- Поле изменения цены кейса -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена открытия кейса (грн / ₴)</label>
+                            <input type="number" id="admin-case-price" min="1" required placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-amber-500/50 text-amber-400 font-bold text-sm">
+                        </div>
+
+                        <div id="admin-case-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
+                        
+                        <button type="button" onclick="saveAdminCaseSettings()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
+                            Сохранить цену и настройки кейса
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Выдача прокрутов -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-indigo-400 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-ticket"></i> Выдать прокруты кейса
+                    </h2>
+                    <form onsubmit="handleGiveSpinToUser(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Email игрока</label>
+                            <input type="email" id="grant-email" required placeholder="user@gmail.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Кейс</label>
+                            <select id="grant-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <option value="adopt">Кейс Adopt Me</option>
+                                <option value="mm2">Кейс MM2</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Количество попыток</label>
+                            <input type="number" id="grant-count" value="1" min="1" required class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold p-3 rounded-xl transition active:scale-95 text-sm">
+                            Выдать попытки
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Логи открытий -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-slate-300 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> История открытий кейсов
+                    </h2>
+                    <div id="admin-cases-logs" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Модальное окно профиля / админки -->
-    <div class="modal" id="profile-modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('profile-modal')">&times;</button>
-            <h2>Личный кабинет</h2>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="openReviewsModal()">⭐ Отзывы</button>
-                <button class="btn" onclick="openAdminLogin()">⚙️ Админ-панель</button>
-            </div>
+    <!-- Нижняя мобильная навигационная панель -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
+        <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
+            <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
+        </button>
+        <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-gun text-base"></i><span>MM2</span>
+        </button>
+        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-box-open text-base text-amber-400"></i><span>Кейс Am</span>
+        </button>
+        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-box-open text-base text-red-400"></i><span>Кейс MM2</span>
+        </button>
+        <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-backpack text-base"></i><span>Инв.</span>
+        </button>
+        <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
+            <i class="fa-solid fa-user-gear text-base"></i><span>Профиль</span>
+        </button>
+    </div>
+
+    <!-- Модальное окно Регистрации -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <h3 class="text-xl font-bold text-white mb-1">Регистрация</h3>
+            <p class="text-xs text-slate-400 mb-5">Введите ник и почту для открытия кейсов</p>
+            <form onsubmit="handleRegisterUser(event)" class="space-y-3.5 text-left">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1 uppercase">Никнейм</label>
+                    <input type="text" id="reg-username" required placeholder="RobloxKing" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1 uppercase">Email</label>
+                    <input type="email" id="reg-email" required placeholder="name@gmail.com" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition text-sm mt-2">
+                    Войти
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Модальное окно отзывов -->
-    <div class="modal" id="reviews-modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('reviews-modal')">&times;</button>
-            <h2>Отзывы покупателей</h2>
-            <div class="reviews-list" id="reviews-container">
-                <!-- Отзывы -->
+    <!-- Модальное окно Профиля -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
+            <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto uppercase" id="prof-modal-avatar">U</div>
+            <div>
+                <h3 class="text-lg font-bold text-white" id="prof-modal-username">Пользователь</h3>
+                <p class="text-xs text-slate-400" id="prof-modal-email">user@gmail.com</p>
             </div>
-            <div class="form-group">
-                <input type="text" id="review-author-input" placeholder="Ваше имя">
-            </div>
-            <div class="form-group">
-                <textarea id="review-text-input" placeholder="Ваш отзыв..." rows="2"></textarea>
-            </div>
-            <button class="btn" onclick="addReview()">Оставить отзыв</button>
+            <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2">
+                <i class="fa-solid fa-crown"></i> Админ-Панель
+            </button>
+            <button type="button" onclick="closeProfileModal()" class="w-full bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">
+                Закрыть
+            </button>
         </div>
     </div>
 
-    <!-- Модальное окно админ-панели -->
-    <div class="modal" id="admin-modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('admin-modal')">&times;</button>
-            <h2>Панель администратора</h2>
-            
-            <div id="admin-login-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>Пароль администратора</label>
-                    <input type="password" id="admin-password">
-                </div>
-                <button class="btn" onclick="checkAdminPassword()">Войти</button>
+    <!-- Окно Покупки -->
+    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <div class="w-12 h-12 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-brands fa-telegram"></i>
             </div>
-
-            <div id="admin-panel-content" style="display: none; margin-top: 15px;">
-                <h3 style="margin-bottom: 10px; font-size: 15px; color: #00ffcc;">Добавить новый товар</h3>
-                <div class="form-group">
-                    <label>Название товара</label>
-                    <input type="text" id="new-title">
-                </div>
-                <div class="form-group">
-                    <label>Цена (грн)</label>
-                    <input type="number" id="new-price">
-                </div>
-                <div class="form-group">
-                    <label>Категория</label>
-                    <select id="new-category">
-                        <option value="adoptme">Adopt Me</option>
-                        <option value="mm2">MM2</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Ссылка на фото</label>
-                    <input type="text" id="new-image">
-                </div>
-                <button class="btn" onclick="addProduct()">Добавить товар</button>
+            <h3 class="text-lg font-bold text-white mb-1.5">Покупка товара</h3>
+            <p id="modal-product-name" class="font-bold text-indigo-400 mb-3 text-sm"></p>
+            <p class="text-xs text-slate-200 mb-5 bg-slate-900/70 p-3 rounded-xl border border-slate-700">Напишите администратору в Telegram для получения товара</p>
+            <div class="flex flex-col gap-2">
+                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-brands fa-telegram text-base"></i> Написать в Telegram (@TOPTTL)
+                </a>
+                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl transition text-xs">
+                    Закрыть
+                </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно изменения цены товара -->
-    <div class="modal" id="edit-price-modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('edit-price-modal')">&times;</button>
-            <h2>Изменить цену товара</h2>
-            <div class="form-group" style="margin-top: 15px;">
-                <label>Новая цена (грн)</label>
-                <input type="number" id="edit-price-input">
-            </div>
-            <button class="btn" onclick="saveEditedPrice()">Сохранить цену</button>
-        </div>
-    </div>
-
-    <!-- Модальное окно покупки / связи с продавцом -->
-    <div class="modal" id="buy-modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('buy-modal')">&times;</button>
-            <h2>Покупка товара</h2>
-            <p id="buy-product-info" style="margin: 15px 0; color: #aaa;"></p>
-            <p style="margin-bottom: 15px; font-size: 14px;">Для покупки напишите продавцу в Telegram:</p>
-            <a href="https://t.me/ваш_логин" target="_blank" class="btn" style="display: block; text-align: center; text-decoration: none;">Написать в Telegram</a>
         </div>
     </div>
 
     <script>
-        // Инициализация Firebase (замените на ваши данные из Firebase Console при необходимости)
-        const firebaseConfig = {
-            apiKey: "AIzaSy...",
-            authDomain: "your-app.firebaseapp.com",
-            projectId: "your-app",
-            storageBucket: "your-app.appspot.com",
-            messagingSenderId: "...",
-            appId: "..."
+        let currentTab = 'adopt';
+        let isAdmin = false;
+        let currentUser = null;
+        let isSpinningCase = false;
+
+        let defaultCaseItems = {
+            adopt: [
+                { name: "Shadow Dragon", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Shadow" },
+                { name: "Frost Dragon", rarity: "legendary", chance: "8%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Frost" },
+                { name: "Bat Dragon", rarity: "legendary", chance: "10%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Bat" },
+                { name: "Owl", rarity: "epic", chance: "30%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Owl" },
+                { name: "Unicorn", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Unicorn" }
+            ],
+            mm2: [
+                { name: "Corrupt Gun", rarity: "godly", chance: "2%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Corrupt" },
+                { name: "Harvester", rarity: "godly", chance: "5%", img: "https://via.placeholder.com/120/ef4444/ffffff?text=Harvester" },
+                { name: "Icebreaker", rarity: "legendary", chance: "15%", img: "https://via.placeholder.com/120/eab308/ffffff?text=Icebreaker" },
+                { name: "Candy Knife", rarity: "epic", chance: "28%", img: "https://via.placeholder.com/120/a855f7/ffffff?text=Candy" },
+                { name: "Seer", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Seer" }
+            ]
         };
         
-        // Проверка инициализации, если конфиг пустой — используем локальный массив для теста
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-        } catch(e) {
-            console.log("Firebase not configured yet, running local simulation");
-        }
-
-        // Локальное хранилище для отзывов и товаров (если Firebase не подключен)
-        let localProducts = [
-            { id: "1", title: "Shadow Dragon (FR)", price: 350, category: "adoptme", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Shadow+Dragon" },
-            { id: "2", title: "Bat Dragon", price: 300, category: "adoptme", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Bat+Dragon" },
-            { id: "3", title: "Laser (MM2 Godly)", price: 80, category: "mm2", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Laser+MM2" }
-        ];
-
-        let localReviews = [
-            { author: "Игрок123", text: "Быстро передали питомца в Adopt Me, всё супер!" },
-            { author: "RobloxFan", text: "Купил гадли, продавец ответил сразу. Рекомендую!" }
-        ];
-
-        let isAdminLoggedIn = false;
-        let editingProductId = null;
-        let currentFilter = 'all';
-
-        window.onload = function() {
-            loadProducts();
-            loadReviews();
+        let currentCaseItems = {
+            adopt: [...defaultCaseItems.adopt],
+            mm2: [...defaultCaseItems.mm2]
+        };
+        
+        let currentCasePrices = {
+            adopt: 50,
+            mm2: 50
         };
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        function openProfileModal() {
-            openModal('profile-modal');
-        }
-
-        function openReviewsModal() {
-            closeModal('profile-modal');
-            openModal('reviews-modal');
-        }
-
-        function openAdminLogin() {
-            closeModal('profile-modal');
-            openModal('admin-modal');
-        }
-
-        function checkAdminPassword() {
-            const pass = document.getElementById('admin-password').value;
-            if (pass === "admin123") { // Ваш пароль администратора
-                isAdminLoggedIn = true;
-                document.getElementById('admin-login-form').style.display = 'none';
-                document.getElementById('admin-panel-content').style.display = 'block';
+        window.addEventListener('DOMContentLoaded', () => {
+            checkUserAuth();
+            renderCaseTape('adopt');
+            renderCaseShowcase('adopt');
+            renderCaseTape('mm2');
+            renderCaseShowcase('mm2');
+            if (window.firebaseReady) {
                 loadProducts();
-                alert("Успешный вход в админ-панель!");
-            } else {
-                alert("Неверный пароль!");
+                loadCaseData('adopt');
+                loadCaseData('mm2');
             }
-        }
+        });
 
-        function filterCategory(category, btn) {
-            currentFilter = category;
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            loadProducts();
-        }
-
-        // Загрузка товаров
-        function loadProducts() {
-            const container = document.getElementById('products-container');
-            container.innerHTML = '';
-            
-            let filtered = localProducts;
-            if (currentFilter !== 'all') {
-                filtered = localProducts.filter(p => p.category === currentFilter);
-            }
-
-            filtered.forEach(product => {
-                let adminButtons = '';
-                if (isAdminLoggedIn) {
-                    adminButtons = `<button class="btn btn-secondary" onclick="openEditPriceModal('${product.id}')" style="margin-top: 8px; width: 100%; font-size: 13px;">✏️ Изменить цену</button>`;
+        function checkUserAuth() {
+            const saved = localStorage.getItem('roblox_shop_user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                if (currentUser.isAdmin) {
+                    isAdmin = true;
+                    activateAdminState();
                 }
-
-                container.innerHTML += `
-                    <div class="product-card">
-                        <div>
-                            <img src="${product.image || 'https://via.placeholder.com/220x150'}" class="product-img" alt="item">
-                            <div class="product-info">
-                                <div class="product-title">${product.title}</div>
-                                <div class="product-price">${product.price} грн</div>
-                            </div>
-                        </div>
-                        <div style="padding: 0 15px 15px 15px;">
-                            <button class="btn" onclick="openBuyModal('${product.title}', ${product.price})" style="width: 100%;">Купить</button>
-                            ${adminButtons}
-                        </div>
-                    </div>
-                `;
-            });
+                updateProfileUI();
+            } else {
+                document.getElementById('auth-modal').classList.remove('hidden');
+            }
         }
 
-        // Изменение цены товара без удаления
-        function openEditPriceModal(id) {
-            editingProductId = id;
-            const product = localProducts.find(p => p.id === id);
-            document.getElementById('edit-price-input').value = product.price;
-            openModal('edit-price-modal');
+        function handleRegisterUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            if (!username || !email) return;
+
+            currentUser = { username, email, isAdmin: false };
+            localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            document.getElementById('auth-modal').classList.add('hidden');
+            updateProfileUI();
         }
 
-        function saveEditedPrice() {
-            const newPrice = parseFloat(document.getElementById('edit-price-input').value);
-            if (isNaN(newPrice) || newPrice <= 0) {
-                alert("Введите корректную цену!");
-                return;
-            }
+        function updateProfileUI() {
+            if (!currentUser) return;
+            const letter = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('pc-avatar').innerText = letter;
+            document.getElementById('pc-username').innerText = currentUser.username;
+            document.getElementById('pc-user-profile').classList.remove('hidden');
 
-            const product = localProducts.find(p => p.id === editingProductId);
-            if (product) {
-                product.price = newPrice;
-            }
+            document.getElementById('prof-modal-avatar').innerText = letter;
+            document.getElementById('prof-modal-username').innerText = currentUser.username;
+            document.getElementById('prof-modal-email').innerText = currentUser.email;
 
-            closeModal('edit-price-modal');
-            loadProducts();
-            alert("Цена успешно изменена!");
+            const revAuthor = document.getElementById('rev-author');
+            if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
+
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
+            loadUserInventory();
         }
 
-        // Добавление товара (Админ)
-        function addProduct() {
-            const title = document.getElementById('new-title').value;
-            const price = parseFloat(document.getElementById('new-price').value);
-            const category = document.getElementById('new-category').value;
-            const image = document.getElementById('new-image').value;
+        function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
+        function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
 
-            if (!title || isNaN(price)) {
-                alert("Заполните название и цену!");
-                return;
+        function handleCheckAdminPass(e) {
+            if (e) e.preventDefault();
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'Roblox2604Rusla') {
+                isAdmin = true;
+                if (currentUser) {
+                    currentUser.isAdmin = true;
+                    localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+                }
+                activateAdminState();
+                alert('Успешный вход в админ-панель!');
+            } else {
+                alert('Неверный пароль!');
             }
+        }
 
-            const newProduct = {
-                id: Date.now().toString(),
-                title,
-                price,
-                category,
-                image
-            };
+        function activateAdminState() {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            document.getElementById('admin-badge').classList.remove('hidden');
+            loadAdminCaseInputs();
+            loadAdminCasesLogs();
+        }
 
-            localProducts.push(newProduct);
-            loadProducts();
+        function handleLogoutAdmin() {
+            isAdmin = false;
+            if (currentUser) {
+                currentUser.isAdmin = false;
+                localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            }
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-badge').classList.add('hidden');
+            switchTab('adopt');
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
             
-            document.getElementById('new-title').value = '';
-            document.getElementById('new-price').value = '';
-            document.getElementById('new-image').value = '';
-            closeModal('admin-modal');
-            alert("Товар успешно добавлен!");
+            // Список всех секций, которые есть на сайте
+            const allSections = ['shop', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'];
+            
+            // Принудительно скрываем ВСЕ секции, а потом показываем нужную
+            allSections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if (el) {
+                    // Для магазина проверяем совпадение, для остальных — название секции совпадает с табом
+                    if (s === 'shop') {
+                        const isShopTab = (tab === 'adopt' || tab === 'mm2');
+                        el.classList.toggle('hidden', !isShopTab);
+                    } else {
+                        el.classList.toggle('hidden', s !== tab);
+                    }
+                }
+            });
+
+            // Обновляем подсветку кнопок в ПК меню
+            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
+                const btn = document.getElementById('btn-' + t);
+                if (btn) {
+                    btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+                }
+            });
+
+            // Обновляем подсветку в нижнем мобильном баре
+            document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
+            const mBtn = document.getElementById(`m-btn-${tab}`);
+            if (mBtn) mBtn.classList.add('text-indigo-400');
+
+            // Загружаем данные для конкретной вкладки
+            if (tab === 'adopt' || tab === 'mm2') {
+                document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
+                loadProducts();
+            } else if (tab === 'case_adopt') {
+                loadCaseData('adopt');
+                loadUserSpins('adopt');
+            } else if (tab === 'case_mm2') {
+                loadCaseData('mm2');
+                loadUserSpins('mm2');
+            } else if (tab === 'inventory') {
+                loadUserInventory();
+            } else if (tab === 'reviews') {
+                loadReviews();
+            } else if (tab === 'admin' && isAdmin) {
+                loadAdminCasesLogs();
+            }
         }
 
-        // Отзывы
-        function loadReviews() {
-            const container = document.getElementById('reviews-container');
-            container.innerHTML = '';
-            localReviews.forEach(r => {
-                container.innerHTML += `
-                    <div class="review-item">
-                        <div class="review-author">${r.author}</div>
-                        <div style="font-size: 13px; color: #ccc;">${r.text}</div>
-                    </div>
-                `;
+        window.onFirebaseLoaded = function() {
+            loadProducts();
+            loadCaseData('adopt');
+            loadCaseData('mm2');
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
+        };
+
+        function loadProducts() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'products'), (snapshot) => {
+                const grid = document.getElementById('items-grid');
+                const emptyState = document.getElementById('empty-shop-state');
+                const countBadge = document.getElementById('items-count');
+                grid.innerHTML = '';
+                let count = 0;
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        const item = { id: key, ...data[key] };
+                        if (item.category === currentTab) {
+                            count++;
+                            grid.innerHTML += `
+                                <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2">
+                                    <div class="h-24 sm:h-28 bg-slate-900 rounded-lg flex items-center justify-center p-1 border border-slate-700/50">
+                                        <img src="${item.img || 'https://via.placeholder.com/120'}" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    <div class="mt-2 flex flex-col justify-between flex-grow">
+                                        <div>
+                                            <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${item.title}</h3>
+                                            <p class="text-xs sm:text-sm font-extrabold text-emerald-400 my-0.5">${item.price} ₴</p>
+                                        </div>
+                                        <div class="mt-1 pt-1 border-t border-slate-700/40">
+                                            ${isAdmin ? `
+                                                <button onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/20 text-red-400 py-1 rounded text-[10px] font-bold">Удалить</button>
+                                            ` : `
+                                                <button onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 rounded text-xs shadow-md">Купить</button>
+                                            `}
+                                        </div>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+                }
+                countBadge.innerText = `${count} товаров`;
+                emptyState.classList.toggle('hidden', count > 0);
             });
         }
 
-        function addReview() {
-            const author = document.getElementById('review-author-input').value.trim();
-            const text = document.getElementById('review-text-input').value.trim();
+        async function handleSaveProduct(e) {
+            e.preventDefault();
+            const title = document.getElementById('prod-title').value.trim();
+            const price = Number(document.getElementById('prod-price').value);
+            const category = document.getElementById('prod-category').value;
+            const fileInput = document.getElementById('prod-img');
+            let imgData = 'https://via.placeholder.com/120';
+            if (fileInput.files[0]) imgData = await compressImage(fileInput.files[0]);
 
-            if (!author || !text) {
-                alert("Заполните имя и текст отзыва!");
+            if (window.firebaseReady) {
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, 'products'), { title, price, category, img: imgData });
+                alert('Товар добавлен в магазин!');
+                document.getElementById('product-form').reset();
+                switchTab(category);
+            }
+        }
+
+        async function handleDeleteProduct(id) {
+            if (confirm('Удалить товар?')) {
+                const { ref, remove } = window.fb;
+                await remove(ref(window.rtdb, 'products/' + id));
+            }
+        }
+
+        function loadCaseData(cat) {
+            if (!window.firebaseReady) {
+                currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
+                return;
+            }
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'case_' + cat), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    if (data.items && Array.isArray(data.items)) currentCaseItems[cat] = data.items;
+                    else currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                    
+                    currentCasePrices[cat] = data.price !== undefined ? data.price : 50;
+                } else {
+                    currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                    currentCasePrices[cat] = 50;
+                }
+                
+                const priceTag = document.getElementById(`case-${cat}-price-tag`);
+                if (priceTag) priceTag.innerText = `${currentCasePrices[cat]} грн / ₴`;
+                
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
+            });
+        }
+
+        function renderCaseTape(cat) {
+            const tape = document.getElementById(`case-${cat}-tape`);
+            if (!tape) return;
+            tape.innerHTML = '';
+            let extendedItems = [];
+            for (let i = 0; i < 6; i++) {
+                extendedItems = extendedItems.concat(currentCaseItems[cat]);
+            }
+            extendedItems.forEach(item => {
+                tape.innerHTML += `
+                    <div class="flex-shrink-0 w-24 h-28 bg-slate-900 border-2 rounded-xl p-2 flex flex-col items-center justify-between shadow-md rarity-${item.rarity || 'common'}">
+                        <img src="${item.img}" class="w-16 h-14 object-contain filter drop-shadow">
+                        <span class="text-[10px] font-bold text-slate-200 text-center line-clamp-1">${item.name}</span>
+                    </div>`;
+            });
+        }
+
+        function renderCaseShowcase(cat) {
+            const showcase = document.getElementById(`case-${cat}-showcase`);
+            if (!showcase) return;
+            showcase.innerHTML = '';
+            currentCaseItems[cat].forEach(item => {
+                showcase.innerHTML += `
+                    <div class="bg-slate-900/90 border rounded-xl p-2.5 flex flex-col items-center text-center rarity-${item.rarity || 'common'}">
+                        <img src="${item.img}" class="w-14 h-12 object-contain mb-1">
+                        <span class="text-[11px] font-bold text-white line-clamp-1">${item.name}</span>
+                        <span class="text-[10px] text-amber-400 font-semibold mt-0.5">Шанс: ${item.chance || '10%'}</span>
+                    </div>`;
+            });
+        }
+
+        function safeEmailKey(email) { return email.replace(/\./g, '_dot_').replace(/@/g, '_at_'); }
+
+        function loadUserSpins(cat) {
+            if (!window.firebaseReady || !currentUser) return;
+            const key = safeEmailKey(currentUser.email);
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, `user_spins/${key}/${cat}`), (snap) => {
+                const spins = snap.val() || 0;
+                const counter = document.getElementById(`user-spins-${cat}`);
+                if (counter) counter.innerText = `${spins} спинов`;
+            });
+        }
+
+        async function startCaseOpening(cat) {
+            if (isSpinningCase) return;
+            if (!currentUser) {
+                alert('Сначала зарегистрируйтесь!');
+                document.getElementById('auth-modal').classList.remove('hidden');
                 return;
             }
 
-            localReviews.unshift({ author, text });
-            loadReviews();
+            const key = safeEmailKey(currentUser.email);
+            const { ref, get, set, push } = window.fb;
+            const spinsRef = ref(window.rtdb, `user_spins/${key}/${cat}`);
+            const snap = await get(spinsRef);
+            const currentSpins = snap.val() || 0;
 
-            document.getElementById('review-author-input').value = '';
-            document.getElementById('review-text-input').value = '';
-            alert("Спасибо за ваш отзыв!");
+            if (currentSpins <= 0) {
+                alert(`⛔ У вас нет оплаченных попыток!\nЦена открытия: ${currentCasePrices[cat]} грн.\nНапишите в Telegram админу: @TOPTTL для оплаты и получения спинов.`);
+                return;
+            }
+
+            await set(spinsRef, currentSpins - 1);
+            loadUserSpins(cat);
+
+            isSpinningCase = true;
+            const btn = document.getElementById(`btn-open-case-${cat}`);
+            if (btn) btn.disabled = true;
+
+            const itemsList = currentCaseItems[cat];
+            const winningIndex = Math.floor(Math.random() * itemsList.length);
+            const wonItem = itemsList[winningIndex];
+
+            const cardWidth = 108;
+            const targetOffset = (itemsList.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
+
+            const tape = document.getElementById(`case-${cat}-tape`);
+            tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
+            tape.style.transform = `translateX(-${targetOffset}px)`;
+
+            playTickSound();
+
+            setTimeout(async () => {
+                isSpinningCase = false;
+                if (btn) btn.disabled = false;
+
+                await push(ref(window.rtdb, `user_inventory/${key}`), {
+                    name: wonItem.name,
+                    rarity: wonItem.rarity,
+                    img: wonItem.img,
+                    wonAt: new Date().toLocaleString()
+                });
+
+                await push(ref(window.rtdb, 'cases_logs'), {
+                    username: currentUser.username,
+                    email: currentUser.email,
+                    caseType: cat.toUpperCase(),
+                    itemName: wonItem.name,
+                    rarity: wonItem.rarity,
+                    time: new Date().toLocaleTimeString()
+                });
+
+                alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли предмет: ${wonItem.name} (${wonItem.rarity.toUpperCase()})!\nПредмет добавлен в ваш инвентарь.`);
+                
+                tape.style.transition = 'none';
+                tape.style.transform = 'translateX(0px)';
+                loadUserInventory();
+                if (isAdmin) loadAdminCasesLogs();
+            }, 5200);
         }
 
-        function openBuyModal(title, price) {
-            document.getElementById('buy-product-info').innerText = `Вы выбрали: ${title} — ${price} грн`;
-            openModal('buy-modal');
+        function playTickSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let i = 0;
+                const interval = setInterval(() => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600 + i * 20, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                    i++;
+                    if (i > 35) clearInterval(interval);
+                }, 130);
+            } catch(e) {}
         }
+
+        function loadUserInventory() {
+            if (!window.firebaseReady || !currentUser) return;
+            const key = safeEmailKey(currentUser.email);
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, `user_inventory/${key}`), (snap) => {
+                const grid = document.getElementById('inventory-grid');
+                const emptyState = document.getElementById('empty-inventory-state');
+                grid.innerHTML = '';
+                let count = 0;
+
+                const data = snap.val();
+                if (data) {
+                    Object.keys(data).forEach(id => {
+                        const item = { id, ...data[id] };
+                        count++;
+                        grid.innerHTML += `
+                            <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg rarity-${item.rarity || 'common'}">
+                                <img src="${item.img}" class="w-20 h-16 object-contain my-2 filter drop-shadow">
+                                <span class="font-bold text-xs text-white line-clamp-1">${item.name}</span>
+                                <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.rarity || 'common'}</span>
+                                <button onclick="removeInventoryItem('${id}')" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-1 rounded text-[10px] font-bold">Убрать</button>
+                            </div>`;
+                    });
+                }
+                emptyState.classList.toggle('hidden', count > 0);
+            });
+        }
+
+        async function removeInventoryItem(id) {
+            if (confirm('Убрать предмет из инвентаря?')) {
+                const key = safeEmailKey(currentUser.email);
+                const { ref, remove } = window.fb;
+                await remove(ref(window.rtdb, `user_inventory/${key}/${id}`));
+            }
+        }
+
+        async function handleGiveItemToUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('give-item-email').value.trim().toLowerCase();
+            const name = document.getElementById('give-item-name').value.trim();
+            const rarity = document.getElementById('give-item-rarity').value;
+            const fileInput = document.getElementById('give-item-file');
+            const urlInput = document.getElementById('give-item-url').value.trim();
+
+            let imgData = 'https://via.placeholder.com/120';
+            if (fileInput.files[0]) {
+                imgData = await compressImage(fileInput.files[0]);
+            } else if (urlInput) {
+                imgData = urlInput;
+            }
+
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, `user_inventory/${key}`), {
+                    name, rarity, img: imgData, wonAt: new Date().toLocaleString()
+                });
+                alert(`Успешно! Предмет "${name}" выдан игроку ${email} в инвентарь.`);
+                document.getElementById('give-item-email').value = '';
+                document.getElementById('give-item-name').value = '';
+                document.getElementById('give-item-url').value = '';
+                document.getElementById('give-item-file').value = '';
+            }
+        }
+
+        function loadAdminCaseInputs() {
+            const cat = document.getElementById('admin-case-cat').value;
+            
+            if (window.firebaseReady) {
+                const { ref, get } = window.fb;
+                get(ref(window.rtdb, 'case_' + cat)).then(snap => {
+                    const val = snap.val();
+                    const price = (val && val.price !== undefined) ? val.price : 50;
+                    document.getElementById('admin-case-price').value = price;
+                });
+            } else {
+                document.getElementById('admin-case-price').value = currentCasePrices[cat];
+            }
+
+            const container = document.getElementById('admin-case-items-list');
+            container.innerHTML = '';
+            const items = defaultCaseItems[cat];
+
+            items.forEach((item, idx) => {
+                container.innerHTML += `
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-amber-400">Предмет #${idx + 1}</span>
+                            <select id="adm-item-rarity-${idx}" class="text-xs bg-slate-800 text-white p-1 rounded border border-slate-700">
+                                <option value="common" ${item.rarity==='common'?'selected':''}>Common</option>
+                                <option value="rare" ${item.rarity==='rare'?'selected':''}>Rare</option>
+                                <option value="epic" ${item.rarity==='epic'?'selected':''}>Epic</option>
+                                <option value="legendary" ${item.rarity==='legendary'?'selected':''}>Legendary</option>
+                                <option value="godly" ${item.rarity==='godly'?'selected':''}>Godly</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="adm-item-name-${idx}" value="${item.name}" placeholder="Название" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                            <input type="text" id="adm-item-chance-${idx}" value="${item.chance}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                        </div>
+                        <div>
+                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function saveAdminCaseSettings() {
+            const cat = document.getElementById('admin-case-cat').value;
+            const newPrice = Number(document.getElementById('admin-case-price').value) || 50;
+            const newItems = [];
+            
+            for (let i = 0; i < 5; i++) {
+                newItems.push({
+                    name: document.getElementById(`adm-item-name-${i}`).value.trim() || `Скин ${i+1}`,
+                    rarity: document.getElementById(`adm-item-rarity-${i}`).value,
+                    chance: document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%',
+                    img: document.getElementById(`adm-item-img-${i}`).value.trim() || 'https://via.placeholder.com/120'
+                });
+            }
+
+            if (window.firebaseReady) {
+                const { ref, set } = window.fb;
+                await set(ref(window.rtdb, 'case_' + cat), { price: newPrice, items: newItems });
+                alert('Цена и настройки кейса успешно сохранены!');
+                loadCaseData(cat);
+            }
+        }
+
+        async function handleGiveSpinToUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('grant-email').value.trim().toLowerCase();
+            const category = document.getElementById('grant-category').value;
+            const count = Number(document.getElementById('grant-count').value) || 1;
+
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, get, set } = window.fb;
+                const snap = await get(ref(window.rtdb, `user_spins/${key}/${category}`));
+                const current = snap.val() || 0;
+                await set(ref(window.rtdb, `user_spins/${key}/${category}`), current + count);
+                alert(`Успешно выдано ${count} прокрутов для ${email}!`);
+                document.getElementById('grant-email').value = '';
+            }
+        }
+
+        function loadAdminCasesLogs() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'cases_logs'), (snap) => {
+                const container = document.getElementById('admin-cases-logs');
+                container.innerHTML = '';
+                const data = snap.val();
+                if (!data) {
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">История пуста</p>`;
+                    return;
+                }
+                Object.values(data).reverse().forEach(log => {
+                    container.innerHTML += `
+                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-xs flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-indigo-300">${log.username}</span> (${log.email})
+                                <span class="text-slate-400 block text-[10px]">Кейс: ${log.caseType} | Выпало: <strong class="text-amber-400">${log.itemName}</strong></span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">${log.time}</span>
+                        </div>`;
+                });
+            });
+        }
+
+        function compressImage(file, maxWidth = 400, quality = 0.6) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                };
+            });
+        }
+
+        function loadReviews() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'reviews'), (snap) => {
+                const list = document.getElementById('reviews-list');
+                list.innerHTML = '';
+                const data = snap.val();
+                if (!data) { list.innerHTML = `<p class="text-slate-500 text-xs text-center">Отзывов пока нет.</p>`; return; }
+                Object.keys(data).forEach(k => {
+                    const rev = data[k];
+                    list.innerHTML += `
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-xs text-slate-200">${rev.author}</span>
+                                <span class="text-amber-400 text-xs">${'⭐'.repeat(rev.rating)}</span>
+                            </div>
+                            <p class="text-slate-300 text-xs">${rev.text}</p>
+                        </div>`;
+                });
+            });
+        }
+
+        async function handleSaveReview(e) {
+            e.preventDefault();
+            const author = document.getElementById('rev-author').value.trim();
+            const rating = document.getElementById('rev-rating').value;
+            const text = document.getElementById('rev-text').value.trim();
+            if (window.firebaseReady) {
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, 'reviews'), { author, rating, text });
+                alert('Отзыв отправлен!');
+                document.getElementById('rev-text').value = '';
+            }
+        }
+
+        function handleBuyProduct(title) {
+            document.getElementById('modal-product-name').innerText = title;
+            document.getElementById('buy-modal').classList.remove('hidden');
+        }
+        function closeBuyModal() { document.getElementById('buy-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
