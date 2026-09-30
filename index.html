@@ -78,7 +78,7 @@
                 <span id="items-count" class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
             </div>
             
-            <div id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"></div>
+            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5"></div>
 
             <div id="empty-shop-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 my-4">
                 <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
@@ -186,6 +186,30 @@
         </section>
     </main>
 
+    <!-- Модальное окно для покупки через Telegram -->
+    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <div class="w-14 h-14 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-brands fa-telegram"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Оформление покупки</h3>
+            <p class="text-slate-300 text-sm mb-1">Вы хотите купить:</p>
+            <p id="modal-product-name" class="font-semibold text-indigo-400 mb-4 text-base"></p>
+            <p class="text-xs text-slate-400 mb-6 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                Перейдите в профиль <span class="text-sky-400 font-bold">@TOPTTL</span> в Telegram и напишите продавцу название предмета.
+            </p>
+            
+            <div class="flex flex-col gap-2.5">
+                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95">
+                    <i class="fa-brands fa-telegram text-lg"></i> Перейти в Telegram
+                </a>
+                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2.5 rounded-xl transition text-sm active:scale-95">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentTab = 'adopt';
         let isAdmin = false;
@@ -264,23 +288,23 @@
                         if (item.category === currentTab) {
                             count++;
                             grid.innerHTML += `
-                                <div class="bg-slate-800 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg flex flex-col justify-between transition hover:border-slate-600">
-                                    <div class="h-48 sm:h-52 bg-slate-900 overflow-hidden relative flex items-center justify-center">
-                                        <img src="${item.img || 'https://via.placeholder.com/300?text=No+Image'}" class="w-full h-full object-cover">
+                                <div class="bg-slate-800 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg flex flex-col justify-between transition hover:border-slate-600 p-2.5">
+                                    <div class="h-28 sm:h-32 bg-slate-900/80 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-700/40 p-2">
+                                        <img src="${item.img || 'https://via.placeholder.com/150?text=No+Image'}" class="max-h-full max-w-full object-contain filter drop-shadow-md">
                                     </div>
-                                    <div class="p-4 flex flex-col flex-grow justify-between">
+                                    <div class="mt-2.5 flex flex-col flex-grow justify-between">
                                         <div>
-                                            <h3 class="font-bold text-lg text-slate-100 line-clamp-2">${item.title}</h3>
-                                            <p class="text-xl font-extrabold text-emerald-400 my-2">${item.price} <span class="text-sm font-normal">грн / ₴</span></p>
+                                            <h3 class="font-bold text-sm text-slate-100 line-clamp-2">${item.title}</h3>
+                                            <p class="text-base sm:text-lg font-extrabold text-emerald-400 my-1">${item.price} <span class="text-xs font-normal text-slate-400">грн / ₴</span></p>
                                         </div>
-                                        <div class="mt-3 pt-3 border-t border-slate-700/50">
+                                        <div class="mt-2 pt-2 border-t border-slate-700/50">
                                             ${isAdmin ? `
-                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-2 rounded-xl transition text-sm flex items-center justify-center gap-1.5 active:scale-95">
-                                                    <i class="fa-solid fa-trash-can text-xs"></i> Удалить
+                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-1.5 rounded-lg transition text-xs flex items-center justify-center gap-1 active:scale-95">
+                                                    <i class="fa-solid fa-trash-can"></i> Удалить
                                                 </button>
                                             ` : `
-                                                <button type="button" onclick="handleBuyProduct('${item.title}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl transition shadow-md shadow-indigo-600/20 active:scale-95">
-                                                    Купить
+                                                <button type="button" onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl transition text-xs sm:text-sm shadow-md shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-1.5">
+                                                    <i class="fa-solid fa-cart-shopping text-xs"></i> Купить
                                                 </button>
                                             `}
                                         </div>
@@ -295,11 +319,11 @@
                 emptyState.classList.toggle('hidden', count > 0);
             }, (error) => {
                 console.error("Ошибка загрузки товаров:", error);
-                alert("Не удалось загрузить товары. Проверьте правила доступа в Realtime Database: " + error.message);
+                alert("Не удалось загрузить товары: " + error.message);
             });
         }
 
-        function compressImage(file, maxWidth = 600, quality = 0.6) {
+        function compressImage(file, maxWidth = 500, quality = 0.6) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -369,7 +393,7 @@
                 switchTab(category);
             } catch (err) {
                 console.error("Ошибка при сохранении:", err);
-                alert('ОШИБКА СОХРАНЕНИЯ: ' + err.message + '\n\nУбедитесь, что в вкладке Rules (Правила) вашей Realtime Database включен доступ .read: true и .write: true!');
+                alert('ОШИБКА СОХРАНЕНИЯ: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'Опубликовать товар';
@@ -460,7 +484,12 @@
         }
 
         function handleBuyProduct(title) {
-            alert(`Для покупки "${title}" свяжитесь с продавцом!`);
+            document.getElementById('modal-product-name').innerText = title;
+            document.getElementById('buy-modal').classList.remove('hidden');
+        }
+
+        function closeBuyModal() {
+            document.getElementById('buy-modal').classList.add('hidden');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
