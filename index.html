@@ -10,7 +10,7 @@
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyDuotWstgVYf-TLgJzywcqAvprBUBI1fdA",
@@ -28,7 +28,7 @@
         const rtdb = getDatabase(app);
         
         window.rtdb = rtdb;
-        window.fb = { ref, push, onValue, set, remove };
+        window.fb = { ref, push, onValue, set, remove, get };
         window.firebaseReady = true;
         
         if (typeof window.onFirebaseLoaded === 'function') {
@@ -94,28 +94,39 @@
         <!-- Секция Кейсов (Колесо Фортуны) -->
         <section id="cases-section" class="hidden max-w-xl mx-auto text-center space-y-6">
             <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
-                <h2 class="text-xl font-black text-amber-400 mb-2 flex items-center justify-center gap-2">
+                <h2 class="text-xl font-black text-amber-400 mb-1 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-dharmachakra text-2xl animate-spin-slow"></i> Колесо Фортуны
                 </h2>
-                <p class="text-xs text-slate-400 mb-4">Выберите режим, испытай удачу и выигрывай петов!</p>
+                <p class="text-xs text-slate-400 mb-3">Выберите режим и испытайте удачу!</p>
+
+                <!-- Цена и количество доступных прокрутов -->
+                <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-3 mb-4 flex justify-around items-center text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Цена открытия:</span>
+                        <span id="case-price-tag" class="font-extrabold text-amber-400 text-sm">50 грн / ₴</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-700"></div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Ваши попытки:</span>
+                        <span id="user-spins-count" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
+                    </div>
+                </div>
 
                 <!-- Режимы Кейсов -->
-                <div class="flex justify-center gap-2 mb-6">
+                <div class="flex justify-center gap-2 mb-4">
                     <button id="wheel-cat-adopt" onclick="switchWheelCategory('adopt')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95">Adopt Me</button>
                     <button id="wheel-cat-mm2" onclick="switchWheelCategory('mm2')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95">MM2</button>
                 </div>
 
                 <!-- Контейнер Колеса -->
                 <div class="relative w-64 h-64 sm:w-72 sm:h-72 mx-auto my-4 flex items-center justify-center">
-                    <!-- Стрелка-указатель -->
                     <div class="absolute -top-3 z-20 text-amber-400 text-3xl filter drop-shadow">
                         <i class="fa-solid fa-location-pin fa-rotate-180"></i>
                     </div>
-
                     <canvas id="wheel-canvas" width="300" height="300" class="w-full h-full rounded-full border-4 border-amber-500/50 shadow-2xl"></canvas>
                 </div>
 
-                <button id="btn-spin-wheel" onclick="spinWheel()" class="w-full max-w-xs mt-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
+                <button id="btn-spin-wheel" onclick="spinWheel()" class="w-full max-w-xs mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
                     <i class="fa-solid fa-rotate text-xs me-1"></i> Крутить колесо
                 </button>
             </div>
@@ -221,10 +232,10 @@
                     </form>
                 </div>
 
-                <!-- Настройка Колеса Фортуны Админом -->
+                <!-- Настройка Колеса Фортуны и Цены Админом -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
                     <h2 class="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-dharmachakra"></i> Настройка Колеса Фортуны (5 предметов)
+                        <i class="fa-solid fa-dharmachakra"></i> Настройка Колеса и Цены
                     </h2>
                     <div class="space-y-4">
                         <div>
@@ -235,14 +246,49 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена прокрута (грн / ₴)</label>
+                            <input type="number" id="admin-wheel-price" min="0" placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-amber-400 text-sm">
+                        </div>
+
                         <div id="admin-wheel-items-inputs" class="space-y-3">
-                            <!-- Динамически заполняются 5 полей ввода -->
+                            <!-- Динамически заполняются 5 полей предметов -->
                         </div>
 
                         <button type="button" onclick="saveAdminWheelSettings()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm">
-                            Сохранить предметы колеса
+                            Сохранить настройки колеса
                         </button>
                     </div>
+                </div>
+
+                <!-- Выдача Попыток Спина Игроку по Почте -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-lg font-bold text-sky-400 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-ticket"></i> Выдать доступ к Кейсу после оплаты
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-4">Разрешите человеку прокрутить кейс 1 или более раз по его Email</p>
+
+                    <form onsubmit="handleGiveSpinToUser(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Email пользователя</label>
+                            <input type="email" id="grant-email" required placeholder="user@gmail.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-sky-400 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Режим</label>
+                            <select id="grant-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-sky-400 text-sm">
+                                <option value="adopt">Adopt Me</option>
+                                <option value="mm2">MM2</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Количество попыток (прокрутов)</label>
+                            <input type="number" id="grant-count" value="1" min="1" required class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-sky-400 text-sm">
+                        </div>
+
+                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-sky-500/20 active:scale-95 text-sm">
+                            Выдать попытки игроку
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -294,10 +340,19 @@
 
     <!-- Модальное окно Профиля -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg uppercase" id="prof-modal-avatar">U</div>
-            <h3 class="text-lg font-bold text-white" id="prof-modal-username">Пользователь</h3>
-            <p class="text-xs text-slate-400 mb-6" id="prof-modal-email">user@gmail.com</p>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
+            <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto shadow-lg uppercase" id="prof-modal-avatar">U</div>
+            <div>
+                <h3 class="text-lg font-bold text-white" id="prof-modal-username">Пользователь</h3>
+                <p class="text-xs text-slate-400" id="prof-modal-email">user@gmail.com</p>
+            </div>
+
+            <!-- Админ-кнопка внутри Профиля на мобильном -->
+            <div id="profile-admin-block" class="hidden pt-2 border-t border-slate-700">
+                <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 active:scale-95 shadow-md shadow-amber-500/20">
+                    <i class="fa-solid fa-crown"></i> Перейти в Админ-панель
+                </button>
+            </div>
 
             <button type="button" onclick="closeProfileModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs active:scale-95">
                 Закрыть
@@ -336,8 +391,9 @@
         let isAdmin = false;
         let currentUser = null;
         let isSpinning = false;
+        let userSpinsCount = 0;
+        let currentWheelPrice = 50;
 
-        // Элементы Колеса по умолчанию (5 штук)
         let defaultWheelItems = {
             adopt: ["Shadow Dragon", "Frost Dragon", "Bat Dragon", "Giraffe", "Owl"],
             mm2: ["Nikilis Scythe", "Corrupt", "Harvester", "Candy", "Icebreaker"]
@@ -359,6 +415,10 @@
             const savedUser = localStorage.getItem('roblox_shop_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
+                if (currentUser.isAdmin) {
+                    isAdmin = true;
+                    activateAdminState();
+                }
                 updateProfileUI();
             } else {
                 document.getElementById('auth-modal').classList.remove('hidden');
@@ -368,11 +428,11 @@
         function handleRegisterUser(e) {
             e.preventDefault();
             const username = document.getElementById('reg-username').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
 
             if (!username || !email) return;
 
-            currentUser = { username, email };
+            currentUser = { username, email, isAdmin: false };
             localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
             updateProfileUI();
@@ -392,9 +452,16 @@
             document.getElementById('prof-modal-username').innerText = currentUser.username;
             document.getElementById('prof-modal-email').innerText = currentUser.email;
 
+            // Блок админа в профиле
+            if (isAdmin) {
+                document.getElementById('profile-admin-block').classList.remove('hidden');
+            }
+
             // Заполнить имя в форме отзывов
             const revAuthor = document.getElementById('rev-author');
             if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
+
+            loadUserSpins();
         }
 
         function openProfileModal() {
@@ -403,6 +470,45 @@
 
         function closeProfileModal() {
             document.getElementById('profile-modal').classList.add('hidden');
+        }
+
+        // Вход Админа и сохранение статуса
+        function handleCheckAdminPass(e) {
+            if (e) e.preventDefault();
+            const passInput = document.getElementById('admin-pass');
+            if (passInput.value === 'Roblox2604Rusla') {
+                isAdmin = true;
+                if (currentUser) {
+                    currentUser.isAdmin = true;
+                    localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+                }
+                activateAdminState();
+                alert('Вы вошли как администратор! Статус админа сохранён за вашим аккаунтом.');
+            } else {
+                alert('Неверный пароль!');
+            }
+        }
+
+        function activateAdminState() {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            document.getElementById('admin-badge').classList.remove('hidden');
+            document.getElementById('profile-admin-block').classList.remove('hidden');
+            loadAdminWheelInputs();
+        }
+
+        function handleLogoutAdmin() {
+            isAdmin = false;
+            if (currentUser) {
+                currentUser.isAdmin = false;
+                localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            }
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-badge').classList.add('hidden');
+            document.getElementById('profile-admin-block').classList.add('hidden');
+            switchTab('adopt');
         }
 
         // Переключение вкладок
@@ -438,41 +544,18 @@
             } else if (tab === 'reviews') {
                 loadReviews();
             } else if (tab === 'cases') {
-                renderWheel();
+                loadWheelData();
+                loadUserSpins();
             }
-        }
-
-        // Вход Админа
-        function handleCheckAdminPass(e) {
-            if (e) e.preventDefault();
-            const passInput = document.getElementById('admin-pass');
-            if (passInput.value === 'Roblox2604Rusla') {
-                isAdmin = true;
-                document.getElementById('admin-login').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('admin-badge').classList.remove('hidden');
-                loadAdminWheelInputs();
-                alert('Вы вошли как администратор!');
-            } else {
-                alert('Неверный пароль!');
-            }
-        }
-
-        function handleLogoutAdmin() {
-            isAdmin = false;
-            document.getElementById('admin-pass').value = '';
-            document.getElementById('admin-login').classList.remove('hidden');
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('admin-badge').classList.add('hidden');
-            switchTab('adopt');
         }
 
         window.onFirebaseLoaded = function() {
             loadProducts();
             loadWheelData();
+            loadUserSpins();
         };
 
-        // Загрузка товаров из Firebase
+        // Загрузка товаров
         function loadProducts() {
             if (!window.firebaseReady) return;
 
@@ -526,7 +609,6 @@
             });
         }
 
-        // Сохранение товара
         async function handleSaveProduct(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-prod-submit');
@@ -588,12 +670,13 @@
             }
         }
 
-        // Колесо Фортуны & Кейсы
+        // Работа с Кейсами и Колесом
         function switchWheelCategory(cat) {
             wheelCategory = cat;
             document.getElementById('wheel-cat-adopt').className = cat === 'adopt' ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95' : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95';
             document.getElementById('wheel-cat-mm2').className = cat === 'mm2' ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95' : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95';
             loadWheelData();
+            loadUserSpins();
         }
 
         function loadWheelData() {
@@ -606,12 +689,34 @@
             const { ref, onValue } = window.fb;
             onValue(ref(window.rtdb, 'wheel_' + wheelCategory), (snapshot) => {
                 const data = snapshot.val();
-                if (data && Array.isArray(data) && data.length === 5) {
+                if (data && data.items && Array.isArray(data.items) && data.items.length === 5) {
+                    currentWheelItems = data.items;
+                    currentWheelPrice = data.price || 50;
+                } else if (Array.isArray(data)) {
                     currentWheelItems = data;
+                    currentWheelPrice = 50;
                 } else {
                     currentWheelItems = [...defaultWheelItems[wheelCategory]];
+                    currentWheelPrice = 50;
                 }
+                document.getElementById('case-price-tag').innerText = `${currentWheelPrice} грн / ₴`;
                 renderWheel();
+            });
+        }
+
+        function safeEmailKey(email) {
+            return email.replace(/\./g, '_dot_').replace(/@/g, '_at_');
+        }
+
+        function loadUserSpins() {
+            if (!window.firebaseReady || !currentUser || !currentUser.email) return;
+
+            const key = safeEmailKey(currentUser.email);
+            const { ref, onValue } = window.fb;
+            
+            onValue(ref(window.rtdb, `user_spins/${key}/${wheelCategory}`), (snapshot) => {
+                userSpinsCount = snapshot.val() || 0;
+                document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
             });
         }
 
@@ -635,7 +740,6 @@
                 ctx.lineTo(radius, radius);
                 ctx.fill();
 
-                // Текст секторов
                 ctx.save();
                 ctx.translate(radius, radius);
                 ctx.rotate(angle + sectorAngle / 2);
@@ -647,16 +751,31 @@
             }
         }
 
-        function spinWheel() {
+        async function spinWheel() {
             if (isSpinning) return;
+
+            if (userSpinsCount <= 0) {
+                alert(`⚠️ У вас 0 доступных попыток на открывание!\n\nДля покупки прокрута за ${currentWheelPrice} грн напишите администратору в Telegram: @TOPTTL.\nПосле оплаты вам выдадут доступ по вашему Email!`);
+                return;
+            }
+
             isSpinning = true;
             const btn = document.getElementById('btn-spin-wheel');
             btn.disabled = true;
 
+            // Списываем 1 попытку
+            userSpinsCount--;
+            document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
+            
+            if (window.firebaseReady && currentUser && currentUser.email) {
+                const key = safeEmailKey(currentUser.email);
+                const { ref, set } = window.fb;
+                await set(ref(window.rtdb, `user_spins/${key}/${wheelCategory}`), userSpinsCount);
+            }
+
             const canvas = document.getElementById('wheel-canvas');
             const randomSector = Math.floor(Math.random() * 5);
             const sectorDegree = 360 / 5;
-            // Расчет угла для попадания нужного сектора под верхнюю стрелку
             const targetDegree = 360 * 5 + (360 - (randomSector * sectorDegree + sectorDegree / 2));
 
             canvas.style.transform = `rotate(${targetDegree}deg)`;
@@ -665,14 +784,14 @@
                 isSpinning = false;
                 btn.disabled = false;
                 const wonItem = currentWheelItems[randomSector];
-                alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли: ${wonItem}!\n\nНапишите продавцу @TOPTTL в Telegram для получения предмета!`);
+                alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли: ${wonItem}!\n\nСделайте скриншот и напишите продавцу @TOPTTL в Telegram для получения предмета!`);
                 canvas.style.transition = 'none';
                 canvas.style.transform = 'rotate(0deg)';
                 setTimeout(() => { canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)'; }, 50);
             }, 4000);
         }
 
-        // Настройка колеса админом
+        // Настройки админа для колеса и цены
         function loadAdminWheelInputs() {
             const cat = document.getElementById('admin-wheel-cat').value;
             const container = document.getElementById('admin-wheel-items-inputs');
@@ -691,6 +810,7 @@
 
         async function saveAdminWheelSettings() {
             const cat = document.getElementById('admin-wheel-cat').value;
+            const price = Number(document.getElementById('admin-wheel-price').value) || 50;
             const newItems = [];
             for (let i = 0; i < 5; i++) {
                 const val = document.getElementById(`admin-wheel-item-${i}`).value.trim();
@@ -699,9 +819,35 @@
 
             if (window.firebaseReady) {
                 const { ref, set } = window.fb;
-                await set(ref(window.rtdb, 'wheel_' + cat), newItems);
-                alert('Предметы колеса сохранены!');
+                await set(ref(window.rtdb, 'wheel_' + cat), {
+                    items: newItems,
+                    price: price
+                });
+                alert('Настройки колеса и цена успешно сохранены!');
                 loadWheelData();
+            }
+        }
+
+        // Выдача спинов пользователю админом
+        async function handleGiveSpinToUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('grant-email').value.trim().toLowerCase();
+            const category = document.getElementById('grant-category').value;
+            const count = Number(document.getElementById('grant-count').value) || 1;
+
+            if (!email) return;
+
+            if (window.firebaseReady) {
+                const key = safeEmailKey(email);
+                const { ref, get, set } = window.fb;
+                const dbRef = ref(window.rtdb, `user_spins/${key}/${category}`);
+                
+                const snapshot = await get(dbRef);
+                const currentSpins = snapshot.val() || 0;
+                await set(dbRef, currentSpins + count);
+
+                alert(`Успешно выдано ${count} попыток на кейс (${category.toUpperCase()}) для ${email}!`);
+                document.getElementById('grant-email').value = '';
             }
         }
 
