@@ -43,64 +43,64 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
     <header class="bg-slate-800/95 backdrop-blur border-b border-slate-700 sticky top-0 z-50 shadow-md">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="max-w-5xl mx-auto px-3 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-3">
             <div class="flex justify-between items-center w-full sm:w-auto">
-                <h1 class="text-xl font-black text-indigo-400 tracking-wide flex items-center gap-2 cursor-pointer" onclick="switchTab('adopt')">
-                    <i class="fa-solid fa-gamepad text-2xl"></i> Roblox Store
+                <h1 class="text-lg sm:text-xl font-black text-indigo-400 tracking-wide flex items-center gap-2 cursor-pointer" onclick="switchTab('adopt')">
+                    <i class="fa-solid fa-gamepad text-xl sm:text-2xl"></i> Roblox Store
                 </h1>
-                <span id="admin-badge" class="hidden text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold border border-amber-500/30">
+                <span id="admin-badge" class="hidden text-[10px] sm:text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold border border-amber-500/30">
                     <i class="fa-solid fa-crown me-1"></i>Админ
                 </span>
             </div>
             
-            <nav class="flex w-full sm:w-auto gap-1.5 text-xs sm:text-sm font-semibold overflow-x-auto pb-1 sm:pb-0">
-                <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 text-center whitespace-nowrap active:scale-95">
+            <nav class="flex w-full sm:w-auto gap-1.5 text-xs font-semibold overflow-x-auto pb-0.5 sm:pb-0">
+                <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 text-center whitespace-nowrap active:scale-95">
                     Adopt Me
                 </button>
-                <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95">
+                <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95">
                     MM2
                 </button>
-                <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95">
+                <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95">
                     Отзывы
                 </button>
-                <button type="button" onclick="switchTab('admin')" id="btn-admin" class="px-3 py-2.5 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center justify-center gap-1.5 whitespace-nowrap active:scale-95">
-                    <i class="fa-solid fa-lock text-xs"></i><span>Админка</span>
+                <button type="button" onclick="switchTab('admin')" id="btn-admin" class="px-2.5 py-2 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center justify-center gap-1 whitespace-nowrap active:scale-95">
+                    <i class="fa-solid fa-lock text-[10px]"></i><span>Админ</span>
                 </button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
+    <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
         <!-- Секция Магазина -->
         <section id="shop-section">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="section-title" class="text-2xl font-bold text-indigo-300">Adopt Me</h2>
-                <span id="items-count" class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
+            <div class="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
+                <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
             </div>
             
-            <!-- Сетка товаров (3-5 колонок с компактным адаптивным размером) -->
-            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
+            <!-- Сетка: ровно 2 карточки в ряд на мобильном (grid-cols-2), 3-5 на больших экранах -->
+            <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4"></div>
 
             <div id="empty-shop-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 my-4">
                 <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
-                <p class="text-slate-400 font-medium">Товаров в этой категории пока нет</p>
+                <p class="text-slate-400 font-medium text-sm">Товаров в этой категории пока нет</p>
             </div>
         </section>
 
         <!-- Секция Отзывов -->
         <section id="reviews-section" class="hidden max-w-2xl mx-auto space-y-6">
-            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-                <h2 class="text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
+            <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h2 class="text-lg sm:text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-star text-amber-400"></i> Оставить отзыв
                 </h2>
                 <form id="review-form" onsubmit="handleSaveReview(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваше имя / Никнейм</label>
-                        <input type="text" id="rev-author" required placeholder="Например: Player_123" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <input type="text" id="rev-author" required placeholder="Например: Player_123" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Оценка</label>
-                        <select id="rev-rating" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 font-bold focus:outline-none focus:border-indigo-500">
+                        <select id="rev-rating" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 font-bold focus:outline-none focus:border-indigo-500 text-sm">
                             <option value="5">⭐⭐⭐⭐⭐ (5/5) — Отлично!</option>
                             <option value="4">⭐⭐⭐⭐ (4/5) — Хорошо</option>
                             <option value="3">⭐⭐⭐ (3/5) — Нормально</option>
@@ -110,44 +110,44 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваш отзыв</label>
-                        <textarea id="rev-text" required rows="3" placeholder="Напишите впечатления о покупке..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"></textarea>
+                        <textarea id="rev-text" required rows="3" placeholder="Напишите впечатления о покупке..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
                     </div>
-                    <button type="submit" id="btn-review-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-3.5 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-95">
+                    <button type="submit" id="btn-review-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-3 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-95 text-sm">
                         Отправить отзыв
                     </button>
                 </form>
             </div>
 
-            <div class="space-y-4">
-                <h3 class="text-lg font-bold text-slate-200">Все отзывы</h3>
-                <div id="reviews-list" class="space-y-3"></div>
+            <div class="space-y-3">
+                <h3 class="text-base sm:text-lg font-bold text-slate-200">Все отзывы</h3>
+                <div id="reviews-list" class="space-y-2.5"></div>
             </div>
         </section>
 
         <!-- Секция Админ-панели -->
         <section id="admin-section" class="hidden">
-            <div id="admin-login" class="max-w-md mx-auto bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
+            <div id="admin-login" class="max-w-md mx-auto bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
                 <div class="text-center mb-6">
-                    <div class="w-14 h-14 bg-amber-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-amber-400 text-2xl">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-amber-400 text-xl">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
-                    <h2 class="text-xl font-bold text-slate-100">Панель Администратора</h2>
+                    <h2 class="text-lg font-bold text-slate-100">Панель Администратора</h2>
                     <p class="text-xs text-slate-400 mt-1">Введите пароль для выкладывания товаров</p>
                 </div>
                 
                 <form id="login-form" onsubmit="handleCheckAdminPass(event)" class="space-y-4">
                     <div>
-                        <input type="password" id="admin-pass" autocomplete="current-password" placeholder="Пароль администратора..." required class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-amber-400 text-white placeholder-slate-500">
+                        <input type="password" id="admin-pass" autocomplete="current-password" placeholder="Пароль администратора..." required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-amber-400 text-white placeholder-slate-500 text-sm">
                     </div>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold p-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95">
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm">
                         Войти в панель
                     </button>
                 </form>
             </div>
 
-            <div id="admin-panel" class="hidden max-w-lg mx-auto bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-700">
-                    <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+            <div id="admin-panel" class="hidden max-w-lg mx-auto bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
+                <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-700">
+                    <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-plus-circle"></i> Опубликовать товар
                     </h2>
                     <button type="button" onclick="handleLogoutAdmin()" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg active:scale-95">
@@ -155,31 +155,31 @@
                     </button>
                 </div>
 
-                <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-4">
+                <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-3.5">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Выберите вкладку</label>
-                        <select id="prod-category" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Выберите вкладку</label>
+                        <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500 text-sm">
                             <option value="adopt">Adopt Me</option>
                             <option value="mm2">MM2</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Название товара</label>
-                        <input type="text" id="prod-title" required placeholder="Например: Fly Ride Frost Dragon" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара</label>
+                        <input type="text" id="prod-title" required placeholder="Например: Fly Ride Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Цена (в грн / ₴)</label>
-                        <input type="number" id="prod-price" min="1" step="any" required placeholder="150" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена (в грн / ₴)</label>
+                        <input type="number" id="prod-price" min="1" step="any" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Фотография из галереи</label>
-                        <input type="file" id="prod-img" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer bg-slate-900 p-2 rounded-xl border border-slate-700">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография из галереи</label>
+                        <input type="file" id="prod-img" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer bg-slate-900 p-1.5 rounded-xl border border-slate-700">
                     </div>
 
-                    <button type="submit" id="btn-prod-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3.5 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-95 mt-2">
+                    <button type="submit" id="btn-prod-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-95 mt-2 text-sm">
                         Опубликовать товар
                     </button>
                 </form>
@@ -187,26 +187,25 @@
         </section>
     </main>
 
-    <!-- Окно Покупки (Показывается при клике на Купить) -->
-    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <div class="w-14 h-14 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+    <!-- Окно Покупки -->
+    <div id="buy-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-5 sm:p-6 text-center shadow-2xl relative">
+            <div class="w-12 h-12 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl">
                 <i class="fa-brands fa-telegram"></i>
             </div>
             
-            <h3 class="text-xl font-bold text-white mb-2">Покупка товара</h3>
-            <p id="modal-product-name" class="font-bold text-indigo-400 mb-3 text-base"></p>
+            <h3 class="text-lg sm:text-xl font-bold text-white mb-1.5">Покупка товара</h3>
+            <p id="modal-product-name" class="font-bold text-indigo-400 mb-3 text-sm sm:text-base line-clamp-2"></p>
             
-            <!-- Основное сообщение по вашему запросу -->
-            <p class="text-sm text-slate-200 mb-6 bg-slate-900/70 p-3.5 rounded-xl border border-slate-700/60 leading-relaxed font-medium">
+            <p class="text-xs sm:text-sm text-slate-200 mb-5 bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 font-medium">
                 Напишите мне в телеграм по поводу покупки
             </p>
             
-            <div class="flex flex-col gap-2.5">
-                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95 text-sm">
-                    <i class="fa-brands fa-telegram text-lg"></i> Перейти в мой Telegram
+            <div class="flex flex-col gap-2">
+                <a id="modal-tg-link" href="https://t.me/TOPTTL" target="_blank" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95 text-xs sm:text-sm">
+                    <i class="fa-brands fa-telegram text-base"></i> Перейти в мой Telegram
                 </a>
-                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2.5 rounded-xl transition text-xs active:scale-95">
+                <button type="button" onclick="closeBuyModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2 rounded-xl transition text-xs active:scale-95">
                     Закрыть
                 </button>
             </div>
@@ -224,8 +223,8 @@
             const btnMm2 = document.getElementById('btn-mm2');
             const btnReviews = document.getElementById('btn-reviews');
 
-            const activeStyle = 'flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 text-center whitespace-nowrap active:scale-95';
-            const inactiveStyle = 'flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95';
+            const activeStyle = 'flex-1 sm:flex-initial px-3 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 text-center whitespace-nowrap active:scale-95';
+            const inactiveStyle = 'flex-1 sm:flex-initial px-3 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 text-center whitespace-nowrap active:scale-95';
 
             btnAdopt.className = tab === 'adopt' ? activeStyle : inactiveStyle;
             btnMm2.className = tab === 'mm2' ? activeStyle : inactiveStyle;
@@ -291,24 +290,24 @@
                         if (item.category === currentTab) {
                             count++;
                             grid.innerHTML += `
-                                <div class="bg-slate-800 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg flex flex-col justify-between transition hover:border-slate-600 p-2 sm:p-2.5">
-                                    <!-- Уменьшенный блок карточки иконки -->
-                                    <div class="h-24 sm:h-28 bg-slate-900/90 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-700/50 p-1.5">
+                                <div class="bg-slate-800 rounded-xl border border-slate-700/80 overflow-hidden shadow-md flex flex-col justify-between transition hover:border-slate-600 p-2">
+                                    <!-- Компактный контейнер под картинку пета: h-20 для телефонов -->
+                                    <div class="h-20 sm:h-28 bg-slate-900/90 rounded-lg overflow-hidden relative flex items-center justify-center border border-slate-700/50 p-1">
                                         <img src="${item.img || 'https://via.placeholder.com/120?text=No+Image'}" class="max-h-full max-w-full object-contain filter drop-shadow">
                                     </div>
-                                    <div class="mt-2 flex flex-col flex-grow justify-between">
+                                    <div class="mt-1.5 flex flex-col flex-grow justify-between">
                                         <div>
-                                            <h3 class="font-bold text-xs sm:text-sm text-slate-100 line-clamp-2 leading-tight">${item.title}</h3>
-                                            <p class="text-sm sm:text-base font-extrabold text-emerald-400 my-1">${item.price} <span class="text-[10px] sm:text-xs font-normal text-slate-400">грн / ₴</span></p>
+                                            <h3 class="font-bold text-xs text-slate-100 line-clamp-2 leading-tight">${item.title}</h3>
+                                            <p class="text-xs sm:text-sm font-extrabold text-emerald-400 my-0.5">${item.price} <span class="text-[9px] sm:text-[10px] font-normal text-slate-400">грн / ₴</span></p>
                                         </div>
-                                        <div class="mt-1.5 pt-1.5 border-t border-slate-700/50">
+                                        <div class="mt-1 pt-1 border-t border-slate-700/40">
                                             ${isAdmin ? `
-                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-1 rounded-lg transition text-xs flex items-center justify-center gap-1 active:scale-95">
+                                                <button type="button" onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-semibold py-1 rounded-lg transition text-[10px] sm:text-xs flex items-center justify-center gap-1 active:scale-95">
                                                     <i class="fa-solid fa-trash-can"></i> Удалить
                                                 </button>
                                             ` : `
-                                                <button type="button" onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 rounded-lg transition text-xs shadow-md shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-1">
-                                                    <i class="fa-solid fa-cart-shopping text-[10px]"></i> Купить
+                                                <button type="button" onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 sm:py-1.5 rounded-lg transition text-[11px] sm:text-xs shadow-md shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-1">
+                                                    <i class="fa-solid fa-cart-shopping text-[9px]"></i> Купить
                                                 </button>
                                             `}
                                         </div>
@@ -427,7 +426,7 @@
 
                 const data = snapshot.val();
                 if (!data) {
-                    list.innerHTML = `<p class="text-slate-500 text-sm text-center py-4">Отзывов пока нет. Будьте первым!</p>`;
+                    list.innerHTML = `<p class="text-slate-500 text-xs sm:text-sm text-center py-4">Отзывов пока нет. Будьте первым!</p>`;
                     return;
                 }
 
@@ -435,16 +434,16 @@
                     const rev = { id: key, ...data[key] };
                     const stars = '⭐'.repeat(Number(rev.rating) || 5);
                     list.innerHTML += `
-                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/60 flex justify-between items-start gap-3">
+                        <div class="bg-slate-800/80 p-3 sm:p-4 rounded-xl border border-slate-700/60 flex justify-between items-start gap-3">
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-slate-200">${rev.author}</span>
-                                    <span class="text-xs text-amber-400">${stars}</span>
+                                    <span class="font-bold text-xs sm:text-sm text-slate-200">${rev.author}</span>
+                                    <span class="text-[10px] sm:text-xs text-amber-400">${stars}</span>
                                 </div>
-                                <p class="text-slate-300 text-sm">${rev.text}</p>
+                                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">${rev.text}</p>
                             </div>
                             ${isAdmin ? `
-                                <button type="button" onclick="handleDeleteReview('${rev.id}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded bg-red-500/10">Удалить</button>
+                                <button type="button" onclick="handleDeleteReview('${rev.id}')" class="text-red-400 hover:text-red-300 text-[10px] sm:text-xs px-2 py-1 rounded bg-red-500/10">Удалить</button>
                             ` : ''}
                         </div>
                     `;
