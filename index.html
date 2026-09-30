@@ -153,7 +153,7 @@
             </div>
         </section>
 
-        <!-- Секция Инвентаря Игрока (БЕЗ стоимости) -->
+        <!-- Секция Инвентаря Игрока -->
         <section id="inventory-section" class="hidden max-w-4xl mx-auto space-y-4">
             <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex justify-between items-center">
                 <div>
@@ -303,22 +303,30 @@
                     </form>
                 </div>
 
-                <!-- Настройка Кейсов и Фото -->
+                <!-- Настройка Цены и Содержимого Кейсов -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
                     <h2 class="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-box-archive"></i> Настройка Кейсов и Фото
+                        <i class="fa-solid fa-box-archive"></i> Настройка Цены и Кейсов
                     </h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Кейс</label>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Выбрать кейс</label>
                             <select id="admin-case-cat" onchange="loadAdminCaseInputs()" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                                 <option value="adopt">Adopt Me Кейс</option>
                                 <option value="mm2">MM2 Кейс</option>
                             </select>
                         </div>
+
+                        <!-- Поле изменения цены кейса -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена открытия кейса (грн / ₴)</label>
+                            <input type="number" id="admin-case-price" min="1" required placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-amber-500/50 text-amber-400 font-bold text-sm">
+                        </div>
+
                         <div id="admin-case-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
+                        
                         <button type="button" onclick="saveAdminCaseSettings()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
-                            Сохранить кейс и фотографии
+                            Сохранить цену и настройки кейса
                         </button>
                     </div>
                 </div>
@@ -361,7 +369,7 @@
         </section>
     </main>
 
-    <!-- Нижняя мобильная навигационная панель (с Отзывами вместо админки) -->
+    <!-- Нижняя мобильная навигационная панель -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
         <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
             <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
@@ -404,7 +412,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно Профиля (с кнопкой Админ-панели внутри) -->
+    <!-- Модальное окно Профиля -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
             <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto uppercase" id="prof-modal-avatar">U</div>
@@ -680,9 +688,11 @@
             const { ref, onValue } = window.fb;
             onValue(ref(window.rtdb, 'case_' + caseCategory), (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.items && Array.isArray(data.items)) {
-                    currentCaseItems = data.items;
-                    currentCasePrice = data.price || 50;
+                if (data) {
+                    if (data.items && Array.isArray(data.items)) currentCaseItems = data.items;
+                    else currentCaseItems = [...defaultCaseItems[caseCategory]];
+                    
+                    currentCasePrice = data.price !== undefined ? data.price : 50;
                 } else {
                     currentCaseItems = [...defaultCaseItems[caseCategory]];
                     currentCasePrice = 50;
@@ -823,7 +833,6 @@
             } catch(e) {}
         }
 
-        // Инвентарь (БЕЗ стоимости)
         function loadUserInventory() {
             if (!window.firebaseReady || !currentUser) return;
             const key = safeEmailKey(currentUser.email);
@@ -860,7 +869,6 @@
             }
         }
 
-        // Выдача вещи в инвентарь игроку из админки
         async function handleGiveItemToUser(e) {
             e.preventDefault();
             const email = document.getElementById('give-item-email').value.trim().toLowerCase();
@@ -892,6 +900,19 @@
 
         function loadAdminCaseInputs() {
             const cat = document.getElementById('admin-case-cat').value;
+            
+            // Подгружаем актуальную цену в поле ввода админки
+            if (window.firebaseReady) {
+                const { ref, get } = window.fb;
+                get(ref(window.rtdb, 'case_' + cat)).then(snap => {
+                    const val = snap.val();
+                    const price = (val && val.price !== undefined) ? val.price : 50;
+                    document.getElementById('admin-case-price').value = price;
+                });
+            } else {
+                document.getElementById('admin-case-price').value = currentCasePrice;
+            }
+
             const container = document.getElementById('admin-case-items-list');
             container.innerHTML = '';
             const items = defaultCaseItems[cat];
@@ -922,7 +943,9 @@
 
         async function saveAdminCaseSettings() {
             const cat = document.getElementById('admin-case-cat').value;
+            const newPrice = Number(document.getElementById('admin-case-price').value) || 50;
             const newItems = [];
+            
             for (let i = 0; i < 5; i++) {
                 newItems.push({
                     name: document.getElementById(`adm-item-name-${i}`).value.trim() || `Скин ${i+1}`,
@@ -934,8 +957,8 @@
 
             if (window.firebaseReady) {
                 const { ref, set } = window.fb;
-                await set(ref(window.rtdb, 'case_' + cat), { price: 50, items: newItems });
-                alert('Кейс и фотографии успешно сохранены!');
+                await set(ref(window.rtdb, 'case_' + cat), { price: newPrice, items: newItems });
+                alert('Цена и настройки кейса успешно сохранены!');
                 loadCaseData();
             }
         }
