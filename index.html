@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Roblox Store — MM2 & Adopt Me Кейсы</title>
+    <title>Roblox Store — Adopt Me, MM2 & Кейсы</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -71,7 +71,8 @@
             <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
                 <button type="button" onclick="switchTab('adopt')" id="btn-adopt" class="px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95">Adopt Me</button>
                 <button type="button" onclick="switchTab('mm2')" id="btn-mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">MM2</button>
-                <button type="button" onclick="switchTab('cases')" id="btn-cases" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Кейсы</button>
+                <button type="button" onclick="switchTab('case_adopt')" id="btn-case_adopt" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-amber-400"></i> Кейс Adopt Me</button>
+                <button type="button" onclick="switchTab('case_mm2')" id="btn-case_mm2" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95 flex items-center gap-1.5"><i class="fa-solid fa-box-open text-red-400"></i> Кейс MM2</button>
                 <button type="button" onclick="switchTab('inventory')" id="btn-inventory" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95"><i class="fa-solid fa-backpack text-sky-400"></i> Инвентарь</button>
                 <button type="button" onclick="switchTab('reviews')" id="btn-reviews" class="px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95">Отзывы</button>
                 <button type="button" onclick="switchTab('admin')" id="btn-admin" class="px-3.5 py-2 rounded-xl transition bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-1 whitespace-nowrap active:scale-95"><i class="fa-solid fa-lock text-[10px]"></i> Admin</button>
@@ -101,30 +102,24 @@
             </div>
         </section>
 
-        <!-- Секция Кейсов в стиле MM2 -->
-        <section id="cases-section" class="hidden max-w-2xl mx-auto space-y-6">
+        <!-- Секция Кейса Adopt Me -->
+        <section id="case_adopt-section" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
                 <h2 class="text-xl font-black text-amber-400 mb-1 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-box-open text-2xl"></i> Открытие Кейсов
+                    <i class="fa-solid fa-box-open text-2xl"></i> Кейс Adopt Me
                 </h2>
-                <p class="text-xs text-slate-400 mb-4">Испытай удачу и выиграй крутой скин!</p>
-
-                <!-- Выбор режима кейса -->
-                <div class="flex justify-center gap-2 mb-6">
-                    <button id="case-cat-adopt" onclick="switchCaseCategory('adopt')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95">Adopt Me Кейс</button>
-                    <button id="case-cat-mm2" onclick="switchCaseCategory('mm2')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95">MM2 Кейс</button>
-                </div>
+                <p class="text-xs text-slate-400 mb-4">Испытай удачу и выиграй питомца из Adopt Me!</p>
 
                 <!-- Баланс спинов и цена -->
                 <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-3 mb-6 flex justify-around items-center text-xs">
                     <div>
                         <span class="text-slate-400 block text-[10px]">Цена открытия:</span>
-                        <span id="case-price-tag" class="font-extrabold text-amber-400 text-sm">50 грн / ₴</span>
+                        <span id="case-adopt-price-tag" class="font-extrabold text-amber-400 text-sm">50 грн / ₴</span>
                     </div>
                     <div class="h-6 w-px bg-slate-700"></div>
                     <div>
                         <span class="text-slate-400 block text-[10px]">Ваши попытки:</span>
-                        <span id="user-spins-count" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
+                        <span id="user-spins-adopt" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
                     </div>
                 </div>
 
@@ -135,21 +130,67 @@
                     <div class="absolute bottom-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▲</div>
 
                     <div class="case-tape-container overflow-hidden w-full py-2">
-                        <div id="case-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
+                        <div id="case-adopt-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
                     </div>
                 </div>
 
-                <button id="btn-open-case" onclick="startCaseOpening()" class="w-full max-w-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
-                    <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс
+                <button id="btn-open-case-adopt" onclick="startCaseOpening('adopt')" class="w-full max-w-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 text-sm uppercase tracking-wider">
+                    <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс Adopt Me
                 </button>
             </div>
 
             <!-- ШОУКЕЙС -->
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <h3 class="text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть из кейса:
+                    <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть:
                 </h3>
-                <div id="case-loot-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+                <div id="case-adopt-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+            </div>
+        </section>
+
+        <!-- Секция Кейса MM2 -->
+        <section id="case_mm2-section" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
+                <h2 class="text-xl font-black text-red-400 mb-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-box-open text-2xl"></i> Кейс MM2
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">Испытай удачу и выиграй крутой нож или ган из MM2!</p>
+
+                <!-- Баланс спинов и цена -->
+                <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-3 mb-6 flex justify-around items-center text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Цена открытия:</span>
+                        <span id="case-mm2-price-tag" class="font-extrabold text-red-400 text-sm">50 грн / ₴</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-700"></div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Ваши попытки:</span>
+                        <span id="user-spins-mm2" class="font-extrabold text-emerald-400 text-sm">0 спинов</span>
+                    </div>
+                </div>
+
+                <!-- РУЛЕТКА -->
+                <div class="relative w-full bg-slate-950 rounded-2xl border-2 border-red-500/50 p-4 mb-6 overflow-hidden shadow-inner">
+                    <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-red-500 z-30 shadow-[0_0_10px_#ef4444]"></div>
+                    <div class="absolute top-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▼</div>
+                    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 text-red-500 text-xs z-30 filter drop-shadow">▲</div>
+
+                    <div class="case-tape-container overflow-hidden w-full py-2">
+                        <div id="case-mm2-tape" class="flex gap-3 items-center" style="transform: translateX(0px);"></div>
+                    </div>
+                </div>
+
+                <button id="btn-open-case-mm2" onclick="startCaseOpening('mm2')" class="w-full max-w-sm bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg shadow-red-500/20 active:scale-95 text-sm uppercase tracking-wider">
+                    <i class="fa-solid fa-play text-xs me-1"></i> Открыть кейс MM2
+                </button>
+            </div>
+
+            <!-- ШОУКЕЙС -->
+            <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-indigo-400"></i> Что может выпасть:
+                </h3>
+                <div id="case-mm2-showcase" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
             </div>
         </section>
 
@@ -312,8 +353,8 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Выбрать кейс</label>
                             <select id="admin-case-cat" onchange="loadAdminCaseInputs()" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
-                                <option value="adopt">Adopt Me Кейс</option>
-                                <option value="mm2">MM2 Кейс</option>
+                                <option value="adopt">Кейс Adopt Me</option>
+                                <option value="mm2">Кейс MM2</option>
                             </select>
                         </div>
 
@@ -344,8 +385,8 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Кейс</label>
                             <select id="grant-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
-                                <option value="adopt">Adopt Me</option>
-                                <option value="mm2">MM2</option>
+                                <option value="adopt">Кейс Adopt Me</option>
+                                <option value="mm2">Кейс MM2</option>
                             </select>
                         </div>
                         <div>
@@ -377,14 +418,14 @@
         <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-gun text-base"></i><span>MM2</span>
         </button>
-        <button onclick="switchTab('cases')" id="m-btn-cases" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-box-open text-base"></i><span>Кейсы</span>
+        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-box-open text-base text-amber-400"></i><span>Кейс Am</span>
+        </button>
+        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="flex flex-col items-center gap-0.5">
+            <i class="fa-solid fa-box-open text-base text-red-400"></i><span>Кейс MM2</span>
         </button>
         <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-backpack text-base"></i><span>Инвентарь</span>
-        </button>
-        <button onclick="switchTab('reviews')" id="m-btn-reviews" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-star text-base"></i><span>Отзывы</span>
+            <i class="fa-solid fa-backpack text-base"></i><span>Инв.</span>
         </button>
         <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
             <i class="fa-solid fa-user-gear text-base"></i><span>Профиль</span>
@@ -451,12 +492,9 @@
 
     <script>
         let currentTab = 'adopt';
-        let caseCategory = 'adopt';
         let isAdmin = false;
         let currentUser = null;
         let isSpinningCase = false;
-        let userSpinsCount = 0;
-        let currentCasePrice = 50;
 
         let defaultCaseItems = {
             adopt: [
@@ -474,15 +512,27 @@
                 { name: "Seer", rarity: "rare", chance: "50%", img: "https://via.placeholder.com/120/3b82f6/ffffff?text=Seer" }
             ]
         };
-        let currentCaseItems = [...defaultCaseItems.adopt];
+        
+        let currentCaseItems = {
+            adopt: [...defaultCaseItems.adopt],
+            mm2: [...defaultCaseItems.mm2]
+        };
+        
+        let currentCasePrices = {
+            adopt: 50,
+            mm2: 50
+        };
 
         window.addEventListener('DOMContentLoaded', () => {
             checkUserAuth();
-            renderCaseTape();
-            renderCaseShowcase();
+            renderCaseTape('adopt');
+            renderCaseShowcase('adopt');
+            renderCaseTape('mm2');
+            renderCaseShowcase('mm2');
             if (window.firebaseReady) {
                 loadProducts();
-                loadCaseData();
+                loadCaseData('adopt');
+                loadCaseData('mm2');
             }
         });
 
@@ -526,7 +576,8 @@
             const revAuthor = document.getElementById('rev-author');
             if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
 
-            loadUserSpins();
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
             loadUserInventory();
         }
 
@@ -571,7 +622,7 @@
 
         function switchTab(tab) {
             currentTab = tab;
-            ['adopt', 'mm2', 'cases', 'inventory', 'reviews', 'admin'].forEach(t => {
+            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
                 const el = document.getElementById(t + '-section');
                 if (el) el.classList.toggle('hidden', t !== tab);
                 const btn = document.getElementById('btn-' + t);
@@ -585,9 +636,12 @@
             if (tab === 'adopt' || tab === 'mm2') {
                 document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
                 loadProducts();
-            } else if (tab === 'cases') {
-                loadCaseData();
-                loadUserSpins();
+            } else if (tab === 'case_adopt') {
+                loadCaseData('adopt');
+                loadUserSpins('adopt');
+            } else if (tab === 'case_mm2') {
+                loadCaseData('mm2');
+                loadUserSpins('mm2');
             } else if (tab === 'inventory') {
                 loadUserInventory();
             } else if (tab === 'reviews') {
@@ -599,8 +653,10 @@
 
         window.onFirebaseLoaded = function() {
             loadProducts();
-            loadCaseData();
-            loadUserSpins();
+            loadCaseData('adopt');
+            loadCaseData('mm2');
+            loadUserSpins('adopt');
+            loadUserSpins('mm2');
         };
 
         function loadProducts() {
@@ -670,45 +726,41 @@
             }
         }
 
-        function switchCaseCategory(cat) {
-            caseCategory = cat;
-            document.getElementById('case-cat-adopt').className = cat === 'adopt' ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95' : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95';
-            document.getElementById('case-cat-mm2').className = cat === 'mm2' ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-amber-500 text-slate-950 shadow-md active:scale-95' : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95';
-            loadCaseData();
-            loadUserSpins();
-        }
-
-        function loadCaseData() {
+        function loadCaseData(cat) {
             if (!window.firebaseReady) {
-                currentCaseItems = [...defaultCaseItems[caseCategory]];
-                renderCaseTape();
-                renderCaseShowcase();
+                currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
                 return;
             }
             const { ref, onValue } = window.fb;
-            onValue(ref(window.rtdb, 'case_' + caseCategory), (snapshot) => {
+            onValue(ref(window.rtdb, 'case_' + cat), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    if (data.items && Array.isArray(data.items)) currentCaseItems = data.items;
-                    else currentCaseItems = [...defaultCaseItems[caseCategory]];
+                    if (data.items && Array.isArray(data.items)) currentCaseItems[cat] = data.items;
+                    else currentCaseItems[cat] = [...defaultCaseItems[cat]];
                     
-                    currentCasePrice = data.price !== undefined ? data.price : 50;
+                    currentCasePrices[cat] = data.price !== undefined ? data.price : 50;
                 } else {
-                    currentCaseItems = [...defaultCaseItems[caseCategory]];
-                    currentCasePrice = 50;
+                    currentCaseItems[cat] = [...defaultCaseItems[cat]];
+                    currentCasePrices[cat] = 50;
                 }
-                document.getElementById('case-price-tag').innerText = `${currentCasePrice} грн / ₴`;
-                renderCaseTape();
-                renderCaseShowcase();
+                
+                const priceTag = document.getElementById(`case-${cat}-price-tag`);
+                if (priceTag) priceTag.innerText = `${currentCasePrices[cat]} грн / ₴`;
+                
+                renderCaseTape(cat);
+                renderCaseShowcase(cat);
             });
         }
 
-        function renderCaseTape() {
-            const tape = document.getElementById('case-tape');
+        function renderCaseTape(cat) {
+            const tape = document.getElementById(`case-${cat}-tape`);
+            if (!tape) return;
             tape.innerHTML = '';
             let extendedItems = [];
             for (let i = 0; i < 6; i++) {
-                extendedItems = extendedItems.concat(currentCaseItems);
+                extendedItems = extendedItems.concat(currentCaseItems[cat]);
             }
             extendedItems.forEach(item => {
                 tape.innerHTML += `
@@ -719,10 +771,11 @@
             });
         }
 
-        function renderCaseShowcase() {
-            const showcase = document.getElementById('case-loot-showcase');
+        function renderCaseShowcase(cat) {
+            const showcase = document.getElementById(`case-${cat}-showcase`);
+            if (!showcase) return;
             showcase.innerHTML = '';
-            currentCaseItems.forEach(item => {
+            currentCaseItems[cat].forEach(item => {
                 showcase.innerHTML += `
                     <div class="bg-slate-900/90 border rounded-xl p-2.5 flex flex-col items-center text-center rarity-${item.rarity || 'common'}">
                         <img src="${item.img}" class="w-14 h-12 object-contain mb-1">
@@ -734,17 +787,18 @@
 
         function safeEmailKey(email) { return email.replace(/\./g, '_dot_').replace(/@/g, '_at_'); }
 
-        function loadUserSpins() {
+        function loadUserSpins(cat) {
             if (!window.firebaseReady || !currentUser) return;
             const key = safeEmailKey(currentUser.email);
             const { ref, onValue } = window.fb;
-            onValue(ref(window.rtdb, `user_spins/${key}/${caseCategory}`), (snap) => {
-                userSpinsCount = snap.val() || 0;
-                document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
+            onValue(ref(window.rtdb, `user_spins/${key}/${cat}`), (snap) => {
+                const spins = snap.val() || 0;
+                const counter = document.getElementById(`user-spins-${cat}`);
+                if (counter) counter.innerText = `${spins} спинов`;
             });
         }
 
-        async function startCaseOpening() {
+        async function startCaseOpening(cat) {
             if (isSpinningCase) return;
             if (!currentUser) {
                 alert('Сначала зарегистрируйтесь!');
@@ -754,30 +808,30 @@
 
             const key = safeEmailKey(currentUser.email);
             const { ref, get, set, push } = window.fb;
-            const spinsRef = ref(window.rtdb, `user_spins/${key}/${caseCategory}`);
+            const spinsRef = ref(window.rtdb, `user_spins/${key}/${cat}`);
             const snap = await get(spinsRef);
             const currentSpins = snap.val() || 0;
 
             if (currentSpins <= 0) {
-                alert(`⛔ У вас нет оплаченных попыток!\nЦена открытия: ${currentCasePrice} грн.\nНапишите в Telegram админу: @TOPTTL для оплаты и получения спинов.`);
+                alert(`⛔ У вас нет оплаченных попыток!\nЦена открытия: ${currentCasePrices[cat]} грн.\nНапишите в Telegram админу: @TOPTTL для оплаты и получения спинов.`);
                 return;
             }
 
             await set(spinsRef, currentSpins - 1);
-            userSpinsCount = currentSpins - 1;
-            document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
+            loadUserSpins(cat);
 
             isSpinningCase = true;
-            const btn = document.getElementById('btn-open-case');
-            btn.disabled = true;
+            const btn = document.getElementById(`btn-open-case-${cat}`);
+            if (btn) btn.disabled = true;
 
-            const winningIndex = Math.floor(Math.random() * currentCaseItems.length);
-            const wonItem = currentCaseItems[winningIndex];
+            const itemsList = currentCaseItems[cat];
+            const winningIndex = Math.floor(Math.random() * itemsList.length);
+            const wonItem = itemsList[winningIndex];
 
             const cardWidth = 108;
-            const targetOffset = (currentCaseItems.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
+            const targetOffset = (itemsList.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
 
-            const tape = document.getElementById('case-tape');
+            const tape = document.getElementById(`case-${cat}-tape`);
             tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
             tape.style.transform = `translateX(-${targetOffset}px)`;
 
@@ -785,7 +839,7 @@
 
             setTimeout(async () => {
                 isSpinningCase = false;
-                btn.disabled = false;
+                if (btn) btn.disabled = false;
 
                 await push(ref(window.rtdb, `user_inventory/${key}`), {
                     name: wonItem.name,
@@ -797,7 +851,7 @@
                 await push(ref(window.rtdb, 'cases_logs'), {
                     username: currentUser.username,
                     email: currentUser.email,
-                    caseType: caseCategory.toUpperCase(),
+                    caseType: cat.toUpperCase(),
                     itemName: wonItem.name,
                     rarity: wonItem.rarity,
                     time: new Date().toLocaleTimeString()
@@ -901,7 +955,6 @@
         function loadAdminCaseInputs() {
             const cat = document.getElementById('admin-case-cat').value;
             
-            // Подгружаем актуальную цену в поле ввода админки
             if (window.firebaseReady) {
                 const { ref, get } = window.fb;
                 get(ref(window.rtdb, 'case_' + cat)).then(snap => {
@@ -910,7 +963,7 @@
                     document.getElementById('admin-case-price').value = price;
                 });
             } else {
-                document.getElementById('admin-case-price').value = currentCasePrice;
+                document.getElementById('admin-case-price').value = currentCasePrices[cat];
             }
 
             const container = document.getElementById('admin-case-items-list');
@@ -959,7 +1012,7 @@
                 const { ref, set } = window.fb;
                 await set(ref(window.rtdb, 'case_' + cat), { price: newPrice, items: newItems });
                 alert('Цена и настройки кейса успешно сохранены!');
-                loadCaseData();
+                loadCaseData(cat);
             }
         }
 
