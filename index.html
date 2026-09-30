@@ -622,17 +622,38 @@
 
         function switchTab(tab) {
             currentTab = tab;
-            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
-                const el = document.getElementById(t + '-section');
-                if (el) el.classList.toggle('hidden', t !== tab);
-                const btn = document.getElementById('btn-' + t);
-                if (btn) btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+            
+            // Список всех секций, которые есть на сайте
+            const allSections = ['shop', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'];
+            
+            // Принудительно скрываем ВСЕ секции, а потом показываем нужную
+            allSections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if (el) {
+                    // Для магазина проверяем совпадение, для остальных — название секции совпадает с табом
+                    if (s === 'shop') {
+                        const isShopTab = (tab === 'adopt' || tab === 'mm2');
+                        el.classList.toggle('hidden', !isShopTab);
+                    } else {
+                        el.classList.toggle('hidden', s !== tab);
+                    }
+                }
             });
 
+            // Обновляем подсветку кнопок в ПК меню
+            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
+                const btn = document.getElementById('btn-' + t);
+                if (btn) {
+                    btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+                }
+            });
+
+            // Обновляем подсветку в нижнем мобильном баре
             document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
             const mBtn = document.getElementById(`m-btn-${tab}`);
             if (mBtn) mBtn.classList.add('text-indigo-400');
 
+            // Загружаем данные для конкретной вкладки
             if (tab === 'adopt' || tab === 'mm2') {
                 document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
                 loadProducts();
