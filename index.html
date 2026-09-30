@@ -295,9 +295,9 @@
     </main>
 
     <!-- Нижняя мобильная навигационная панель -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-2 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
         <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
-            <i class="fa-solid fa-paw text-base"></i><span>Adopt Me</span>
+            <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
         </button>
         <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-gun text-base"></i><span>MM2</span>
@@ -307,6 +307,9 @@
         </button>
         <button onclick="switchTab('reviews')" id="m-btn-reviews" class="flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-star text-base"></i><span>Отзывы</span>
+        </button>
+        <button onclick="switchTab('admin')" id="m-btn-admin" class="flex flex-col items-center gap-0.5 text-amber-400">
+            <i class="fa-solid fa-shield-halved text-base"></i><span>Админ</span>
         </button>
         <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
             <i class="fa-solid fa-user-gear text-base"></i><span>Профиль</span>
@@ -347,10 +350,10 @@
                 <p class="text-xs text-slate-400" id="prof-modal-email">user@gmail.com</p>
             </div>
 
-            <!-- Админ-кнопка внутри Профиля на мобильном -->
-            <div id="profile-admin-block" class="hidden pt-2 border-t border-slate-700">
+            <!-- Админ-кнопка в Профиле -->
+            <div class="pt-2 border-t border-slate-700">
                 <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 active:scale-95 shadow-md shadow-amber-500/20">
-                    <i class="fa-solid fa-crown"></i> Перейти в Админ-панель
+                    <i class="fa-solid fa-crown"></i> Админ-Панель
                 </button>
             </div>
 
@@ -452,11 +455,6 @@
             document.getElementById('prof-modal-username').innerText = currentUser.username;
             document.getElementById('prof-modal-email').innerText = currentUser.email;
 
-            // Блок админа в профиле
-            if (isAdmin) {
-                document.getElementById('profile-admin-block').classList.remove('hidden');
-            }
-
             // Заполнить имя в форме отзывов
             const revAuthor = document.getElementById('rev-author');
             if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
@@ -483,9 +481,9 @@
                     localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
                 }
                 activateAdminState();
-                alert('Вы вошли как администратор! Статус админа сохранён за вашим аккаунтом.');
+                alert('Вы успешно авторизовались как администратор!');
             } else {
-                alert('Неверный пароль!');
+                alert('Неверный пароль администратора!');
             }
         }
 
@@ -493,7 +491,6 @@
             document.getElementById('admin-login').classList.add('hidden');
             document.getElementById('admin-panel').classList.remove('hidden');
             document.getElementById('admin-badge').classList.remove('hidden');
-            document.getElementById('profile-admin-block').classList.remove('hidden');
             loadAdminWheelInputs();
         }
 
@@ -507,7 +504,6 @@
             document.getElementById('admin-login').classList.remove('hidden');
             document.getElementById('admin-panel').classList.add('hidden');
             document.getElementById('admin-badge').classList.add('hidden');
-            document.getElementById('profile-admin-block').classList.add('hidden');
             switchTab('adopt');
         }
 
@@ -531,7 +527,7 @@
             // Мобильная навигация
             document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
             const mBtn = document.getElementById(`m-btn-${tab}`);
-            if (mBtn) mBtn.classList.add('text-indigo-400');
+            if (mBtn && tab !== 'admin') mBtn.classList.add('text-indigo-400');
 
             document.getElementById('shop-section').classList.toggle('hidden', tab !== 'adopt' && tab !== 'mm2');
             document.getElementById('cases-section').classList.toggle('hidden', tab !== 'cases');
@@ -754,24 +750,40 @@
         async function spinWheel() {
             if (isSpinning) return;
 
-            if (userSpinsCount <= 0) {
-                alert(`⚠️ У вас 0 доступных попыток на открывание!\n\nДля покупки прокрута за ${currentWheelPrice} грн напишите администратору в Telegram: @TOPTTL.\nПосле оплаты вам выдадут доступ по вашему Email!`);
+            if (!currentUser || !currentUser.email) {
+                alert('⚠️ Зарегистрируйтесь, чтобы открывать кейсы!');
+                document.getElementById('auth-modal').classList.remove('hidden');
+                return;
+            }
+
+            // ПРОВЕРКА СПИНОВ В FIREBASE
+            if (window.firebaseReady) {
+                const key = safeEmailKey(currentUser.email);
+                const { ref, get, set } = window.fb;
+                const dbRef = ref(window.rtdb, `user_spins/${key}/${wheelCategory}`);
+                
+                const snapshot = await get(dbRef);
+                const serverSpins = snapshot.val() || 0;
+
+                if (serverSpins <= 0) {
+                    alert(`⛔ У ВАС НЕТ ОПЛАЧЕННЫХ ПОПЫТОК!\n\nСтоимость прокрута: ${currentWheelPrice} грн.\n\nДля покупки доступа напишите администратору в Telegram: @TOPTTL.\nПосле оплаты вам выдадут попытку!`);
+                    userSpinsCount = 0;
+                    document.getElementById('user-spins-count').innerText = `0 спинов`;
+                    return;
+                }
+
+                // Списываем 1 спин на сервере
+                await set(dbRef, serverSpins - 1);
+                userSpinsCount = serverSpins - 1;
+                document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
+            } else {
+                alert('⚠️ Нет подключения к базе данных!');
                 return;
             }
 
             isSpinning = true;
             const btn = document.getElementById('btn-spin-wheel');
             btn.disabled = true;
-
-            // Списываем 1 попытку
-            userSpinsCount--;
-            document.getElementById('user-spins-count').innerText = `${userSpinsCount} спинов`;
-            
-            if (window.firebaseReady && currentUser && currentUser.email) {
-                const key = safeEmailKey(currentUser.email);
-                const { ref, set } = window.fb;
-                await set(ref(window.rtdb, `user_spins/${key}/${wheelCategory}`), userSpinsCount);
-            }
 
             const canvas = document.getElementById('wheel-canvas');
             const randomSector = Math.floor(Math.random() * 5);
