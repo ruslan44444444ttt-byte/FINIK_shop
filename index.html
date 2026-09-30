@@ -3,101 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloxDrop - Симулятор кейсов и Магазин</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>Roblox Store - Adopt Me & MM2</title>
+    <!-- Подключаем Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #0d1117;
-            color: #ffffff;
+            background-color: #121212;
+            color: #e0e0e0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Шапка */
         header {
-            background: rgba(22, 27, 34, 0.85);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #30363d;
+            background-color: #1e1e1e;
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid #333;
         }
 
         .logo {
             font-size: 24px;
-            font-weight: 900;
-            color: #58a6ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
+            font-weight: bold;
+            color: #00ffcc;
         }
 
-        .nav-links {
+        .nav-buttons {
             display: flex;
-            gap: 20px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #8b949e;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: #58a6ff;
-        }
-
-        .user-panel {
-            display: flex;
-            align-items: center;
             gap: 15px;
-        }
-
-        .balance-badge {
-            background: #21262d;
-            border: 1px solid #30363d;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            color: #3fb950;
-            display: flex;
             align-items: center;
-            gap: 5px;
         }
 
-        .profile-btn {
-            background: #21262d;
-            border: 1px solid #30363d;
-            color: #c9d1d9;
+        .btn {
+            background-color: #00ffcc;
+            color: #121212;
+            border: none;
             padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-weight: bold;
+            transition: 0.2s;
         }
 
-        .profile-btn:hover {
-            background: #30363d;
-            border-color: #8b949e;
+        .btn:hover {
+            background-color: #00cc99;
         }
 
-        /* Основной контент */
+        .btn-secondary {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+
         main {
             flex: 1;
             padding: 30px;
@@ -106,128 +76,66 @@
             width: 100%;
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Страница кейсов */
-        .cases-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .case-card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s, border-color 0.2s;
+        .categories {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 25px;
         }
 
-        .case-card:hover {
-            transform: translateY(-5px);
-            border-color: #58a6ff;
-        }
-
-        .case-img {
-            font-size: 60px;
-            margin: 15px 0;
-        }
-
-        .case-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
+        .category-btn {
+            background-color: #1e1e1e;
+            color: #aaa;
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
         }
 
-        .btn:hover {
-            background: #2ea043;
+        .category-btn.active {
+            background-color: #00ffcc;
+            color: #121212;
+            border-color: #00ffcc;
+            font-weight: bold;
         }
 
-        /* Страница магазина */
-        .store-grid {
+        .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
 
-        .item-card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
+        .product-card {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .item-img {
-            font-size: 50px;
-            margin: 10px 0;
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background-color: #2a2a2a;
         }
 
-        .item-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 15px;
+        .product-info {
+            padding: 15px;
         }
 
-        .item-price {
-            color: #3fb950;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        /* Инвентарь */
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .inventory-item {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            position: relative;
-        }
-
-        .inventory-item .item-price {
-            font-size: 13px;
+        .product-title {
+            font-size: 16px;
             margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .sell-btn {
-            background: #da3633;
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-        .sell-btn:hover {
-            background: #f85149;
+        .product-price {
+            color: #00ffcc;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
         }
 
         /* Модальные окна */
@@ -237,242 +145,112 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0,0,0,0.7);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
+            display: none;
         }
 
         .modal.active {
-            opacity: 1;
-            pointer-events: auto;
+            display: flex;
         }
 
         .modal-content {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
+            background-color: #1e1e1e;
             padding: 30px;
+            border-radius: 8px;
             width: 100%;
             max-width: 450px;
+            border: 1px solid #333;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .close-modal {
+        .close-btn {
             position: absolute;
             top: 15px;
             right: 15px;
             background: none;
             border: none;
-            color: #8b949e;
+            color: #aaa;
             font-size: 20px;
             cursor: pointer;
         }
 
-        .close-modal:hover {
-            color: #ffffff;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* Анимация кейса */
-        .opening-container {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .roulette-window {
-            width: 100%;
-            height: 120px;
-            background: #0d1117;
-            border: 2px solid #30363d;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .roulette-track {
-            display: flex;
-            position: absolute;
-            left: 0;
-            transition: left cubic-bezier(0.1, 0.8, 0.1, 1) 4s;
-        }
-
-        .roulette-item {
-            min-width: 110px;
-            height: 100px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            margin: 0 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 13px;
-        }
-
-        .roulette-pointer {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 3px;
-            background: #f85149;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        /* Элементы админки */
-        .admin-controls {
-            margin-top: 20px;
-            background: #21262d;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #f85149;
-        }
-
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            font-size: 13px;
-            color: #8b949e;
             margin-bottom: 5px;
+            color: #aaa;
+            font-size: 14px;
         }
 
-        .form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 8px 12px;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 6px;
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 4px;
             color: #fff;
         }
 
-        .btn-danger {
-            background: #da3633;
-        }
-        .btn-danger:hover {
-            background: #f85149;
-        }
-        
-        .btn-secondary {
-            background: #21262d;
-            border: 1px solid #30363d;
-        }
-        .btn-secondary:hover {
-            background: #30363d;
-        }
-
-        /* Стили отзывов */
         .reviews-list {
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding-right: 5px;
         }
 
-        .review-card {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            padding: 10px 12px;
-            border-radius: 6px;
+        .review-item {
+            background: #121212;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
         }
 
         .review-author {
-            font-weight: 700;
+            font-weight: bold;
+            color: #00ffcc;
             font-size: 13px;
-            color: #58a6ff;
             margin-bottom: 3px;
-        }
-
-        .review-text {
-            font-size: 13px;
-            color: #c9d1d9;
         }
     </style>
 </head>
 <body>
 
-    <!-- Шапка сайта -->
     <header>
-        <div class="logo" onclick="switchTab('cases')">BloxDrop</div>
-        <ul class="nav-links">
-            <li><a onclick="switchTab('cases')" class="active" id="nav-cases">Кейсы</a></li>
-            <li><a onclick="switchTab('store')" id="nav-store">Магазин</a></li>
-            <li><a onclick="switchTab('inventory')" id="nav-inventory">Инвентарь</a></li>
-        </ul>
-        <div class="user-panel">
-            <div class="balance-badge">💰 <span id="user-balance">1000</span> R$</div>
-            <button class="profile-btn" onclick="openProfileModal()">Профиль</button>
+        <div class="logo">Roblox Shop</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="openProfileModal()">👤 Профиль</button>
         </div>
     </header>
 
-    <!-- Основной контент -->
     <main>
-        <!-- Вкладка: Кейсы -->
-        <section id="tab-cases" class="tab-content active">
-            <div class="cases-grid" id="cases-container">
-                <!-- Динамически заполняется через JS -->
-            </div>
-        </section>
+        <div class="categories">
+            <button class="category-btn active" onclick="filterCategory('all', this)">Все товары</button>
+            <button class="category-btn" onclick="filterCategory('adoptme', this)">Adopt Me</button>
+            <button class="category-btn" onclick="filterCategory('mm2', this)">MM2</button>
+        </div>
 
-        <!-- Вкладка: Магазин -->
-        <section id="tab-store" class="tab-content">
-            <div class="store-grid" id="store-container">
-                <!-- Динамически заполняется через JS -->
-            </div>
-        </section>
-
-        <!-- Вкладка: Инвентарь -->
-        <section id="tab-inventory" class="tab-content">
-            <div class="inventory-grid" id="inventory-container">
-                <!-- Динамически заполняется через JS -->
-            </div>
-        </section>
+        <div class="products-grid" id="products-container">
+            <!-- Товары загружаются через JS / Firebase -->
+        </div>
     </main>
 
-    <!-- Модальное окно профиля / панели управления -->
+    <!-- Модальное окно профиля / админки -->
     <div class="modal" id="profile-modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeProfileModal()">&times;</button>
-            <div class="modal-title" id="profile-modal-title">Личный кабинет</div>
-            
-            <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="close-btn" onclick="closeModal('profile-modal')">&times;</button>
+            <h2>Личный кабинет</h2>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-secondary" onclick="openReviewsModal()">⭐ Отзывы</button>
-                <button class="btn btn-secondary" onclick="toggleAdminPanel()">⚙️ Админ-панель</button>
-            </div>
-
-            <div class="admin-controls" id="admin-panel" style="display: none;">
-                <h4 style="margin-bottom: 10px; color: #f85149; font-size: 15px;">Панель администратора</h4>
-                <div class="form-group">
-                    <label>Добавить R$ на баланс</label>
-                    <button class="btn" onclick="adminAddMoney()" style="padding: 6px;">+5000 R$</button>
-                </div>
-                <div class="form-group">
-                    <label>Сбросить инвентарь</label>
-                    <button class="btn btn-danger" onclick="adminClearInventory()" style="padding: 6px;">Очистить</button>
-                </div>
+                <button class="btn" onclick="openAdminLogin()">⚙️ Админ-панель</button>
             </div>
         </div>
     </div>
@@ -480,363 +258,291 @@
     <!-- Модальное окно отзывов -->
     <div class="modal" id="reviews-modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeReviewsModal()">&times;</button>
-            <div class="modal-title">Отзывы игроков</div>
-            
+            <button class="close-btn" onclick="closeModal('reviews-modal')">&times;</button>
+            <h2>Отзывы покупателей</h2>
             <div class="reviews-list" id="reviews-container">
-                <!-- Список отзывов -->
+                <!-- Отзывы -->
             </div>
-
             <div class="form-group">
-                <input type="text" id="review-input" placeholder="Напишите ваш отзыв...">
+                <input type="text" id="review-author-input" placeholder="Ваше имя">
             </div>
-            <button class="btn" onclick="submitReview()">Отправить отзыв</button>
+            <div class="form-group">
+                <textarea id="review-text-input" placeholder="Ваш отзыв..." rows="2"></textarea>
+            </div>
+            <button class="btn" onclick="addReview()">Оставить отзыв</button>
         </div>
     </div>
 
-    <!-- Модальное окно открытия кейса -->
-    <div class="modal" id="case-modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <button class="close-modal" onclick="closeCaseModal()">&times;</button>
-            <div class="modal-title" id="opening-case-title">Открытие кейса</div>
+    <!-- Модальное окно админ-панели -->
+    <div class="modal" id="admin-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('admin-modal')">&times;</button>
+            <h2>Панель администратора</h2>
             
-            <div class="opening-container">
-                <div class="roulette-window">
-                    <div class="roulette-pointer"></div>
-                    <div class="roulette-track" id="roulette-track"></div>
+            <div id="admin-login-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>Пароль администратора</label>
+                    <input type="password" id="admin-password">
                 </div>
-                <button class="btn" id="start-spin-btn" onclick="startSpinning()">Открыть кейс</button>
+                <button class="btn" onclick="checkAdminPassword()">Войти</button>
+            </div>
+
+            <div id="admin-panel-content" style="display: none; margin-top: 15px;">
+                <h3 style="margin-bottom: 10px; font-size: 15px; color: #00ffcc;">Добавить новый товар</h3>
+                <div class="form-group">
+                    <label>Название товара</label>
+                    <input type="text" id="new-title">
+                </div>
+                <div class="form-group">
+                    <label>Цена (грн)</label>
+                    <input type="number" id="new-price">
+                </div>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="new-category">
+                        <option value="adoptme">Adopt Me</option>
+                        <option value="mm2">MM2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ссылка на фото</label>
+                    <input type="text" id="new-image">
+                </div>
+                <button class="btn" onclick="addProduct()">Добавить товар</button>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно изменения цены товара (для админов) -->
+    <!-- Модальное окно изменения цены товара -->
     <div class="modal" id="edit-price-modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeEditPriceModal()">&times;</button>
-            <div class="modal-title">Изменить цену товара</div>
-            <div class="form-group">
-                <label>Новая цена (R$)</label>
-                <input type="number" id="new-item-price-input" min="1">
+            <button class="close-btn" onclick="closeModal('edit-price-modal')">&times;</button>
+            <h2>Изменить цену товара</h2>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Новая цена (грн)</label>
+                <input type="number" id="edit-price-input">
             </div>
-            <button class="btn" onclick="saveNewItemPrice()">Сохранить</button>
+            <button class="btn" onclick="saveEditedPrice()">Сохранить цену</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно покупки / связи с продавцом -->
+    <div class="modal" id="buy-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('buy-modal')">&times;</button>
+            <h2>Покупка товара</h2>
+            <p id="buy-product-info" style="margin: 15px 0; color: #aaa;"></p>
+            <p style="margin-bottom: 15px; font-size: 14px;">Для покупки напишите продавцу в Telegram:</p>
+            <a href="https://t.me/ваш_логин" target="_blank" class="btn" style="display: block; text-align: center; text-decoration: none;">Написать в Telegram</a>
         </div>
     </div>
 
     <script>
-        // Данные приложения
-        let balance = 1000;
-        let inventory = [];
-        let reviews = [
-            { author: "RobloxPro_2026", text: "Отличный сайт! Выбил легендарку с третьего кейса!" },
-            { author: "BuilderMan", text: "Классная рулетка, всё честно работает." }
+        // Инициализация Firebase (замените на ваши данные из Firebase Console при необходимости)
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "your-app.firebaseapp.com",
+            projectId: "your-app",
+            storageBucket: "your-app.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+        
+        // Проверка инициализации, если конфиг пустой — используем локальный массив для теста
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+        } catch(e) {
+            console.log("Firebase not configured yet, running local simulation");
+        }
+
+        // Локальное хранилище для отзывов и товаров (если Firebase не подключен)
+        let localProducts = [
+            { id: "1", title: "Shadow Dragon (FR)", price: 350, category: "adoptme", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Shadow+Dragon" },
+            { id: "2", title: "Bat Dragon", price: 300, category: "adoptme", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Bat+Dragon" },
+            { id: "3", title: "Laser (MM2 Godly)", price: 80, category: "mm2", image: "https://via.placeholder.com/220x150/2a2a2a/00ffcc?text=Laser+MM2" }
         ];
 
-        let casesData = [
-            { id: 1, name: "Новичок", price: 50, icon: "📦", items: [
-                { name: "Обычная футболка", price: 15, icon: "👕" },
-                { name: "Кепка", price: 25, icon: "🧢" },
-                { name: "Штаны", price: 35, icon: "👖" },
-                { name: "Очки", price: 60, icon: "🕶️" },
-                { name: "Кроссовки", price: 100, icon: "👟" }
-            ]},
-            { id: 2, name: "Эпический", price: 200, icon: "💼", items: [
-                { name: "Рюкзак Roblox", price: 80, icon: "🎒" },
-                { name: "Шлем рыцаря", price: 180, icon: "🪖" },
-                { name: "Золотая цепь", price: 300, icon: "👑" },
-                { name: "Неоновый меч", price: 500, icon: "🗡️" }
-            ]},
-            { id: 3, name: "Легендарный", price: 600, icon: "🎁", items: [
-                { name: "Доминиус", price: 1200, icon: "💠" },
-                { name: "Валькирия", price: 2500, icon: "✨" },
-                { name: "Феникс", price: 5000, icon: "🔥" }
-            ]}
+        let localReviews = [
+            { author: "Игрок123", text: "Быстро передали питомца в Adopt Me, всё супер!" },
+            { author: "RobloxFan", text: "Купил гадли, продавец ответил сразу. Рекомендую!" }
         ];
 
-        let storeData = [
-            { id: 1, name: "Обычная футболка", price: 20, icon: "👕" },
-            { id: 2, name: "Кепка", price: 35, icon: "🧢" },
-            { id: 3, name: "Штаны", price: 45, icon: "👖" },
-            { id: 4, name: "Рюкзак Roblox", price: 100, icon: "🎒" },
-            { id: 5, name: "Шлем рыцаря", price: 220, icon: "🪖" },
-            { id: 6, name: "Золотая цепь", price: 350, icon: "👑" },
-            { id: 7, name: "Доминиус", price: 1500, icon: "💠" }
-        ];
+        let isAdminLoggedIn = false;
+        let editingProductId = null;
+        let currentFilter = 'all';
 
-        let currentActiveCase = null;
-        let isSpinning = false;
-        let editingStoreItemId = null;
-        let isAdmin = false; // Режим админа включается по желанию
-
-        // Инициализация при загрузке
         window.onload = function() {
-            renderCases();
-            renderStore();
-            renderInventory();
-            renderReviews();
-            updateBalanceUI();
+            loadProducts();
+            loadReviews();
         };
 
-        // Переключение вкладок
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
-
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            if(document.getElementById(`nav-${tabName}`)) {
-                document.getElementById(`nav-${tabName}`).classList.add('active');
-            }
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
         }
 
-        function updateBalanceUI() {
-            document.getElementById('user-balance').innerText = balance;
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
         }
 
-        // Отрисовка кейсов
-        function renderCases() {
-            const container = document.getElementById('cases-container');
-            container.innerHTML = '';
-            casesData.forEach(c => {
-                container.innerHTML += `
-                    <div class="case-card">
-                        <div>
-                            <div class="case-img">${c.icon}</div>
-                            <div class="case-title">${c.name}</div>
-                        </div>
-                        <div>
-                            <div style="color: #3fb950; font-weight: 700; margin-bottom: 12px;">${c.price} R$</div>
-                            <button class="btn" onclick="openCaseModal(${c.id})">Открыть</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Отрисовка магазина
-        function renderStore() {
-            const container = document.getElementById('store-container');
-            container.innerHTML = '';
-            storeData.forEach(item => {
-                let adminEditBtn = isAdmin ? `<button class="btn btn-secondary" onclick="openEditPriceModal(${item.id})" style="margin-top: 8px; font-size: 12px; padding: 5px;">✏️ Изменить цену</button>` : '';
-                container.innerHTML += `
-                    <div class="item-card">
-                        <div>
-                            <div class="item-img">${item.icon}</div>
-                            <div class="item-name">${item.name}</div>
-                        </div>
-                        <div>
-                            <div class="item-price">${item.price} R$</div>
-                            <button class="btn" onclick="buyItem(${item.id})">Купить</button>
-                            ${adminEditBtn}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Отрисовка инвентаря
-        function renderInventory() {
-            const container = document.getElementById('inventory-container');
-            container.innerHTML = '';
-            if (inventory.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #8b949e; padding: 40px;">Ваш инвентарь пуст</div>`;
-                return;
-            }
-            inventory.forEach((item, index) => {
-                container.innerHTML += `
-                    <div class="inventory-item">
-                        <div class="item-img" style="font-size: 40px;">${item.icon}</div>
-                        <div class="item-name" style="font-size: 13px;">${item.name}</div>
-                        <div class="item-price">${item.price} R$</div>
-                        <button class="btn sell-btn" onclick="sellItem(${index})">Продать</button>
-                    </div>
-                `;
-            });
-        }
-
-        // Отрисовка отзывов
-        function renderReviews() {
-            const container = document.getElementById('reviews-container');
-            container.innerHTML = '';
-            reviews.forEach(r => {
-                container.innerHTML += `
-                    <div class="review-card">
-                        <div class="review-author">${r.author}</div>
-                        <div class="review-text">${r.text}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // Логика покупки в магазине
-        function buyItem(id) {
-            const item = storeData.find(i => i.id === id);
-            if (balance < item.price) {
-                alert("Недостаточно Robux на балансе!");
-                return;
-            }
-            balance -= item.price;
-            inventory.push({ ...item });
-            updateBalanceUI();
-            renderInventory();
-            alert(`Вы успешно купили: ${item.name}!`);
-        }
-
-        // Продажа из инвентаря
-        function sellItem(index) {
-            const item = inventory[index];
-            balance += item.price;
-            inventory.splice(index, 1);
-            updateBalanceUI();
-            renderInventory();
-        }
-
-        // Управление модальными окнами профиля и отзывов
         function openProfileModal() {
-            document.getElementById('profile-modal').classList.add('active');
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profile-modal').classList.remove('active');
+            openModal('profile-modal');
         }
 
         function openReviewsModal() {
-            closeProfileModal();
-            document.getElementById('reviews-modal').classList.add('active');
+            closeModal('profile-modal');
+            openModal('reviews-modal');
         }
 
-        function closeReviewsModal() {
-            document.getElementById('reviews-modal').classList.remove('active');
+        function openAdminLogin() {
+            closeModal('profile-modal');
+            openModal('admin-modal');
         }
 
-        function toggleAdminPanel() {
-            isAdmin = true;
-            const panel = document.getElementById('admin-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            renderStore(); // Обновляем магазин, чтобы появились кнопки редактирования
+        function checkAdminPassword() {
+            const pass = document.getElementById('admin-password').value;
+            if (pass === "admin123") { // Ваш пароль администратора
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login-form').style.display = 'none';
+                document.getElementById('admin-panel-content').style.display = 'block';
+                loadProducts();
+                alert("Успешный вход в админ-панель!");
+            } else {
+                alert("Неверный пароль!");
+            }
         }
 
-        // Отправка отзыва
-        function submitReview() {
-            const input = document.getElementById('review-input');
-            const text = input.value.trim();
-            if (!text) return;
-            reviews.unshift({ author: "Игрок #" + Math.floor(Math.random() * 8999 + 1000), text: text });
-            input.value = '';
-            renderReviews();
+        function filterCategory(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadProducts();
+        }
+
+        // Загрузка товаров
+        function loadProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            let filtered = localProducts;
+            if (currentFilter !== 'all') {
+                filtered = localProducts.filter(p => p.category === currentFilter);
+            }
+
+            filtered.forEach(product => {
+                let adminButtons = '';
+                if (isAdminLoggedIn) {
+                    adminButtons = `<button class="btn btn-secondary" onclick="openEditPriceModal('${product.id}')" style="margin-top: 8px; width: 100%; font-size: 13px;">✏️ Изменить цену</button>`;
+                }
+
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div>
+                            <img src="${product.image || 'https://via.placeholder.com/220x150'}" class="product-img" alt="item">
+                            <div class="product-info">
+                                <div class="product-title">${product.title}</div>
+                                <div class="product-price">${product.price} грн</div>
+                            </div>
+                        </div>
+                        <div style="padding: 0 15px 15px 15px;">
+                            <button class="btn" onclick="openBuyModal('${product.title}', ${product.price})" style="width: 100%;">Купить</button>
+                            ${adminButtons}
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         // Изменение цены товара без удаления
         function openEditPriceModal(id) {
-            editingStoreItemId = id;
-            const item = storeData.find(i => i.id === id);
-            document.getElementById('new-item-price-input').value = item.price;
-            document.getElementById('edit-price-modal').classList.add('active');
+            editingProductId = id;
+            const product = localProducts.find(p => p.id === id);
+            document.getElementById('edit-price-input').value = product.price;
+            openModal('edit-price-modal');
         }
 
-        function closeEditPriceModal() {
-            document.getElementById('edit-price-modal').classList.remove('active');
-            editingStoreItemId = null;
-        }
-
-        function saveNewItemPrice() {
-            const newPrice = parseInt(document.getElementById('new-item-price-input').value);
+        function saveEditedPrice() {
+            const newPrice = parseFloat(document.getElementById('edit-price-input').value);
             if (isNaN(newPrice) || newPrice <= 0) {
                 alert("Введите корректную цену!");
                 return;
             }
-            const item = storeData.find(i => i.id === editingStoreItemId);
-            if (item) {
-                item.price = newPrice;
+
+            const product = localProducts.find(p => p.id === editingProductId);
+            if (product) {
+                product.price = newPrice;
             }
-            closeEditPriceModal();
-            renderStore();
-            alert("Цена товара успешно обновлена!");
+
+            closeModal('edit-price-modal');
+            loadProducts();
+            alert("Цена успешно изменена!");
         }
 
-        // Функции админки
-        function adminAddMoney() {
-            balance += 5000;
-            updateBalanceUI();
-            alert("Начислено 5000 R$!");
-        }
+        // Добавление товара (Админ)
+        function addProduct() {
+            const title = document.getElementById('new-title').value;
+            const price = parseFloat(document.getElementById('new-price').value);
+            const category = document.getElementById('new-category').value;
+            const image = document.getElementById('new-image').value;
 
-        function adminClearInventory() {
-            inventory = [];
-            renderInventory();
-            alert("Инвентарь очищен!");
-        }
-
-        // Логика открытия кейсов (Рулетка)
-        function openCaseModal(id) {
-            currentActiveCase = casesData.find(c => c.id === id);
-            if (balance < currentActiveCase.price) {
-                alert("Недостаточно средств для открытия кейса!");
+            if (!title || isNaN(price)) {
+                alert("Заполните название и цену!");
                 return;
             }
-            document.getElementById('opening-case-title').innerText = `Кейс: ${currentActiveCase.name}`;
-            setupRouletteTrack(currentActiveCase.items);
-            document.getElementById('start-spin-btn').style.display = 'block';
-            document.getElementById('case-modal').classList.add('active');
-        }
 
-        function closeCaseModal() {
-            if (isSpinning) return;
-            document.getElementById('case-modal').classList.remove('active');
-        }
+            const newProduct = {
+                id: Date.now().toString(),
+                title,
+                price,
+                category,
+                image
+            };
 
-        function setupRouletteTrack(items) {
-            const track = document.getElementById('roulette-track');
-            track.style.transition = 'none';
-            track.style.left = '0px';
+            localProducts.push(newProduct);
+            loadProducts();
             
-            let html = '';
-            // Генерируем длинную ленту случайных элементов для прокрутки
-            for (let i = 0; i < 50; i++) {
-                const randomItem = items[Math.floor(Math.random() * items.length)];
-                html += `
-                    <div class="roulette-item">
-                        <div style="font-size: 35px;">${randomItem.icon}</div>
-                        <div style="margin-top: 5px; font-weight: 600;">${randomItem.price} R$</div>
+            document.getElementById('new-title').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-image').value = '';
+            closeModal('admin-modal');
+            alert("Товар успешно добавлен!");
+        }
+
+        // Отзывы
+        function loadReviews() {
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = '';
+            localReviews.forEach(r => {
+                container.innerHTML += `
+                    <div class="review-item">
+                        <div class="review-author">${r.author}</div>
+                        <div style="font-size: 13px; color: #ccc;">${r.text}</div>
                     </div>
                 `;
-            }
-            track.innerHTML = html;
+            });
         }
 
-        function startSpinning() {
-            if (isSpinning) return;
-            isSpinning = true;
-            document.getElementById('start-spin-btn').style.display = 'none';
+        function addReview() {
+            const author = document.getElementById('review-author-input').value.trim();
+            const text = document.getElementById('review-text-input').value.trim();
 
-            balance -= currentActiveCase.price;
-            updateBalanceUI();
+            if (!author || !text) {
+                alert("Заполните имя и текст отзыва!");
+                return;
+            }
 
-            const track = document.getElementById('roulette-track');
-            
-            // Вычисляем выигрышный элемент (например, 35-й по счету)
-            const winningIndex = 35;
-            const itemWidth = 120; // 110px ширина + 10px суммарный отступ (margin 5px * 2)
-            const windowWidth = document.querySelector('.roulette-window').offsetWidth;
-            
-            // Позиция центра для остановки ровно под красным указателем
-            const targetLeft = -(winningIndex * itemWidth) + (windowWidth / 2) - (itemWidth / 2);
+            localReviews.unshift({ author, text });
+            loadReviews();
 
-            track.style.transition = 'left cubic-bezier(0.08, 0.82, 0.12, 1) 4s';
-            track.style.left = `${targetLeft}px`;
+            document.getElementById('review-author-input').value = '';
+            document.getElementById('review-text-input').value = '';
+            alert("Спасибо за ваш отзыв!");
+        }
 
-            setTimeout(() => {
-                isSpinning = false;
-                // Определяем выигравший предмет на основе ленты
-                const items = currentActiveCase.items;
-                const wonItem = items[Math.floor(Math.random() * items.length)];
-                
-                inventory.push({ ...wonItem });
-                renderInventory();
-
-                alert(`Поздравляем! Вы выиграли: ${wonItem.name} (${wonItem.price} R$)`);
-                document.getElementById('case-modal').classList.remove('active');
-            }, 4100);
+        function openBuyModal(title, price) {
+            document.getElementById('buy-product-info').innerText = `Вы выбрали: ${title} — ${price} грн`;
+            openModal('buy-modal');
         }
     </script>
 </body>
