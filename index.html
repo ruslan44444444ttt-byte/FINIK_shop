@@ -53,7 +53,7 @@
         .rarity-godly { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-24 sm:pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-28 sm:pb-12 overflow-x-hidden">
 
     <!-- Верхний Хедер -->
     <header class="bg-slate-800/95 backdrop-blur border-b border-slate-700 sticky top-0 z-40 shadow-md">
@@ -88,7 +88,7 @@
 
     <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
         <!-- Секция Магазина (Adopt Me / MM2) -->
-        <section id="shop-section">
+        <section id="shop-section" class="tab-content">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
                 <div class="flex items-center gap-3 w-full sm:w-auto justify-between">
                     <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
@@ -110,7 +110,7 @@
         </section>
 
         <!-- Секция Кейса Adopt Me -->
-        <section id="case_adopt-section" class="hidden max-w-2xl mx-auto space-y-6">
+        <section id="case_adopt-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
                 <h2 class="text-xl font-black text-amber-400 mb-1 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-box-open text-2xl"></i> Кейс Adopt Me
@@ -156,7 +156,7 @@
         </section>
 
         <!-- Секция Кейса MM2 -->
-        <section id="case_mm2-section" class="hidden max-w-2xl mx-auto space-y-6">
+        <section id="case_mm2-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl text-center">
                 <h2 class="text-xl font-black text-red-400 mb-1 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-box-open text-2xl"></i> Кейс MM2
@@ -202,13 +202,13 @@
         </section>
 
         <!-- Секция Инвентаря Игрока -->
-        <section id="inventory-section" class="hidden max-w-4xl mx-auto space-y-4">
+        <section id="inventory-section" class="tab-content hidden max-w-4xl mx-auto space-y-4">
             <div class="bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
                     <h2 class="text-lg sm:text-xl font-bold text-sky-400 flex items-center gap-2">
                         <i class="fa-solid fa-backpack"></i> Ваш Инвентарь
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Здесь хранятся ваши купленные и выигранные из боксов вещи</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Здесь хранятся ваши купленные, избранные и выигранные из боксов вещи</p>
                 </div>
                 
                 <!-- КНОПКИ ФИЛЬТРАЦИИ ИЗБРАННОГО В ИНВЕНТАРЕ -->
@@ -231,7 +231,7 @@
         </section>
 
         <!-- Секция Отзывов -->
-        <section id="reviews-section" class="hidden max-w-2xl mx-auto space-y-6">
+        <section id="reviews-section" class="tab-content hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <h2 class="text-lg sm:text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-star text-amber-400"></i> Оставить отзыв
@@ -274,7 +274,7 @@
         </section>
 
         <!-- Секция Админ-панели -->
-        <section id="admin-section" class="hidden space-y-6">
+        <section id="admin-section" class="tab-content hidden space-y-6">
             <div id="admin-login" class="max-w-md mx-auto bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl my-4">
                 <div class="text-center mb-6">
                     <div class="w-12 h-12 bg-amber-500/10 rounded-2xl border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-amber-400 text-xl">
@@ -295,6 +295,20 @@
             </div>
 
             <div id="admin-panel" class="hidden max-w-xl mx-auto space-y-6">
+                <!-- Включение / Выключение тега Администратора -->
+                <div class="bg-slate-800 p-5 rounded-2xl border border-amber-500/40 shadow-xl flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-crown"></i> Включить тег администратора
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Отображает плашку [АДМИНИСТРАТОР] возле вашего ника в чате для всех игроков</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="admin-tag-toggle" onchange="toggleAdminTagInChat(this.checked)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+
                 <!-- ВЫДАЧА ВЕЩЕЙ В ИНВЕНТАРЬ ИГРОКУ -->
                 <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
                     <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-700">
@@ -444,24 +458,24 @@
     </main>
 
     <!-- Нижняя мобильная навигационная панель -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-1.5 flex justify-around items-center text-[10px] font-semibold text-slate-400">
-        <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-0.5 text-indigo-400">
-            <i class="fa-solid fa-paw text-base"></i><span>Adopt</span>
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 px-1 py-2 flex justify-around items-center text-[10px] font-semibold text-slate-400">
+        <button onclick="switchTab('adopt')" id="m-btn-adopt" class="flex flex-col items-center gap-1 text-indigo-400">
+            <i class="fa-solid fa-paw text-lg"></i><span>Adopt</span>
         </button>
-        <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-gun text-base"></i><span>MM2</span>
+        <button onclick="switchTab('mm2')" id="m-btn-mm2" class="flex flex-col items-center gap-1">
+            <i class="fa-solid fa-gun text-lg"></i><span>MM2</span>
         </button>
-        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-box-open text-base text-amber-400"></i><span>Кейс Am</span>
+        <button onclick="switchTab('case_adopt')" id="m-btn-case_adopt" class="flex flex-col items-center gap-1">
+            <i class="fa-solid fa-box-open text-lg text-amber-400"></i><span>Кейс Am</span>
         </button>
-        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-box-open text-base text-red-400"></i><span>Кейс MM2</span>
+        <button onclick="switchTab('case_mm2')" id="m-btn-case_mm2" class="flex flex-col items-center gap-1">
+            <i class="fa-solid fa-box-open text-lg text-red-400"></i><span>Кейс MM2</span>
         </button>
-        <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-backpack text-base"></i><span>Инв.</span>
+        <button onclick="switchTab('inventory')" id="m-btn-inventory" class="flex flex-col items-center gap-1">
+            <i class="fa-solid fa-backpack text-lg"></i><span>Инв.</span>
         </button>
-        <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-0.5 text-slate-300">
-            <i class="fa-solid fa-user-gear text-base"></i><span>Профиль</span>
+        <button onclick="openProfileModal()" id="m-btn-profile" class="flex flex-col items-center gap-1 text-slate-300">
+            <i class="fa-solid fa-user-gear text-lg"></i><span>Профиль</span>
         </button>
     </div>
 
@@ -490,7 +504,7 @@
     <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
             
-            <!-- Аватарка с кнопкой изменения (Карандашик) -->
+            <!-- Аватарка с кнопкой изменения -->
             <div class="relative w-20 h-20 mx-auto">
                 <div class="w-20 h-20 bg-indigo-600 text-white font-black text-3xl rounded-full flex items-center justify-center uppercase overflow-hidden border-2 border-indigo-400 shadow-md" id="prof-modal-avatar">U</div>
                 <label for="avatar-input" class="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-400 text-slate-950 p-2 rounded-full cursor-pointer shadow-lg transition active:scale-90 w-8 h-8 flex items-center justify-center">
@@ -588,7 +602,7 @@
         let isSpinningCase = false;
         let allProductsCache = [];
         let userFavorites = JSON.parse(localStorage.getItem('roblox_favorites') || '[]');
-        let currentInventoryFilter = 'all'; // 'all' или 'fav'
+        let currentInventoryFilter = 'all'; 
 
         let defaultCaseItems = {
             adopt: [
@@ -620,6 +634,7 @@
             renderCaseShowcase('adopt');
             renderCaseTape('mm2');
             renderCaseShowcase('mm2');
+            switchTab('adopt');
             if (window.firebaseReady) {
                 loadProducts();
                 loadCaseData('adopt');
@@ -649,7 +664,7 @@
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             if (!username || !email) return;
 
-            currentUser = { username, email, isAdmin: false, avatar: null };
+            currentUser = { username, email, isAdmin: false, avatar: null, showAdminTag: false };
             localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
             
@@ -685,6 +700,9 @@
             const revEmail = document.getElementById('rev-email');
             if (revAuthor) revAuthor.value = currentUser.username;
             if (revEmail) revEmail.value = currentUser.email;
+
+            const tagToggle = document.getElementById('admin-tag-toggle');
+            if (tagToggle) tagToggle.checked = !!currentUser.showAdminTag;
 
             loadUserSpins('adopt');
             loadUserSpins('mm2');
@@ -745,10 +763,17 @@
             loadProducts();
         }
 
+        function toggleAdminTagInChat(status) {
+            if (!currentUser) return;
+            currentUser.showAdminTag = status;
+            localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+        }
+
         function handleLogoutAdmin() {
             isAdmin = false;
             if (currentUser) {
                 currentUser.isAdmin = false;
+                currentUser.showAdminTag = false;
                 localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             }
             document.getElementById('admin-login').classList.remove('hidden');
@@ -759,21 +784,33 @@
 
         function switchTab(tab) {
             currentTab = tab;
-            ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
-                const el = document.getElementById(t + '-section');
-                if (el) el.classList.toggle('hidden', (t === 'adopt' || t === 'mm2') ? (tab !== 'adopt' && tab !== 'mm2') : t !== tab);
+
+            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+
+            if (tab === 'adopt' || tab === 'mm2') {
+                document.getElementById('shop-section').classList.remove('hidden');
+                document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
+                renderProductsGrid();
+            } else {
+                const targetSec = document.getElementById(`${tab}-section`);
+                if (targetSec) targetSec.classList.remove('hidden');
+            }
+
+            const tabsArr = ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'];
+            tabsArr.forEach(t => {
                 const btn = document.getElementById('btn-' + t);
-                if (btn) btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+                if (btn) {
+                    btn.className = (t === tab) 
+                        ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' 
+                        : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
+                }
             });
 
             document.querySelectorAll('.md\\:hidden button').forEach(b => b.classList.remove('text-indigo-400'));
             const mBtn = document.getElementById(`m-btn-${tab}`);
             if (mBtn) mBtn.classList.add('text-indigo-400');
 
-            if (tab === 'adopt' || tab === 'mm2') {
-                document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
-                renderProductsGrid();
-            } else if (tab === 'case_adopt') {
+            if (tab === 'case_adopt') {
                 loadCaseData('adopt');
                 loadUserSpins('adopt');
             } else if (tab === 'case_mm2') {
@@ -810,6 +847,7 @@
                     });
                 }
                 renderProductsGrid();
+                loadUserInventory();
             });
         }
 
@@ -823,6 +861,7 @@
             }
             localStorage.setItem('roblox_favorites', JSON.stringify(userFavorites));
             renderProductsGrid();
+            loadUserInventory();
         }
 
         function renderProductsGrid() {
@@ -844,7 +883,7 @@
                     grid.innerHTML += `
                         <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2.5 relative group">
                             <!-- Сердце Избранного -->
-                            <button onclick="toggleFavoriteShop('${item.id}')" class="absolute top-2 right-2 z-10 p-1 rounded-full bg-slate-900/80 text-xs transition active:scale-90">
+                            <button onclick="toggleFavoriteShop('${item.id}')" class="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-slate-900/80 text-xs transition active:scale-90 hover:scale-110">
                                 <i class="fa-solid fa-heart ${isFav ? 'text-red-500' : 'text-slate-500'}"></i>
                             </button>
 
@@ -1088,51 +1127,77 @@
         }
 
         function loadUserInventory() {
-            if (!window.firebaseReady || !currentUser) return;
-            const key = safeEmailKey(currentUser.email);
-            const { ref, onValue } = window.fb;
-            onValue(ref(window.rtdb, `user_inventory/${key}`), (snap) => {
-                const grid = document.getElementById('inventory-grid');
-                const emptyState = document.getElementById('empty-inventory-state');
-                const emptyText = document.getElementById('empty-inv-text');
-                const favBadge = document.getElementById('fav-count-badge');
-                grid.innerHTML = '';
-                
-                let renderedCount = 0;
-                let favCount = 0;
+            if (!currentUser) return;
+            const grid = document.getElementById('inventory-grid');
+            const emptyState = document.getElementById('empty-inventory-state');
+            const emptyText = document.getElementById('empty-inv-text');
+            const favBadge = document.getElementById('fav-count-badge');
+            
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            let itemsToRender = [];
+            let totalFavCount = userFavorites.length;
 
-                const data = snap.val();
-                if (data) {
-                    Object.keys(data).forEach(id => {
-                        const item = { id, ...data[id] };
-                        if (item.isFav) favCount++;
+            if (window.firebaseReady) {
+                const key = safeEmailKey(currentUser.email);
+                const { ref, onValue } = window.fb;
+                onValue(ref(window.rtdb, `user_inventory/${key}`), (snap) => {
+                    grid.innerHTML = '';
+                    let dbItems = [];
+                    const data = snap.val();
+                    if (data) {
+                        Object.keys(data).forEach(id => {
+                            dbItems.push({ id, ...data[id], isDBItem: true });
+                            if (data[id].isFav) totalFavCount++;
+                        });
+                    }
 
+                    allProductsCache.forEach(prod => {
+                        if (userFavorites.includes(prod.id)) {
+                            dbItems.push({
+                                id: prod.id,
+                                name: prod.title,
+                                img: prod.img,
+                                rarity: 'legendary',
+                                isFav: true,
+                                isShopFav: true
+                            });
+                        }
+                    });
+
+                    if (favBadge) favBadge.innerText = totalFavCount;
+
+                    let count = 0;
+                    dbItems.forEach(item => {
                         if (currentInventoryFilter === 'all' || (currentInventoryFilter === 'fav' && item.isFav)) {
-                            renderedCount++;
+                            count++;
                             grid.innerHTML += `
                                 <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg relative rarity-${item.rarity || 'common'}">
-                                    <button onclick="toggleFavInventoryItem('${id}', ${!item.isFav})" class="absolute top-2 right-2 text-xs p-1 rounded-full bg-slate-900/60">
-                                        <i class="fa-solid fa-star ${item.isFav ? 'text-amber-400' : 'text-slate-600 hover:text-amber-400'}"></i>
+                                    <button onclick="${item.isShopFav ? `toggleFavoriteShop('${item.id}')` : `toggleFavInventoryItem('${item.id}',${!item.isFav})`}" class="absolute top-2 right-2 text-xs p-1 rounded-full bg-slate-900/60">
+                                        <i class="fa-solid fa-star text-amber-400"></i>
                                     </button>
                                     <img src="${item.img}" class="w-20 h-16 object-contain my-2 filter drop-shadow">
                                     <span class="font-bold text-xs text-white line-clamp-1">${item.name}</span>
-                                    <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.rarity || 'common'}</span>
-                                    <button onclick="removeInventoryItem('${id}')" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-1 rounded text-[10px] font-bold">Убрать</button>
+                                    <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.isShopFav ? 'Из магазина' : (item.rarity || 'common')}</span>
+                                    ${item.isShopFav ? `
+                                        <button onclick="toggleFavoriteShop('${item.id}')" class="w-full mt-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 py-1 rounded text-[10px] font-bold">Из избранного</button>
+                                    ` : `
+                                        <button onclick="removeInventoryItem('${item.id}')" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-1 rounded text-[10px] font-bold">Убрать</button>
+                                    `}
                                 </div>`;
                         }
                     });
-                }
 
-                if (favBadge) favBadge.innerText = favCount;
+                    if (currentInventoryFilter === 'fav' && count === 0) {
+                        emptyText.innerText = "У вас нет предметов в избранном. Нажмите ❤️ в магазине или ⭐ в инвентаре, чтобы добавить их сюда!";
+                    } else {
+                        emptyText.innerText = "Ваш инвентарь пуст. Ожидайте выдачи товара администратором или откройте кейсы!";
+                    }
 
-                if (currentInventoryFilter === 'fav' && renderedCount === 0) {
-                    emptyText.innerText = "У вас нет предметов в избранном. Нажмите ⭐ на предмете в инвентаре, чтобы добавить его сюда!";
-                } else {
-                    emptyText.innerText = "Ваш инвентарь пуст. Ожидайте выдачи товара администратором или откройте кейсы!";
-                }
-
-                emptyState.classList.toggle('hidden', renderedCount > 0);
-            });
+                    emptyState.classList.toggle('hidden', count > 0);
+                }, { onlyOnce: true });
+            }
         }
 
         async function toggleFavInventoryItem(id, status) {
@@ -1140,6 +1205,7 @@
             const key = safeEmailKey(currentUser.email);
             const { ref, set } = window.fb;
             await set(ref(window.rtdb, `user_inventory/${key}/${id}/isFav`), status);
+            loadUserInventory();
         }
 
         async function removeInventoryItem(id) {
@@ -1147,6 +1213,7 @@
                 const key = safeEmailKey(currentUser.email);
                 const { ref, remove } = window.fb;
                 await remove(ref(window.rtdb, `user_inventory/${key}/${id}`));
+                loadUserInventory();
             }
         }
 
@@ -1382,7 +1449,10 @@
                             </div>
                             <div class="bg-slate-800 p-2.5 rounded-2xl border border-slate-700/80 max-w-[85%] space-y-0.5">
                                 <div class="flex justify-between items-center gap-3">
-                                    <span class="font-bold text-xs text-indigo-300">${msg.username}</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="font-bold text-xs text-indigo-300">${msg.username}</span>
+                                        ${msg.isAdmin ? `<span class="bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded shadow uppercase tracking-wide">Администратор</span>` : ''}
+                                    </div>
                                     <span class="text-[9px] text-slate-500">${msg.time}</span>
                                 </div>
                                 <p class="text-xs text-slate-200">${msg.text}</p>
@@ -1419,6 +1489,7 @@
                 await push(ref(window.rtdb, 'chat_messages'), {
                     username: currentUser.username,
                     avatar: currentUser.avatar || null,
+                    isAdmin: !!(currentUser.isAdmin && currentUser.showAdminTag),
                     text: text,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 });
