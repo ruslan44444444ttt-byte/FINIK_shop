@@ -873,7 +873,14 @@
             grid.innerHTML = '';
             let count = 0;
 
-            allProductsCache.forEach(item => {
+            // Сортировка: сначала Тренды и Скидки
+            const sortedProducts = [...allProductsCache].sort((a, b) => {
+                const scoreA = (a.isTrending ? 2 : 0) + ((a.discount || 0) > 0 ? 1 : 0);
+                const scoreB = (b.isTrending ? 2 : 0) + ((b.discount || 0) > 0 ? 1 : 0);
+                return scoreB - scoreA;
+            });
+
+            sortedProducts.forEach(item => {
                 if (item.category === currentTab && item.title.toLowerCase().includes(searchVal)) {
                     count++;
                     const isFav = userFavorites.includes(item.id);
