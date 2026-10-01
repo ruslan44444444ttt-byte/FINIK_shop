@@ -371,7 +371,7 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Режим</label>
-                                <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                <select id="prod-category" onchange="updateAdminTypeOptions()" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                                     <option value="adopt">Adopt Me</option>
                                     <option value="mm2">MM2</option>
                                 </select>
@@ -379,14 +379,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Тип предмета</label>
                                 <select id="prod-type" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
-                                    <option value="Пет">Пет (Pet)</option>
-                                    <option value="Яйцо">Яйцо (Egg)</option>
-                                    <option value="Машина">Машина (Vehicle)</option>
-                                    <option value="Игрушка">Игрушка (Toy)</option>
-                                    <option value="Нож">Нож (Knife)</option>
-                                    <option value="Пистолет">Пистолет (Gun)</option>
-                                    <option value="Подарок">Подарок (Gift)</option>
-                                    <option value="Другое">Другое</option>
+                                    <!-- Варианты загружаются динамически в зависимости от режима -->
                                 </select>
                             </div>
                         </div>
@@ -661,6 +654,7 @@
             renderCaseShowcase('adopt');
             renderCaseTape('mm2');
             renderCaseShowcase('mm2');
+            updateAdminTypeOptions();
             switchTab('adopt');
             if (window.firebaseReady) {
                 loadProducts();
@@ -809,6 +803,7 @@
             switchTab('adopt');
         }
 
+        /* --- ОБНОВЛЕНИЕ ТЕМ В ФИЛЬТРЕ И АДМИНКЕ --- */
         function updateTypeFilterOptions() {
             const filterSelect = document.getElementById('shop-type-filter');
             if (!filterSelect) return;
@@ -816,20 +811,68 @@
             let optionsHTML = '<option value="all">Все темы</option>';
             if (currentTab === 'adopt') {
                 optionsHTML += `
-                    <option value="Пет">Пет</option>
+                    <option value="Райд">Райд (Ride)</option>
+                    <option value="Флай">Флай (Fly)</option>
+                    <option value="ФР">Флай Райд (FR)</option>
+                    <option value="Неон">Неон (Neon)</option>
+                    <option value="Мега неон">Мега неон (Mega Neon)</option>
+                    <option value="Пет">Пет (Pet)</option>
+                    <option value="Коляска">Коляска</option>
+                    <option value="Еда">Еда</option>
                     <option value="Яйцо">Яйцо</option>
                     <option value="Машина">Машина</option>
                     <option value="Игрушка">Игрушка</option>
                     <option value="Подарок">Подарок</option>
+                    <option value="Другое">Другое</option>
                 `;
             } else if (currentTab === 'mm2') {
                 optionsHTML += `
+                    <option value="Хрома">Хрома (Chroma)</option>
+                    <option value="Годли">Годли (Godly)</option>
                     <option value="Нож">Нож</option>
                     <option value="Пистолет">Пистолет</option>
+                    <option value="Другое">Другое</option>
                 `;
             }
             filterSelect.innerHTML = optionsHTML;
             filterSelect.value = 'all';
+        }
+
+        function updateAdminTypeOptions() {
+            const catSelect = document.getElementById('prod-category');
+            const typeSelect = document.getElementById('prod-type');
+            if (!catSelect || !typeSelect) return;
+
+            const selectedCat = catSelect.value;
+            let optionsHTML = '';
+
+            if (selectedCat === 'adopt') {
+                optionsHTML = `
+                    <option value="Райд">Райд (Ride)</option>
+                    <option value="Флай">Флай (Fly)</option>
+                    <option value="ФР">Флай Райд (FR)</option>
+                    <option value="Неон">Неон (Neon)</option>
+                    <option value="Мега неон">Мега неон (Mega Neon)</option>
+                    <option value="Пет">Пет (Pet)</option>
+                    <option value="Коляска">Коляска</option>
+                    <option value="Еда">Еда</option>
+                    <option value="Яйцо">Яйцо</option>
+                    <option value="Машина">Машина</option>
+                    <option value="Игрушка">Игрушка</option>
+                    <option value="Подарок">Подарок</option>
+                    <option value="Другое">Другое</option>
+                `;
+            } else if (selectedCat === 'mm2') {
+                optionsHTML = `
+                    <option value="Хрома">Хрома (Chroma)</option>
+                    <option value="Годли">Годли (Godly)</option>
+                    <option value="Нож">Нож</option>
+                    <option value="Пистолет">Пистолет</option>
+                    <option value="Другое">Другое</option>
+                `;
+            }
+
+            typeSelect.innerHTML = optionsHTML;
         }
 
         function switchTab(tab) {
@@ -925,7 +968,6 @@
             grid.innerHTML = '';
             let count = 0;
 
-            // Сортировка: Трендовые всегда первые, остальные от самых дорогих к дешёвым
             const sortedProducts = [...allProductsCache].sort((a, b) => {
                 if (a.isTrending && !b.isTrending) return -1;
                 if (!a.isTrending && b.isTrending) return 1;
@@ -1089,7 +1131,6 @@
             });
         }
 
-        /* --- ВЗВЕШЕННЫЙ ВЫБОР ИЗ КЕЙСА (ПРАВИЛЬНЫЕ ШАНСЫ) --- */
         function getRandomItemByChance(items) {
             let parsedItems = items.map(item => {
                 let weight = parseFloat(String(item.chance).replace('%', '')) || 10;
@@ -1137,17 +1178,16 @@
             const tape = document.getElementById(`case-${cat}-tape`);
             tape.style.transition = 'none';
             tape.style.transform = 'translateX(0px)';
-            tape.offsetHeight; // перерисовка DOM
+            tape.offsetHeight;
 
             const itemsList = currentCaseItems[cat];
             
-            // Получаем выигрышный предмет строго по шансам
             const result = getRandomItemByChance(itemsList);
             const wonItem = result.item;
             const winningIndex = result.index;
 
-            const cardWidth = 108; // 96px ширина + 12px gap
-            const baseRepeats = 4; // количество полных циклов прокрутки ленты
+            const cardWidth = 108;
+            const baseRepeats = 4;
             const targetOffset = (itemsList.length * baseRepeats + winningIndex) * cardWidth - 140 + Math.random() * 40;
 
             tape.style.transition = 'transform 2.5s cubic-bezier(0.1, 0.9, 0.2, 1)';
@@ -1200,7 +1240,7 @@
                     osc.stop(ctx.currentTime + 0.04);
                     i++;
                     if (i > 30) clearInterval(interval);
-                }, 75); // Ускоренный щелчок под быструю рулетку
+                }, 75);
             } catch(e) {}
         }
 
@@ -1522,7 +1562,6 @@
             }
         }
 
-        /* --- ФУНКЦИОНАЛ ЧАТА --- */
         function loadChatMessages() {
             if (!window.firebaseReady) return;
             const { ref, onValue } = window.fb;
