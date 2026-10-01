@@ -43,8 +43,8 @@
             mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, transparent 100%);
         }
-        #case-tape {
-            transition: transform 5s cubic-bezier(0.08, 0.82, 0.12, 1);
+        #case-adopt-tape, #case-mm2-tape {
+            transition: transform 2.5s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
         .rarity-common { border-color: #64748b; background: rgba(100, 116, 139, 0.1); }
         .rarity-rare { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
@@ -873,7 +873,6 @@
             grid.innerHTML = '';
             let count = 0;
 
-            // Сортировка: сначала Тренды и Скидки
             const sortedProducts = [...allProductsCache].sort((a, b) => {
                 const scoreA = (a.isTrending ? 2 : 0) + ((a.discount || 0) > 0 ? 1 : 0);
                 const scoreB = (b.isTrending ? 2 : 0) + ((b.discount || 0) > 0 ? 1 : 0);
@@ -889,12 +888,10 @@
 
                     grid.innerHTML += `
                         <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2.5 relative group">
-                            <!-- Сердце Избранного -->
                             <button onclick="toggleFavoriteShop('${item.id}')" class="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-slate-900/80 text-xs transition active:scale-90 hover:scale-110">
                                 <i class="fa-solid fa-heart ${isFav ? 'text-red-500' : 'text-slate-500'}"></i>
                             </button>
 
-                            <!-- Бэдж Трендовый / Скидка -->
                             <div class="absolute top-2 left-2 z-10 flex flex-col gap-1">
                                 ${item.isTrending ? `<span class="bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded shadow uppercase">🔥 Trend</span>` : ''}
                                 ${discount > 0 ? `<span class="bg-red-500 text-white font-black text-[9px] px-1 py-0.5 rounded shadow">-${discount}%</span>` : ''}
@@ -987,7 +984,7 @@
             if (!tape) return;
             tape.innerHTML = '';
             let extendedItems = [];
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 8; i++) {
                 extendedItems = extendedItems.concat(currentCaseItems[cat]);
             }
             extendedItems.forEach(item => {
@@ -1026,6 +1023,25 @@
             });
         }
 
+        /* --- ВЗВЕШЕННЫЙ ВЫБОР ИЗ КЕЙСА (ПРАВИЛЬНЫЕ ШАНСЫ) --- */
+        function getRandomItemByChance(items) {
+            let parsedItems = items.map(item => {
+                let weight = parseFloat(String(item.chance).replace('%', '')) || 10;
+                return { ...item, weight };
+            });
+
+            let totalWeight = parsedItems.reduce((sum, item) => sum + item.weight, 0);
+            let randomNum = Math.random() * totalWeight;
+            
+            for (let i = 0; i < parsedItems.length; i++) {
+                if (randomNum < parsedItems[i].weight) {
+                    return { item: parsedItems[i], index: i };
+                }
+                randomNum -= parsedItems[i].weight;
+            }
+            return { item: parsedItems[0], index: 0 };
+        }
+
         async function startCaseOpening(cat) {
             if (isSpinningCase) return;
             if (!currentUser) {
@@ -1052,15 +1068,23 @@
             const btn = document.getElementById(`btn-open-case-${cat}`);
             if (btn) btn.disabled = true;
 
-            const itemsList = currentCaseItems[cat];
-            const winningIndex = Math.floor(Math.random() * itemsList.length);
-            const wonItem = itemsList[winningIndex];
-
-            const cardWidth = 108;
-            const targetOffset = (itemsList.length * 3 + winningIndex) * cardWidth - 140 + Math.random() * 60;
-
             const tape = document.getElementById(`case-${cat}-tape`);
-            tape.style.transition = 'transform 5s cubic-bezier(0.08, 0.82, 0.12, 1)';
+            tape.style.transition = 'none';
+            tape.style.transform = 'translateX(0px)';
+            tape.offsetHeight; // перерисовка DOM
+
+            const itemsList = currentCaseItems[cat];
+            
+            // Получаем выигрышный предмет строго по шансам
+            const result = getRandomItemByChance(itemsList);
+            const wonItem = result.item;
+            const winningIndex = result.index;
+
+            const cardWidth = 108; // 96px ширина + 12px gap
+            const baseRepeats = 4; // количество полных циклов прокрутки ленты
+            const targetOffset = (itemsList.length * baseRepeats + winningIndex) * cardWidth - 140 + Math.random() * 40;
+
+            tape.style.transition = 'transform 2.5s cubic-bezier(0.1, 0.9, 0.2, 1)';
             tape.style.transform = `translateX(-${targetOffset}px)`;
 
             playTickSound();
@@ -1088,11 +1112,9 @@
 
                 alert(`🎉 ПОЗДРАВЛЯЕМ!\nВы выиграли предмет: ${wonItem.name} (${wonItem.rarity.toUpperCase()})!\nПредмет добавлен в ваш инвентарь.`);
                 
-                tape.style.transition = 'none';
-                tape.style.transform = 'translateX(0px)';
                 loadUserInventory();
                 if (isAdmin) loadAdminCasesLogs();
-            }, 5200);
+            }, 2600);
         }
 
         function playTickSound() {
@@ -1103,16 +1125,16 @@
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(600 + i * 20, ctx.currentTime);
+                    osc.frequency.setValueAtTime(600 + i * 35, ctx.currentTime);
                     gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
                     osc.start();
-                    osc.stop(ctx.currentTime + 0.05);
+                    osc.stop(ctx.currentTime + 0.04);
                     i++;
-                    if (i > 35) clearInterval(interval);
-                }, 130);
+                    if (i > 30) clearInterval(interval);
+                }, 75); // Ускоренный щелчок под быструю рулетку
             } catch(e) {}
         }
 
@@ -1143,7 +1165,6 @@
             if (!grid) return;
             grid.innerHTML = '';
             
-            let itemsToRender = [];
             let totalFavCount = userFavorites.length;
 
             if (window.firebaseReady) {
