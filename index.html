@@ -80,7 +80,7 @@
 
             <!-- Профиль на ПК -->
             <div id="pc-user-profile" class="hidden md:flex items-center gap-2 bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-xl cursor-pointer hover:border-indigo-500/50" onclick="openProfileModal()">
-                <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase" id="pc-avatar">U</div>
+                <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase overflow-hidden" id="pc-avatar">U</div>
                 <span id="pc-username" class="text-xs font-bold text-slate-200">Пользователь</span>
             </div>
         </div>
@@ -89,16 +89,23 @@
     <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
         <!-- Секция Магазина (Adopt Me / MM2) -->
         <section id="shop-section">
-            <div class="flex justify-between items-center mb-4 sm:mb-6">
-                <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
-                <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between">
+                    <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
+                    <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
+                </div>
+                <!-- Поиск товаров -->
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="shop-search" oninput="filterProducts()" placeholder="Поиск товаров..." class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                </div>
             </div>
             
             <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4"></div>
 
             <div id="empty-shop-state" class="hidden text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 my-4">
                 <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
-                <p class="text-slate-400 font-medium text-sm">Товаров в этой категории пока нет</p>
+                <p class="text-slate-400 font-medium text-sm">Товаров в этой категории не найдено</p>
             </div>
         </section>
 
@@ -220,12 +227,18 @@
                     <i class="fa-solid fa-star text-amber-400"></i> Оставить отзыв
                 </h2>
                 <form id="review-form" onsubmit="handleSaveReview(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваше имя / Никнейм</label>
-                        <input type="text" id="rev-author" required placeholder="Например: Player_123" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Никнейм</label>
+                            <input type="text" id="rev-author" required placeholder="Например: Player_123" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Email при регистрации</label>
+                            <input type="email" id="rev-email" readonly class="w-full p-3 rounded-xl bg-slate-900/60 border border-slate-700/60 text-slate-400 text-sm cursor-not-allowed">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Оценка</label>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Оценка звёздами</label>
                         <select id="rev-rating" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 font-bold focus:outline-none focus:border-indigo-500 text-sm">
                             <option value="5">⭐⭐⭐⭐⭐ (5/5) — Отлично!</option>
                             <option value="4">⭐⭐⭐⭐ (4/5) — Хорошо</option>
@@ -235,11 +248,11 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Ваш отзыв</label>
-                        <textarea id="rev-text" required rows="3" placeholder="Напишите впечатления о покупке..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Описание проблемы / Отзыв</label>
+                        <textarea id="rev-text" required rows="3" placeholder="Опишите впечатление или возникшую проблему..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
                     </div>
                     <button type="submit" id="btn-review-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-3 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-95 text-sm">
-                        Отправить отзыв
+                        Опубликовать отзыв
                     </button>
                 </form>
             </div>
@@ -330,9 +343,19 @@
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара</label>
                             <input type="text" id="prod-title" required placeholder="Frost Dragon" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена (грн / ₴)</label>
-                            <input type="number" id="prod-price" min="1" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Цена (грн / ₴)</label>
+                                <input type="number" id="prod-price" min="1" required placeholder="150" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Скидка (%)</label>
+                                <input type="number" id="prod-discount" min="0" max="99" value="0" placeholder="0" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 text-sm">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="checkbox" id="prod-trending" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                            <label for="prod-trending" class="text-xs font-bold text-amber-400 cursor-pointer">🔥 Закрепить как Трендовый товар</label>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Фотография</label>
@@ -436,7 +459,7 @@
     <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
             <h3 class="text-xl font-bold text-white mb-1">Регистрация</h3>
-            <p class="text-xs text-slate-400 mb-5">Введите ник и почту для открытия кейсов</p>
+            <p class="text-xs text-slate-400 mb-5">Введите ник и почту для доступа к возможностям</p>
             <form onsubmit="handleRegisterUser(event)" class="space-y-3.5 text-left">
                 <div>
                     <label class="block text-[11px] font-semibold text-slate-400 mb-1 uppercase">Никнейм</label>
@@ -456,17 +479,75 @@
     <!-- Модальное окно Профиля -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xs sm:max-w-sm w-full p-6 text-center shadow-2xl relative space-y-4">
-            <div class="w-16 h-16 bg-indigo-600 text-white font-black text-2xl rounded-full flex items-center justify-center mx-auto uppercase" id="prof-modal-avatar">U</div>
-            <div>
-                <h3 class="text-lg font-bold text-white" id="prof-modal-username">Пользователь</h3>
-                <p class="text-xs text-slate-400" id="prof-modal-email">user@gmail.com</p>
+            
+            <!-- Аватарка с кнопкой изменения (Карандашик) -->
+            <div class="relative w-20 h-20 mx-auto">
+                <div class="w-20 h-20 bg-indigo-600 text-white font-black text-3xl rounded-full flex items-center justify-center uppercase overflow-hidden border-2 border-indigo-400 shadow-md" id="prof-modal-avatar">U</div>
+                <label for="avatar-input" class="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-400 text-slate-950 p-2 rounded-full cursor-pointer shadow-lg transition active:scale-90 w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-pencil text-xs"></i>
+                </label>
+                <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
             </div>
-            <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2">
-                <i class="fa-solid fa-crown"></i> Админ-Панель
-            </button>
-            <button type="button" onclick="closeProfileModal()" class="w-full bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">
+
+            <!-- Данные пользователя -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-center gap-2">
+                    <input type="text" id="prof-modal-username-input" class="text-center font-bold text-white bg-slate-900/60 border border-slate-700 rounded-lg px-2 py-1 text-sm focus:border-amber-400 focus:outline-none" value="Пользователь">
+                    <button type="button" onclick="saveUpdatedUsername()" class="bg-slate-700 hover:bg-slate-600 text-amber-400 p-1.5 rounded-lg text-xs" title="Сохранить никнейм"><i class="fa-solid fa-floppy-disk"></i></button>
+                </div>
+                <input type="email" id="prof-modal-email" readonly class="w-full text-center text-xs text-slate-400 bg-slate-900/40 border border-slate-800 rounded-lg py-1 cursor-not-allowed" value="user@gmail.com">
+            </div>
+
+            <!-- Кнопки функций -->
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button type="button" onclick="closeProfileModal(); switchTab('admin');" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-crown"></i> Админ-Панель
+                </button>
+                <button type="button" onclick="closeProfileModal(); switchTab('reviews');" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-star"></i> Отзывы
+                </button>
+                <button type="button" onclick="openChatModal()" class="col-span-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
+                    <i class="fa-solid fa-comments text-sm"></i> Открыть Чат
+                </button>
+            </div>
+
+            <button type="button" onclick="closeProfileModal()" class="w-full bg-slate-700 text-slate-200 font-bold py-2 rounded-xl transition text-xs">
                 Закрыть
             </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно ЧАТА -->
+    <div id="chat-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full h-[520px] flex flex-col shadow-2xl relative overflow-hidden">
+            <!-- Шапка чата -->
+            <div class="p-3.5 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-comments text-emerald-400"></i> Общий Чат Игроков
+                        </h3>
+                        <p class="text-[10px] text-slate-400">
+                            Онлайн: <span id="chat-online-count" class="text-emerald-400 font-bold">0</span> | Всего игроков: <span id="chat-total-users" class="text-indigo-400 font-bold">0</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeChatModal()" class="text-slate-400 hover:text-white p-1 rounded-lg text-sm">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Список сообщений -->
+            <div id="chat-messages" class="flex-grow p-3 space-y-3 overflow-y-auto bg-slate-900/40"></div>
+
+            <!-- Ввод сообщения -->
+            <form onsubmit="handleSendChatMessage(event)" class="p-2.5 bg-slate-900 border-t border-slate-700 flex gap-2">
+                <input type="text" id="chat-input" required placeholder="Напишите сообщение в чат..." class="flex-grow p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-1.5 shadow-md active:scale-95">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -495,6 +576,8 @@
         let isAdmin = false;
         let currentUser = null;
         let isSpinningCase = false;
+        let allProductsCache = [];
+        let userFavorites = JSON.parse(localStorage.getItem('roblox_favorites') || '[]');
 
         let defaultCaseItems = {
             adopt: [
@@ -518,10 +601,7 @@
             mm2: [...defaultCaseItems.mm2]
         };
         
-        let currentCasePrices = {
-            adopt: 50,
-            mm2: 50
-        };
+        let currentCasePrices = { adopt: 50, mm2: 50 };
 
         window.addEventListener('DOMContentLoaded', () => {
             checkUserAuth();
@@ -533,6 +613,8 @@
                 loadProducts();
                 loadCaseData('adopt');
                 loadCaseData('mm2');
+                loadChatMessages();
+                loadChatStats();
             }
         });
 
@@ -556,33 +638,76 @@
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             if (!username || !email) return;
 
-            currentUser = { username, email, isAdmin: false };
+            currentUser = { username, email, isAdmin: false, avatar: null };
             localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
+            
+            if (window.firebaseReady) {
+                const { ref, set } = window.fb;
+                set(ref(window.rtdb, `registered_users/${safeEmailKey(email)}`), { username, email });
+            }
             updateProfileUI();
         }
 
         function updateProfileUI() {
             if (!currentUser) return;
-            const letter = currentUser.username.charAt(0).toUpperCase();
-            document.getElementById('pc-avatar').innerText = letter;
+            
+            const pcAvatar = document.getElementById('pc-avatar');
+            const modalAvatar = document.getElementById('prof-modal-avatar');
+
+            if (currentUser.avatar) {
+                pcAvatar.innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-full">`;
+                modalAvatar.innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                const letter = currentUser.username.charAt(0).toUpperCase();
+                pcAvatar.innerText = letter;
+                modalAvatar.innerText = letter;
+            }
+
             document.getElementById('pc-username').innerText = currentUser.username;
             document.getElementById('pc-user-profile').classList.remove('hidden');
 
-            document.getElementById('prof-modal-avatar').innerText = letter;
-            document.getElementById('prof-modal-username').innerText = currentUser.username;
-            document.getElementById('prof-modal-email').innerText = currentUser.email;
+            document.getElementById('prof-modal-username-input').value = currentUser.username;
+            document.getElementById('prof-modal-email').value = currentUser.email;
 
             const revAuthor = document.getElementById('rev-author');
-            if (revAuthor && !revAuthor.value) revAuthor.value = currentUser.username;
+            const revEmail = document.getElementById('rev-email');
+            if (revAuthor) revAuthor.value = currentUser.username;
+            if (revEmail) revEmail.value = currentUser.email;
 
             loadUserSpins('adopt');
             loadUserSpins('mm2');
             loadUserInventory();
         }
 
+        async function handleAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+            const compressed = await compressImage(file, 200, 0.7);
+            currentUser.avatar = compressed;
+            localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            updateProfileUI();
+        }
+
+        function saveUpdatedUsername() {
+            const newName = document.getElementById('prof-modal-username-input').value.trim();
+            if (!newName || !currentUser) return;
+            currentUser.username = newName;
+            localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
+            updateProfileUI();
+            alert('Никнейм обновлён!');
+        }
+
         function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
         function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+
+        function openChatModal() { 
+            closeProfileModal(); 
+            document.getElementById('chat-modal').classList.remove('hidden'); 
+            loadChatMessages();
+            loadChatStats();
+        }
+        function closeChatModal() { document.getElementById('chat-modal').classList.add('hidden'); }
 
         function handleCheckAdminPass(e) {
             if (e) e.preventDefault();
@@ -606,6 +731,7 @@
             document.getElementById('admin-badge').classList.remove('hidden');
             loadAdminCaseInputs();
             loadAdminCasesLogs();
+            loadProducts();
         }
 
         function handleLogoutAdmin() {
@@ -624,7 +750,7 @@
             currentTab = tab;
             ['adopt', 'mm2', 'case_adopt', 'case_mm2', 'inventory', 'reviews', 'admin'].forEach(t => {
                 const el = document.getElementById(t + '-section');
-                if (el) el.classList.toggle('hidden', t !== tab);
+                if (el) el.classList.toggle('hidden', (t === 'adopt' || t === 'mm2') ? (tab !== 'adopt' && tab !== 'mm2') : t !== tab);
                 const btn = document.getElementById('btn-' + t);
                 if (btn) btn.className = (t === tab) ? 'px-3.5 py-2 rounded-xl transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/35 whitespace-nowrap active:scale-95' : 'px-3.5 py-2 rounded-xl transition bg-slate-700/60 text-slate-300 hover:bg-slate-700 whitespace-nowrap active:scale-95';
             });
@@ -635,7 +761,9 @@
 
             if (tab === 'adopt' || tab === 'mm2') {
                 document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
-                loadProducts();
+                // Скролл к секции
+                document.getElementById('shop-section').scrollIntoView({ behavior: 'smooth' });
+                renderProductsGrid();
             } else if (tab === 'case_adopt') {
                 loadCaseData('adopt');
                 loadUserSpins('adopt');
@@ -657,54 +785,99 @@
             loadCaseData('mm2');
             loadUserSpins('adopt');
             loadUserSpins('mm2');
+            loadChatMessages();
+            loadChatStats();
         };
 
         function loadProducts() {
             if (!window.firebaseReady) return;
             const { ref, onValue } = window.fb;
             onValue(ref(window.rtdb, 'products'), (snapshot) => {
-                const grid = document.getElementById('items-grid');
-                const emptyState = document.getElementById('empty-shop-state');
-                const countBadge = document.getElementById('items-count');
-                grid.innerHTML = '';
-                let count = 0;
+                allProductsCache = [];
                 const data = snapshot.val();
                 if (data) {
                     Object.keys(data).forEach(key => {
-                        const item = { id: key, ...data[key] };
-                        if (item.category === currentTab) {
-                            count++;
-                            grid.innerHTML += `
-                                <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2">
-                                    <div class="h-24 sm:h-28 bg-slate-900 rounded-lg flex items-center justify-center p-1 border border-slate-700/50">
-                                        <img src="${item.img || 'https://via.placeholder.com/120'}" class="max-h-full max-w-full object-contain">
-                                    </div>
-                                    <div class="mt-2 flex flex-col justify-between flex-grow">
-                                        <div>
-                                            <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${item.title}</h3>
-                                            <p class="text-xs sm:text-sm font-extrabold text-emerald-400 my-0.5">${item.price} ₴</p>
-                                        </div>
-                                        <div class="mt-1 pt-1 border-t border-slate-700/40">
-                                            ${isAdmin ? `
-                                                <button onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/20 text-red-400 py-1 rounded text-[10px] font-bold">Удалить</button>
-                                            ` : `
-                                                <button onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 rounded text-xs shadow-md">Купить</button>
-                                            `}
-                                        </div>
-                                    </div>
-                                </div>`;
-                        }
+                        allProductsCache.push({ id: key, ...data[key] });
                     });
                 }
-                countBadge.innerText = `${count} товаров`;
-                emptyState.classList.toggle('hidden', count > 0);
+                renderProductsGrid();
             });
+        }
+
+        function filterProducts() { renderProductsGrid(); }
+
+        function toggleFavoriteShop(prodId) {
+            if (userFavorites.includes(prodId)) {
+                userFavorites = userFavorites.filter(id => id !== prodId);
+            } else {
+                userFavorites.push(prodId);
+            }
+            localStorage.setItem('roblox_favorites', JSON.stringify(userFavorites));
+            renderProductsGrid();
+        }
+
+        function renderProductsGrid() {
+            const grid = document.getElementById('items-grid');
+            const emptyState = document.getElementById('empty-shop-state');
+            const countBadge = document.getElementById('items-count');
+            const searchVal = (document.getElementById('shop-search')?.value || '').toLowerCase().trim();
+            
+            grid.innerHTML = '';
+            let count = 0;
+
+            allProductsCache.forEach(item => {
+                if (item.category === currentTab && item.title.toLowerCase().includes(searchVal)) {
+                    count++;
+                    const isFav = userFavorites.includes(item.id);
+                    const discount = item.discount || 0;
+                    const finalPrice = discount > 0 ? Math.round(item.price * (1 - discount / 100)) : item.price;
+
+                    grid.innerHTML += `
+                        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2.5 relative group">
+                            <!-- Сердце Избранного -->
+                            <button onclick="toggleFavoriteShop('${item.id}')" class="absolute top-2 right-2 z-10 p-1 rounded-full bg-slate-900/80 text-xs transition active:scale-90">
+                                <i class="fa-solid fa-heart ${isFav ? 'text-red-500' : 'text-slate-500'}"></i>
+                            </button>
+
+                            <!-- Бэдж Трендовый / Скидка -->
+                            <div class="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                                ${item.isTrending ? `<span class="bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded shadow uppercase">🔥 Trend</span>` : ''}
+                                ${discount > 0 ? `<span class="bg-red-500 text-white font-black text-[9px] px-1 py-0.5 rounded shadow">-${discount}%</span>` : ''}
+                            </div>
+
+                            <div class="h-28 sm:h-32 bg-slate-900 rounded-lg flex items-center justify-center p-1 border border-slate-700/50 mt-1">
+                                <img src="${item.img || 'https://via.placeholder.com/120'}" class="max-h-full max-w-full object-contain">
+                            </div>
+                            <div class="mt-2 flex flex-col justify-between flex-grow">
+                                <div>
+                                    <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${item.title}</h3>
+                                    <div class="flex items-center gap-1.5 my-0.5">
+                                        <span class="text-xs sm:text-sm font-extrabold text-emerald-400">${finalPrice} ₴</span>
+                                        ${discount > 0 ? `<span class="text-[10px] text-slate-500 line-through">${item.price} ₴</span>` : ''}
+                                    </div>
+                                </div>
+                                <div class="mt-1 pt-1 border-t border-slate-700/40">
+                                    ${isAdmin ? `
+                                        <button onclick="handleDeleteProduct('${item.id}')" class="w-full bg-red-500/20 text-red-400 py-1 rounded text-[10px] font-bold">Удалить</button>
+                                    ` : `
+                                        <button onclick="handleBuyProduct('${item.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 rounded text-xs shadow-md">Купить</button>
+                                    `}
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            });
+
+            countBadge.innerText = `${count} товаров`;
+            emptyState.classList.toggle('hidden', count > 0);
         }
 
         async function handleSaveProduct(e) {
             e.preventDefault();
             const title = document.getElementById('prod-title').value.trim();
             const price = Number(document.getElementById('prod-price').value);
+            const discount = Number(document.getElementById('prod-discount').value) || 0;
+            const isTrending = document.getElementById('prod-trending').checked;
             const category = document.getElementById('prod-category').value;
             const fileInput = document.getElementById('prod-img');
             let imgData = 'https://via.placeholder.com/120';
@@ -712,7 +885,7 @@
 
             if (window.firebaseReady) {
                 const { ref, push } = window.fb;
-                await push(ref(window.rtdb, 'products'), { title, price, category, img: imgData });
+                await push(ref(window.rtdb, 'products'), { title, price, discount, isTrending, category, img: imgData });
                 alert('Товар добавлен в магазин!');
                 document.getElementById('product-form').reset();
                 switchTab(category);
@@ -845,6 +1018,7 @@
                     name: wonItem.name,
                     rarity: wonItem.rarity,
                     img: wonItem.img,
+                    isFav: false,
                     wonAt: new Date().toLocaleString()
                 });
 
@@ -903,7 +1077,10 @@
                         const item = { id, ...data[id] };
                         count++;
                         grid.innerHTML += `
-                            <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg rarity-${item.rarity || 'common'}">
+                            <div class="bg-slate-800 border rounded-xl p-3 flex flex-col justify-between items-center text-center shadow-lg relative rarity-${item.rarity || 'common'}">
+                                <button onclick="toggleFavInventoryItem('${id}', ${!item.isFav})" class="absolute top-2 right-2 text-xs">
+                                    <i class="fa-solid fa-star ${item.isFav ? 'text-amber-400' : 'text-slate-600 hover:text-amber-400'}"></i>
+                                </button>
                                 <img src="${item.img}" class="w-20 h-16 object-contain my-2 filter drop-shadow">
                                 <span class="font-bold text-xs text-white line-clamp-1">${item.name}</span>
                                 <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">${item.rarity || 'common'}</span>
@@ -913,6 +1090,13 @@
                 }
                 emptyState.classList.toggle('hidden', count > 0);
             });
+        }
+
+        async function toggleFavInventoryItem(id, status) {
+            if (!currentUser || !window.firebaseReady) return;
+            const key = safeEmailKey(currentUser.email);
+            const { ref, set } = window.fb;
+            await set(ref(window.rtdb, `user_inventory/${key}/${id}/isFav`), status);
         }
 
         async function removeInventoryItem(id) {
@@ -942,7 +1126,7 @@
                 const key = safeEmailKey(email);
                 const { ref, push } = window.fb;
                 await push(ref(window.rtdb, `user_inventory/${key}`), {
-                    name, rarity, img: imgData, wonAt: new Date().toLocaleString()
+                    name, rarity, img: imgData, isFav: false, wonAt: new Date().toLocaleString()
                 });
                 alert(`Успешно! Предмет "${name}" выдан игроку ${email} в инвентарь.`);
                 document.getElementById('give-item-email').value = '';
@@ -968,7 +1152,7 @@
 
             const container = document.getElementById('admin-case-items-list');
             container.innerHTML = '';
-            const items = defaultCaseItems[cat];
+            const items = currentCaseItems[cat] || defaultCaseItems[cat];
 
             items.forEach((item, idx) => {
                 container.innerHTML += `
@@ -987,8 +1171,9 @@
                             <input type="text" id="adm-item-name-${idx}" value="${item.name}" placeholder="Название" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
                             <input type="text" id="adm-item-chance-${idx}" value="${item.chance}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
                         </div>
-                        <div>
-                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                        <div class="space-y-1">
+                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700 mb-1">
+                            <input type="file" id="adm-item-file-${idx}" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:bg-amber-500 file:text-slate-950 cursor-pointer">
                         </div>
                     </div>`;
             });
@@ -1000,12 +1185,18 @@
             const newItems = [];
             
             for (let i = 0; i < 5; i++) {
-                newItems.push({
-                    name: document.getElementById(`adm-item-name-${i}`).value.trim() || `Скин ${i+1}`,
-                    rarity: document.getElementById(`adm-item-rarity-${i}`).value,
-                    chance: document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%',
-                    img: document.getElementById(`adm-item-img-${i}`).value.trim() || 'https://via.placeholder.com/120'
-                });
+                const name = document.getElementById(`adm-item-name-${i}`).value.trim() || `Предмет ${i+1}`;
+                const rarity = document.getElementById(`adm-item-rarity-${i}`).value;
+                const chance = document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%';
+                const urlImg = document.getElementById(`adm-item-img-${i}`).value.trim();
+                const fileInput = document.getElementById(`adm-item-file-${i}`);
+
+                let img = urlImg || 'https://via.placeholder.com/120';
+                if (fileInput && fileInput.files[0]) {
+                    img = await compressImage(fileInput.files[0]);
+                }
+
+                newItems.push({ name, rarity, chance, img });
             }
 
             if (window.firebaseReady) {
@@ -1084,13 +1275,21 @@
                 list.innerHTML = '';
                 const data = snap.val();
                 if (!data) { list.innerHTML = `<p class="text-slate-500 text-xs text-center">Отзывов пока нет.</p>`; return; }
-                Object.keys(data).forEach(k => {
+                
+                // Публикуются сверху (новые первыми)
+                Object.keys(data).reverse().forEach(k => {
                     const rev = data[k];
                     list.innerHTML += `
-                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-bold text-xs text-slate-200">${rev.author}</span>
-                                <span class="text-amber-400 text-xs">${'⭐'.repeat(rev.rating)}</span>
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 space-y-1 relative group">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-xs text-slate-200">${rev.author}</span>
+                                    <span class="text-[10px] text-slate-500">(${rev.email || 'Email не указан'})</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-amber-400 text-xs">${'⭐'.repeat(rev.rating)}</span>
+                                    ${isAdmin ? `<button onclick="handleDeleteReview('${k}')" class="text-red-400 hover:text-red-300 text-xs ml-2" title="Удалить отзыв"><i class="fa-solid fa-trash"></i></button>` : ''}
+                                </div>
                             </div>
                             <p class="text-slate-300 text-xs">${rev.text}</p>
                         </div>`;
@@ -1101,13 +1300,88 @@
         async function handleSaveReview(e) {
             e.preventDefault();
             const author = document.getElementById('rev-author').value.trim();
+            const email = document.getElementById('rev-email').value;
             const rating = document.getElementById('rev-rating').value;
             const text = document.getElementById('rev-text').value.trim();
+
             if (window.firebaseReady) {
                 const { ref, push } = window.fb;
-                await push(ref(window.rtdb, 'reviews'), { author, rating, text });
-                alert('Отзыв отправлен!');
+                await push(ref(window.rtdb, 'reviews'), { author, email, rating, text, createdAt: Date.now() });
+                alert('Отзыв опубликован!');
                 document.getElementById('rev-text').value = '';
+            }
+        }
+
+        async function handleDeleteReview(reviewId) {
+            if (confirm('Удалить этот отзыв?')) {
+                const { ref, remove } = window.fb;
+                await remove(ref(window.rtdb, 'reviews/' + reviewId));
+            }
+        }
+
+        /* --- ФУНКЦИОНАЛ ЧАТА --- */
+        function loadChatMessages() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'chat_messages'), (snap) => {
+                const container = document.getElementById('chat-messages');
+                container.innerHTML = '';
+                const data = snap.val();
+                if (!data) {
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Сообщений в чате пока нет. Напишите первым!</p>`;
+                    return;
+                }
+                Object.values(data).forEach(msg => {
+                    const avatarContent = msg.avatar ? `<img src="${msg.avatar}" class="w-full h-full object-cover">` : msg.username.charAt(0).toUpperCase();
+                    container.innerHTML += `
+                        <div class="flex items-start gap-2.5">
+                            <div class="w-7 h-7 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 overflow-hidden uppercase">
+                                ${avatarContent}
+                            </div>
+                            <div class="bg-slate-800 p-2.5 rounded-2xl border border-slate-700/80 max-w-[85%] space-y-0.5">
+                                <div class="flex justify-between items-center gap-3">
+                                    <span class="font-bold text-xs text-indigo-300">${msg.username}</span>
+                                    <span class="text-[9px] text-slate-500">${msg.time}</span>
+                                </div>
+                                <p class="text-xs text-slate-200">${msg.text}</p>
+                            </div>
+                        </div>`;
+                });
+                container.scrollTop = container.scrollHeight;
+            });
+        }
+
+        function loadChatStats() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'registered_users'), (snap) => {
+                const data = snap.val() || {};
+                const total = Object.keys(data).length || 1;
+                document.getElementById('chat-total-users').innerText = total;
+                // Имитация онлайн участников
+                document.getElementById('chat-online-count').innerText = Math.max(1, Math.floor(Math.random() * 5) + 1);
+            });
+        }
+
+        async function handleSendChatMessage(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                alert('Сначала зарегистрируйтесь!');
+                return;
+            }
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (window.firebaseReady) {
+                const { ref, push } = window.fb;
+                await push(ref(window.rtdb, 'chat_messages'), {
+                    username: currentUser.username,
+                    avatar: currentUser.avatar || null,
+                    text: text,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+                input.value = '';
             }
         }
 
