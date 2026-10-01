@@ -431,6 +431,13 @@
                             <input type="number" id="admin-case-price" min="1" required placeholder="50" class="w-full p-2.5 rounded-xl bg-slate-900 border border-amber-500/50 text-amber-400 font-bold text-sm">
                         </div>
 
+                        <div class="flex justify-between items-center pt-2">
+                            <span class="text-xs font-bold text-slate-300">Содержимое кейса:</span>
+                            <button type="button" onclick="addAdminCaseItemRow()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1 active:scale-95">
+                                <i class="fa-solid fa-plus"></i> Добавить предмет
+                            </button>
+                        </div>
+
                         <div id="admin-case-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
                         
                         <button type="button" onclick="saveAdminCaseSettings()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg active:scale-95 text-sm">
@@ -472,6 +479,17 @@
                         <i class="fa-solid fa-clock-rotate-left"></i> История открытий кейсов
                     </h2>
                     <div id="admin-cases-logs" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                </div>
+
+                <!-- СПИСОК ЗАРЕГИСТРИРОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ -->
+                <div class="bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-700 shadow-xl">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-bold text-indigo-300 flex items-center gap-2">
+                            <i class="fa-solid fa-users"></i> Зарегистрированные пользователи
+                        </h2>
+                        <span id="registered-users-count" class="text-xs bg-slate-900 text-indigo-400 font-bold px-2.5 py-1 rounded-lg border border-slate-700">0 пользователей</span>
+                    </div>
+                    <div id="admin-registered-users-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </section>
@@ -662,6 +680,7 @@
                 loadCaseData('mm2');
                 loadChatMessages();
                 loadChatStats();
+                loadRegisteredUsers();
             }
         });
 
@@ -685,13 +704,14 @@
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             if (!username || !email) return;
 
-            currentUser = { username, email, isAdmin: false, avatar: null, showAdminTag: false };
+            const registeredAt = Date.now();
+            currentUser = { username, email, isAdmin: false, avatar: null, showAdminTag: false, registeredAt };
             localStorage.setItem('roblox_shop_user', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
             
             if (window.firebaseReady) {
                 const { ref, set } = window.fb;
-                set(ref(window.rtdb, `registered_users/${safeEmailKey(email)}`), { username, email });
+                set(ref(window.rtdb, `registered_users/${safeEmailKey(email)}`), { username, email, registeredAt });
             }
             updateProfileUI();
         }
@@ -782,6 +802,7 @@
             loadAdminCaseInputs();
             loadAdminCasesLogs();
             loadProducts();
+            loadRegisteredUsers();
         }
 
         function toggleAdminTagInChat(status) {
@@ -827,8 +848,8 @@
                 `;
             } else if (currentTab === 'mm2') {
                 optionsHTML += `
-                    <option value="Хрома">Хрома (Chroma)</option>
                     <option value="Годли">Годли (Godly)</option>
+                    <option value="Хрома">Хрома (Chroma)</option>
                     <option value="Нож">Нож</option>
                     <option value="Пистолет">Пистолет</option>
                     <option value="Другое">Другое</option>
@@ -864,8 +885,8 @@
                 `;
             } else if (selectedCat === 'mm2') {
                 optionsHTML = `
-                    <option value="Хрома">Хрома (Chroma)</option>
                     <option value="Годли">Годли (Godly)</option>
+                    <option value="Хрома">Хрома (Chroma)</option>
                     <option value="Нож">Нож</option>
                     <option value="Пистолет">Пистолет</option>
                     <option value="Другое">Другое</option>
@@ -916,6 +937,7 @@
                 loadReviews();
             } else if (tab === 'admin' && isAdmin) {
                 loadAdminCasesLogs();
+                loadRegisteredUsers();
             }
         }
 
@@ -927,6 +949,7 @@
             loadUserSpins('mm2');
             loadChatMessages();
             loadChatStats();
+            loadRegisteredUsers();
         };
 
         function loadProducts() {
@@ -1092,8 +1115,9 @@
             if (!tape) return;
             tape.innerHTML = '';
             let extendedItems = [];
+            const items = currentCaseItems[cat] && currentCaseItems[cat].length > 0 ? currentCaseItems[cat] : defaultCaseItems[cat];
             for (let i = 0; i < 8; i++) {
-                extendedItems = extendedItems.concat(currentCaseItems[cat]);
+                extendedItems = extendedItems.concat(items);
             }
             extendedItems.forEach(item => {
                 tape.innerHTML += `
@@ -1108,7 +1132,8 @@
             const showcase = document.getElementById(`case-${cat}-showcase`);
             if (!showcase) return;
             showcase.innerHTML = '';
-            currentCaseItems[cat].forEach(item => {
+            const items = currentCaseItems[cat] && currentCaseItems[cat].length > 0 ? currentCaseItems[cat] : defaultCaseItems[cat];
+            items.forEach(item => {
                 showcase.innerHTML += `
                     <div class="bg-slate-900/90 border rounded-xl p-2.5 flex flex-col items-center text-center rarity-${item.rarity || 'common'}">
                         <img src="${item.img}" class="w-14 h-12 object-contain mb-1">
@@ -1180,7 +1205,7 @@
             tape.style.transform = 'translateX(0px)';
             tape.offsetHeight;
 
-            const itemsList = currentCaseItems[cat];
+            const itemsList = currentCaseItems[cat] && currentCaseItems[cat].length > 0 ? currentCaseItems[cat] : defaultCaseItems[cat];
             
             const result = getRandomItemByChance(itemsList);
             const wonItem = result.item;
@@ -1389,38 +1414,72 @@
                     const val = snap.val();
                     const price = (val && val.price !== undefined) ? val.price : 50;
                     document.getElementById('admin-case-price').value = price;
+                    
+                    if (val && val.items && Array.isArray(val.items)) {
+                        currentCaseItems[cat] = val.items;
+                    }
+                    renderAdminCaseItemsList();
                 });
             } else {
                 document.getElementById('admin-case-price').value = currentCasePrices[cat];
+                renderAdminCaseItemsList();
             }
+        }
 
+        function renderAdminCaseItemsList() {
+            const cat = document.getElementById('admin-case-cat').value;
             const container = document.getElementById('admin-case-items-list');
+            if (!container) return;
             container.innerHTML = '';
+            
             const items = currentCaseItems[cat] || defaultCaseItems[cat];
 
             items.forEach((item, idx) => {
                 container.innerHTML += `
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 space-y-2">
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 space-y-2 relative group">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-bold text-amber-400">Предмет #${idx + 1}</span>
-                            <select id="adm-item-rarity-${idx}" class="text-xs bg-slate-800 text-white p-1 rounded border border-slate-700">
-                                <option value="common" ${item.rarity==='common'?'selected':''}>Common</option>
-                                <option value="rare" ${item.rarity==='rare'?'selected':''}>Rare</option>
-                                <option value="epic" ${item.rarity==='epic'?'selected':''}>Epic</option>
-                                <option value="legendary" ${item.rarity==='legendary'?'selected':''}>Legendary</option>
-                                <option value="godly" ${item.rarity==='godly'?'selected':''}>Godly</option>
-                            </select>
+                            <div class="flex items-center gap-2">
+                                <select id="adm-item-rarity-${idx}" class="text-xs bg-slate-800 text-white p-1 rounded border border-slate-700">
+                                    <option value="common" ${item.rarity==='common'?'selected':''}>Common</option>
+                                    <option value="rare" ${item.rarity==='rare'?'selected':''}>Rare</option>
+                                    <option value="epic" ${item.rarity==='epic'?'selected':''}>Epic</option>
+                                    <option value="legendary" ${item.rarity==='legendary'?'selected':''}>Legendary</option>
+                                    <option value="godly" ${item.rarity==='godly'?'selected':''}>Godly</option>
+                                </select>
+                                <button type="button" onclick="removeAdminCaseItemRow(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Удалить предмет из кейса"><i class="fa-solid fa-trash"></i></button>
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="adm-item-name-${idx}" value="${item.name}" placeholder="Название" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
-                            <input type="text" id="adm-item-chance-${idx}" value="${item.chance}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                            <input type="text" id="adm-item-name-${idx}" value="${item.name || ''}" placeholder="Название" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
+                            <input type="text" id="adm-item-chance-${idx}" value="${item.chance || '10%'}" placeholder="Шанс (напр. 10%)" class="p-2 rounded bg-slate-800 text-white text-xs border border-slate-700">
                         </div>
                         <div class="space-y-1">
-                            <input type="text" id="adm-item-img-${idx}" value="${item.img}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700 mb-1">
+                            <input type="text" id="adm-item-img-${idx}" value="${item.img || ''}" placeholder="Ссылка на фото (URL)" class="w-full p-2 rounded bg-slate-800 text-white text-xs border border-slate-700 mb-1">
                             <input type="file" id="adm-item-file-${idx}" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:bg-amber-500 file:text-slate-950 cursor-pointer">
                         </div>
                     </div>`;
             });
+        }
+
+        function addAdminCaseItemRow() {
+            const cat = document.getElementById('admin-case-cat').value;
+            if (!currentCaseItems[cat]) currentCaseItems[cat] = [];
+            currentCaseItems[cat].push({
+                name: "Новый Предмет",
+                rarity: "common",
+                chance: "10%",
+                img: "https://via.placeholder.com/120"
+            });
+            renderAdminCaseItemsList();
+        }
+
+        function removeAdminCaseItemRow(idx) {
+            const cat = document.getElementById('admin-case-cat').value;
+            if (currentCaseItems[cat] && currentCaseItems[cat].length > idx) {
+                currentCaseItems[cat].splice(idx, 1);
+                renderAdminCaseItemsList();
+            }
         }
 
         async function saveAdminCaseSettings() {
@@ -1428,8 +1487,13 @@
             const newPrice = Number(document.getElementById('admin-case-price').value) || 50;
             const newItems = [];
             
-            for (let i = 0; i < 5; i++) {
-                const name = document.getElementById(`adm-item-name-${i}`).value.trim() || `Предмет ${i+1}`;
+            const currentCount = (currentCaseItems[cat] || []).length;
+            
+            for (let i = 0; i < currentCount; i++) {
+                const nameInput = document.getElementById(`adm-item-name-${i}`);
+                if (!nameInput) continue;
+                
+                const name = nameInput.value.trim() || `Предмет ${i+1}`;
                 const rarity = document.getElementById(`adm-item-rarity-${i}`).value;
                 const chance = document.getElementById(`adm-item-chance-${i}`).value.trim() || '10%';
                 const urlImg = document.getElementById(`adm-item-img-${i}`).value.trim();
@@ -1487,6 +1551,62 @@
                                 <span class="text-slate-400 block text-[10px]">Кейс: ${log.caseType} | Выпало: <strong class="text-amber-400">${log.itemName}</strong></span>
                             </div>
                             <span class="text-[10px] text-slate-500">${log.time}</span>
+                        </div>`;
+                });
+            });
+        }
+
+        /* --- ЗАРЕГИСТРИРОВАННЫЕ ПОЛЬЗОВАТЕЛИ В АДМИН ПАНЕЛИ --- */
+        function loadRegisteredUsers() {
+            if (!window.firebaseReady) return;
+            const { ref, onValue } = window.fb;
+            onValue(ref(window.rtdb, 'registered_users'), (snap) => {
+                const container = document.getElementById('admin-registered-users-list');
+                const badge = document.getElementById('registered-users-count');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                const data = snap.val();
+                if (!data) {
+                    if (badge) badge.innerText = '0 пользователей';
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-3">Пользователей пока нет</p>`;
+                    return;
+                }
+
+                const usersList = Object.values(data);
+                if (badge) badge.innerText = `${usersList.length} пользователей`;
+
+                const now = Date.now();
+
+                usersList.reverse().forEach(usr => {
+                    let regDateStr = 'Неизвестно';
+                    let daysOnSiteStr = '0 дней (Сегодня)';
+
+                    if (usr.registeredAt) {
+                        const dateObj = new Date(usr.registeredAt);
+                        regDateStr = dateObj.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        
+                        const diffMs = now - usr.registeredAt;
+                        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                        daysOnSiteStr = days === 0 ? '0 дней (Сегодня)' : `${days} дн.`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-xs flex justify-between items-center gap-2">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-white text-sm">${usr.username}</span>
+                                    <span class="text-[10px] bg-slate-800 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/20">${usr.email}</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400">
+                                    Дата регистрации: <span class="text-slate-300 font-medium">${regDateStr}</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-1 rounded-lg inline-block">
+                                    <i class="fa-solid fa-calendar-day me-1"></i>На сайте: ${daysOnSiteStr}
+                                </span>
+                            </div>
                         </div>`;
                 });
             });
