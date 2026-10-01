@@ -94,10 +94,22 @@
                     <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-indigo-300">Adopt Me</h2>
                     <span id="items-count" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400">0 товаров</span>
                 </div>
-                <!-- Поиск товаров -->
-                <div class="relative w-full sm:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="shop-search" oninput="filterProducts()" placeholder="Поиск товаров..." class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                
+                <!-- Блок поиска с выборкой темы -->
+                <div class="flex items-center gap-1.5 w-full sm:w-auto">
+                    <!-- Стрелочка и Выпадающий список тем -->
+                    <div class="relative">
+                        <select id="shop-type-filter" onchange="filterProducts()" class="appearance-none bg-slate-800 border border-slate-700 text-xs text-indigo-300 font-bold py-1.5 pl-3 pr-7 rounded-xl focus:outline-none focus:border-indigo-500 cursor-pointer">
+                            <option value="all">Все темы</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                    </div>
+
+                    <!-- Поиск товаров -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="shop-search" oninput="filterProducts()" placeholder="Поиск товаров..." class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                    </div>
                 </div>
             </div>
             
@@ -797,6 +809,29 @@
             switchTab('adopt');
         }
 
+        function updateTypeFilterOptions() {
+            const filterSelect = document.getElementById('shop-type-filter');
+            if (!filterSelect) return;
+
+            let optionsHTML = '<option value="all">Все темы</option>';
+            if (currentTab === 'adopt') {
+                optionsHTML += `
+                    <option value="Пет">Пет</option>
+                    <option value="Яйцо">Яйцо</option>
+                    <option value="Машина">Машина</option>
+                    <option value="Игрушка">Игрушка</option>
+                    <option value="Подарок">Подарок</option>
+                `;
+            } else if (currentTab === 'mm2') {
+                optionsHTML += `
+                    <option value="Нож">Нож</option>
+                    <option value="Пистолет">Пистолет</option>
+                `;
+            }
+            filterSelect.innerHTML = optionsHTML;
+            filterSelect.value = 'all';
+        }
+
         function switchTab(tab) {
             currentTab = tab;
 
@@ -805,6 +840,7 @@
             if (tab === 'adopt' || tab === 'mm2') {
                 document.getElementById('shop-section').classList.remove('hidden');
                 document.getElementById('section-title').innerText = tab === 'adopt' ? 'Adopt Me' : 'MM2';
+                updateTypeFilterOptions();
                 renderProductsGrid();
             } else {
                 const targetSec = document.getElementById(`${tab}-section`);
@@ -884,6 +920,7 @@
             const emptyState = document.getElementById('empty-shop-state');
             const countBadge = document.getElementById('items-count');
             const searchVal = (document.getElementById('shop-search')?.value || '').toLowerCase().trim();
+            const selectedType = document.getElementById('shop-type-filter')?.value || 'all';
             
             grid.innerHTML = '';
             let count = 0;
@@ -900,7 +937,11 @@
             });
 
             sortedProducts.forEach(item => {
-                if (item.category === currentTab && item.title.toLowerCase().includes(searchVal)) {
+                const matchesCategory = item.category === currentTab;
+                const matchesSearch = item.title.toLowerCase().includes(searchVal);
+                const matchesType = (selectedType === 'all') || (item.type === selectedType);
+
+                if (matchesCategory && matchesSearch && matchesType) {
                     count++;
                     const isFav = userFavorites.includes(item.id);
                     const discount = item.discount || 0;
