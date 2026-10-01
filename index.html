@@ -356,12 +356,27 @@
                         <i class="fa-solid fa-plus-circle"></i> Опубликовать товар в магазин
                     </h2>
                     <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-3.5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Категория</label>
-                            <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
-                                <option value="adopt">Adopt Me</option>
-                                <option value="mm2">MM2</option>
-                            </select>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Режим</label>
+                                <select id="prod-category" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                    <option value="adopt">Adopt Me</option>
+                                    <option value="mm2">MM2</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Тип предмета</label>
+                                <select id="prod-type" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm">
+                                    <option value="Пет">Пет (Pet)</option>
+                                    <option value="Яйцо">Яйцо (Egg)</option>
+                                    <option value="Машина">Машина (Vehicle)</option>
+                                    <option value="Игрушка">Игрушка (Toy)</option>
+                                    <option value="Нож">Нож (Knife)</option>
+                                    <option value="Пистолет">Пистолет (Gun)</option>
+                                    <option value="Подарок">Подарок (Gift)</option>
+                                    <option value="Другое">Другое</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase">Название товара</label>
@@ -873,10 +888,15 @@
             grid.innerHTML = '';
             let count = 0;
 
+            // Сортировка: Трендовые всегда первые, остальные от самых дорогих к дешёвым
             const sortedProducts = [...allProductsCache].sort((a, b) => {
-                const scoreA = (a.isTrending ? 2 : 0) + ((a.discount || 0) > 0 ? 1 : 0);
-                const scoreB = (b.isTrending ? 2 : 0) + ((b.discount || 0) > 0 ? 1 : 0);
-                return scoreB - scoreA;
+                if (a.isTrending && !b.isTrending) return -1;
+                if (!a.isTrending && b.isTrending) return 1;
+
+                const priceA = a.discount > 0 ? Math.round(a.price * (1 - a.discount / 100)) : a.price;
+                const priceB = b.discount > 0 ? Math.round(b.price * (1 - b.discount / 100)) : b.price;
+
+                return priceB - priceA;
             });
 
             sortedProducts.forEach(item => {
@@ -885,6 +905,7 @@
                     const isFav = userFavorites.includes(item.id);
                     const discount = item.discount || 0;
                     const finalPrice = discount > 0 ? Math.round(item.price * (1 - discount / 100)) : item.price;
+                    const itemType = item.type || 'Товар';
 
                     grid.innerHTML += `
                         <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-md flex flex-col justify-between p-2.5 relative group">
@@ -892,7 +913,7 @@
                                 <i class="fa-solid fa-heart ${isFav ? 'text-red-500' : 'text-slate-500'}"></i>
                             </button>
 
-                            <div class="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                            <div class="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start">
                                 ${item.isTrending ? `<span class="bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded shadow uppercase">🔥 Trend</span>` : ''}
                                 ${discount > 0 ? `<span class="bg-red-500 text-white font-black text-[9px] px-1 py-0.5 rounded shadow">-${discount}%</span>` : ''}
                             </div>
@@ -902,6 +923,9 @@
                             </div>
                             <div class="mt-2 flex flex-col justify-between flex-grow">
                                 <div>
+                                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                                        <span class="bg-slate-700/80 text-indigo-300 border border-indigo-500/30 text-[9px] font-bold px-1.5 py-0.2 rounded">${itemType}</span>
+                                    </div>
                                     <h3 class="font-bold text-xs text-slate-100 line-clamp-1">${item.title}</h3>
                                     <div class="flex items-center gap-1.5 my-0.5">
                                         <span class="text-xs sm:text-sm font-extrabold text-emerald-400">${finalPrice} ₴</span>
@@ -931,13 +955,14 @@
             const discount = Number(document.getElementById('prod-discount').value) || 0;
             const isTrending = document.getElementById('prod-trending').checked;
             const category = document.getElementById('prod-category').value;
+            const type = document.getElementById('prod-type').value;
             const fileInput = document.getElementById('prod-img');
             let imgData = 'https://via.placeholder.com/120';
             if (fileInput.files[0]) imgData = await compressImage(fileInput.files[0]);
 
             if (window.firebaseReady) {
                 const { ref, push } = window.fb;
-                await push(ref(window.rtdb, 'products'), { title, price, discount, isTrending, category, img: imgData });
+                await push(ref(window.rtdb, 'products'), { title, price, discount, isTrending, category, type, img: imgData });
                 alert('Товар добавлен в магазин!');
                 document.getElementById('product-form').reset();
                 switchTab(category);
